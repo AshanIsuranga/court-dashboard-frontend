@@ -1,0 +1,462 @@
+<app-loading-spinner *ngIf="isLoading" />
+
+<div *ngIf="!isLoading">
+
+    <div class="flex gap-0 cursor-pointer ">
+        <p class="font-semibold text[#424242] mb-4 mr-5 ml-0 dark:text-[#FFFFFF] dark:bg-blacks">Cases</p>
+        <p class="font-semibold text[#424242] mb-4 mr-5 ml-0 dark:text-[#FFFFFF] dark:bg-blacks">View a Case</p>
+    </div>
+
+<div class="min-h-screen py-2 px-8 shadow-lg ">
+
+    <!-- Page Header -->
+    <div class="mb-6">
+      <h1 class="text-2xl font-semibold text-gray-900 mb-2">Case {{ caseDetail.casenumber }}</h1>
+      <div class="flex items-center gap-2  text-gray-500">
+        <span
+          [ngClass]="{
+            'bg-blue-100 text-blue-700': caseDetail.casestatus === 'IN_PROGRESS',
+            'bg-green-100 text-green-700': caseDetail.casestatus === 'CREATED',
+            'bg-gray-100 text-gray-600': caseDetail.casestatus === 'CLOSED',
+            'bg-yellow-100 text-yellow-700': caseDetail.casestatus === 'STAYED',
+            'bg-red-100 text-red-400': caseDetail.casestatus === 'HEARING_SCHEDULED'
+          }"
+          class="px-2.5 py-0.5 rounded-full font-medium">
+          {{ caseDetail.casestatus }}
+        </span>
+        <span class="w-1 h-1 rounded-full bg-gray-400 inline-block"></span>
+        <span>Filed {{ caseDetail.createdat | date: 'd MMM yyyy' }}</span>
+        <span class="w-1 h-1 rounded-full bg-gray-400 inline-block"></span>
+        <span>{{ caseDetail.courtnameenglish }}</span>
+      </div>
+    </div>
+  
+    <!-- Court Information Card -->
+    <div class="bg-white shadow-lg rounded-2xl border border-gray-200 p-6 mb-4">
+      <p class="font-semibold text-gray-400 uppercase tracking-widest mb-5">Court Information</p>
+      <div class="grid grid-cols-3 gap-x-6 gap-y-5">
+        <div>
+          <p class=" text-gray-400 mb-1">Court Name</p>
+          <p class=" font-semibold text-gray-900">{{ caseDetail.courtnameenglish }}</p>
+        </div>
+        <div>
+          <p class=" text-gray-400 mb-1">Court Type</p>
+          <p class=" font-semibold text-gray-900">{{ caseDetail.type }}</p>
+        </div>
+        <div>
+          <p class=" text-gray-400 mb-1">Province</p>
+          <p class=" font-semibold text-gray-900">{{ caseDetail.province }}</p>
+        </div>
+        <div>
+          <p class=" text-gray-400 mb-1">District</p>
+          <p class=" font-semibold text-gray-900">{{ caseDetail.district }}</p>
+        </div>
+        <div>
+          <p class=" text-gray-400 mb-1">City</p>
+          <p class=" font-semibold text-gray-900">{{ caseDetail.city }}</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Case Details Card -->
+    <div class="bg-white shadow-lg rounded-2xl border border-gray-200 p-6 mb-4 mt-10">
+  
+      <!-- Card Header -->
+      <div class="flex items-center justify-between mb-5">
+        <p class="font-semibold text-gray-400 uppercase tracking-widest">Case Details</p>
+        <span
+          [ngClass]="{
+            'bg-blue-100 text-blue-700': caseDetail.casestatus === 'IN_PROGRESS',
+            'bg-green-100 text-green-700': caseDetail.casestatus === 'CREATED',
+            'bg-gray-100 text-gray-600': caseDetail.casestatus === 'CLOSED',
+            'bg-yellow-100 text-yellow-700': caseDetail.casestatus === 'STAYED',
+            'bg-red-100 text-red-400': caseDetail.casestatus === 'HEARING_SCHEDULED'
+          }"
+          class="px-3 py-1 rounded-full font-medium">
+          {{ caseDetail.casestatus }}
+        </span>
+      </div>
+  
+      <!-- Fields Grid -->
+      <div class="grid grid-cols-3 gap-x-6 gap-y-5 mb-6">
+        <div>
+          <p class=" text-gray-400 mb-1">Case Number</p>
+          <p class=" font-semibold text-gray-900">{{ caseDetail.casenumber }}</p>
+        </div>
+        <div>
+          <p class=" text-gray-400 mb-1">Case Type</p>
+          <p class=" font-semibold text-gray-900">{{ caseDetail.casetype }}</p>
+        </div>
+        <div>
+          <p class=" text-gray-400 mb-1">Case Status</p>
+          <span
+            [ngClass]="{
+            'bg-blue-100 text-blue-700': caseDetail.casestatus === 'IN_PROGRESS',
+            'bg-green-100 text-green-700': caseDetail.casestatus === 'CREATED',
+            'bg-gray-100 text-gray-600': caseDetail.casestatus === 'CLOSED',
+            'bg-yellow-100 text-yellow-700': caseDetail.casestatus === 'STAYED',
+            'bg-red-100 text-red-400': caseDetail.casestatus === 'HEARING_SCHEDULED'
+            }"
+            class="inline-block mt-1 px-2.5 py-0.5 rounded-full  font-medium">
+            {{ caseDetail.casestatus }}
+          </span>
+        </div>
+        <div>
+          <p class=" text-gray-400 mb-1">Created Date</p>
+          <p class=" font-semibold text-gray-900">{{ caseDetail.createdat | date: 'd MMMM yyyy' }}</p>
+        </div>
+        <div>
+          <p class=" text-gray-400 mb-1">Created By (Officer)</p>
+          <p class=" font-semibold text-gray-900">{{ caseDetail.firstname }} {{ caseDetail.lastname }}</p>
+        </div>
+      </div>
+  
+      <!-- Case Description -->
+      <div class="border-t border-gray-100 pt-5">
+        <p class="font-semibold text-gray-400 uppercase tracking-widest mb-3">Case Description</p>
+        <div class="bg-[#F5F4F0] rounded-xl px-5 py-4 text-gray-700 leading-relaxed">
+          {{ caseDetail.descriptionEnglish }}
+        </div>
+      </div>
+    </div>
+  
+    <div class="bg-white dark:bg-gray-900 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-800">
+
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+        RELATED PARTIES
+      </h2>
+    
+      <div class="space-y-4">
+    
+        <!-- Card -->
+        <div *ngFor="let party of parties; let i = index"
+             class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+    
+          <!-- HEADER -->
+          <div
+            (click)="toggleParty(i)"
+            class="p-4 cursor-pointer flex items-start justify-between gap-4 bg-gray-50 dark:bg-gray-800">
+    
+            <div class="flex items-center gap-3">
+    
+              <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center font-semibold">
+                <i class="fa-solid fa-user"></i>
+              </div>
+    
+              <div>
+                <div class="font-semibold text-gray-800 dark:text-white">
+                  {{ party.ispolicestation === 1 ? party.stationname : party.partyname }}
+                </div>
+    
+                <div class="text-gray-500 ">
+                  NIC: {{ party.partynic }}
+                </div>
+              </div>
+    
+            </div>
+    
+            <!-- Tags -->
+            <div class="flex gap-2 flex-wrap justify-end">
+              <span class="px-2 py-1 rounded-full bg-orange-100 text-orange-700">
+                {{ party.partyrole }}
+              </span>
+    
+              <span class="px-2 py-1 rounded-full bg-purple-100 text-purple-700">
+                {{ party.partystatus }}
+              </span>
+            </div>
+    
+          </div>
+    
+          <!-- COLLAPSIBLE CONTENT -->
+          <div
+            class="transition-all duration-300 ease-in-out overflow-hidden"
+            [ngClass]="isOpen(i)
+              ? 'max-h-[600px] opacity-100 p-4'
+              : 'max-h-0 opacity-0 p-0'">
+    
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    
+              <div>
+                <p class="text-gray-500 ">Party Role</p>
+                <p class="font-medium text-gray-800 dark:text-white">
+                  {{ party.partyrole }}
+                </p>
+              </div>
+    
+              <div>
+                <p class="text-gray-500 ">Party Status</p>
+                <p class="font-medium text-gray-800 dark:text-white">
+                  {{ party.partystatus }}
+                </p>
+              </div>
+    
+              <div>
+                <p class="text-gray-500 ">Lawyer Available</p>
+    
+                <span
+                  class="px-3 py-1 rounded-xl "
+                  [ngClass]="party.lawyerstatus === 1
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'">
+    
+                  {{ party.lawyerstatus === 1 ? 'Yes' : 'No' }}
+                </span>
+              </div>
+    
+            </div>
+    
+            <!-- Bottom section -->
+            <div class="mt-4 border-t pt-3 border-gray-200 dark:border-gray-700 flex justify-between items-center">
+    
+              <!-- Lawyer -->
+              <div>
+                <p class=" text-gray-500 mb-1">Assigned Lawyer</p>
+    
+                <p *ngIf="party.lawyerstatus === 1; else noLawyer"
+                   class="font-medium text-gray-800 dark:text-white flex items-center gap-2">
+                  <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                  {{ party.lawyerfirstname }} {{ party.lawyerlastname }}
+                </p>
+    
+                <ng-template #noLawyer>
+                  <p class="text-gray-400 ">No lawyer assigned yet</p>
+                </ng-template>
+              </div>
+    
+              <!-- ACTION BUTTONS -->
+              <div class="flex gap-2">
+    
+                <button (click)="openViewPartyPopUp(party)" class="px-3 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
+                  View Party Details
+                </button>
+    
+                <button (click)="openViewLawyerPopUp(party)" class="px-3 py-1 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300 transition dark:bg-gray-700 dark:text-white">
+                  View Lawyer Details
+                </button>
+    
+              </div>
+    
+            </div>
+    
+          </div>
+    
+        </div>
+    
+      </div>
+    </div>
+    
+  
+  </div>
+
+</div>
+
+<!-- BACKDROP -->
+<div
+  *ngIf="isViewLawyerPopUpOpen"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+  (click)="closeLawyerPopup()"
+>
+
+  <!-- MODAL -->
+  <div
+    class="bg-white dark:bg-gray-900 w-full max-w-2xl rounded-2xl shadow-xl p-6 relative"
+    (click)="$event.stopPropagation()"
+  >
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
+        Lawyer Details
+      </h2>
+
+      <button
+        (click)="closePartyPopup()"
+        class="text-gray-500 hover:text-red-500 text-2xl"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- CONTENT GRID -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+
+      <div>
+        <p class="text-gray-500">First Name</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.lawyerfirstname }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Last Name</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.lawyerlastname }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Barcode</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.lawyerbarcode }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Phone</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.lawyerphonecode }} {{ selectedParty.lawyerphoneno }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">House No</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.lawyerhouseno }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Street</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.lawyerstreetname }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">City</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.lawyercity }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">District</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.lawyerdistrict }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Province</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.lawyerprovince }}
+        </p>
+      </div>
+
+      <div class="md:col-span-2">
+        <p class="text-gray-500">Specialities</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.specialities }}
+        </p>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="mt-6 flex justify-end">
+      <button
+        (click)="closeLawyerPopup()"
+        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:text-white"
+      >
+        Close
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<div
+  *ngIf="isViewPartyPopUpOpen"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+  (click)="closePartyPopup()"
+>
+
+  <!-- MODAL -->
+  <div
+    class="bg-white dark:bg-gray-900 w-full max-w-2xl rounded-2xl shadow-xl p-6 relative"
+    (click)="$event.stopPropagation()"
+  >
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
+        Party Details
+      </h2>
+
+      <button
+        (click)="closePartyPopup()"
+        class="text-gray-500 hover:text-red-500 text-2xl"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- CONTENT GRID -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+
+      <div>
+        <p class="text-gray-500">First Name</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.partyname }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">NIC</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.partynic }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Phone</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.partyphone }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Address</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.partyaddress }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">City</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.partycity }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">District</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.partydistrict }}
+        </p>
+      </div>
+
+      <div>
+        <p class="text-gray-500">Province</p>
+        <p class="font-medium text-gray-800 dark:text-white">
+          {{ selectedParty.partyprovince }}
+        </p>
+      </div>
+
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="mt-6 flex justify-end">
+      <button
+        (click)="closePartyPopup()"
+        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:text-white"
+      >
+        Close
+      </button>
+    </div>
+
+  </div>
+</div>

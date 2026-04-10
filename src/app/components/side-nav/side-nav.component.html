@@ -1,0 +1,108 @@
+<div
+  class="flex flex-col h-full bg-white border-r dark:border-[#1D1D1F] transition-all dark:bg-[#1D1D1F]"
+>
+  <!-- Header -->
+  <div
+  class="flex items-center gap-3 p-5 cursor-pointer mx-2"
+  (click)="toggleSidebar()"
+>
+<i class="fa-solid fa-house text-xl"></i>
+  <span
+    [ngClass]="isCollapsed ? 'hidden' : 'block'"
+    class="text-xl font-bold text-gray-800 dark:text-white whitespace-nowrap"
+  >
+    <p>Magistrate Court</p>
+    <p>Colombo Branch</p>
+  </span>
+</div>
+
+  <!-- Dynamic Menu -->
+  <div class="flex-1 overflow-y-auto scrollbar-none dark:bg-[#1D1D1F]">
+    <ul class="space-y-1  pb-4 pt-2">
+      <ng-container *ngFor="let item of menuItems">
+        <li
+          class="flex flex-row items-center gap-4 p-3 rounded-lg cursor-pointer hover:bg-[#EDF5FC] group"
+          [ngClass]="{ 'bg-[#EDF5FC]': isTabSelected(item.key) }"
+          (click)="navigate(item.path, item.key)"
+        >
+          <i
+            [class]="item.icon + ' text-xl px-2'"
+            [ngClass]="{
+              'text-[#415CFF]': isTabSelected(item.key),
+              'text-[#6B6B6B] dark:text-white': !isTabSelected(item.key),
+              'group-hover:text-[#415CFF] dark:group-hover:text-[#272F45]': true
+            }"
+          ></i>
+          <span
+            [ngClass]="{
+              hidden: isCollapsed,
+              'text-[#415CFF]': isTabSelected(item.key),
+              'text-[#6B6B6B] dark:text-white': !isTabSelected(item.key),
+              'group-hover:text-[#415CFF] dark:group-hover:text-[#272F45]': true
+            }"
+            class="text-[16px] font-normal"
+          >
+            {{ item.label }}
+          </span>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+
+  <!-- Theme Toggle & Logout -->
+  <div class="mx-5 space-y-4 pb-5">
+    
+    <hr />
+
+    <!-- Logout Button -->
+    <div class="flex items-center dark:hover:text-black">
+      <button
+        *ngIf="!isCollapsed"
+        class="hover:bg-[#EDF5FC] w-full rounded-lg flex flex-row items-center gap-x-4 dark:text-red-500 text-red-500 p-4 pl-5 dark:hover:text-[#272F45]"
+        (click)="logOut()"
+      >
+        <i class="fas fa-sign-out-alt text-lg"></i>
+        <span class="block mb-1">Logout</span>
+      </button>
+      <button
+        *ngIf="isCollapsed"
+        class="hover:bg-[#EDF5FC] w-full flex items-center gap-4 rounded-lg dark:text-red-500 text-red-500 p-4 pl-5 dark:hover:text-[#272F45]"
+        (click)="logOut()"
+      >
+        <i class="fas fa-sign-out-alt text-lg"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="logOutView" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-[#363636] shadow-lg rounded-lg px-6 py-10 w-1/3">
+
+      <div>
+          <!-- Icon -->
+          <div class="flex items-center justify-center bg-[#F6F7F9] rounded-lg shadow-sm px-4 mb-3 py-3 mx-auto w-[70px]">
+              <i class="fa-solid fa-triangle-exclamation text-[#6B7D8C] text-4xl px-1"></i>
+          </div>
+
+          <div class="mb-8 text-center dark:text-textDark">
+              <p class="text-lg mb-2">
+                Are you sure you want to Logout?
+              </p>
+              
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex justify-center gap-6">
+              <button class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
+                  (click)="confirmLogOut()"><span class="font-semibold text-[#6B7D8C]">Yes,</span> <br>
+                  <span class="text-light text-whight-700 button-text text-[#6B7D8C]">Logout</span>
+              </button>
+              <button class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
+                  (click)="cancelLogOut()"><span class="font-semibold text-white">Stay</span> <br>
+                  <span class="text-light text-whight-700 button-text text-white">On Page</span>
+              </button>
+          </div>
+      </div>
+  </div>
+
+</div>
