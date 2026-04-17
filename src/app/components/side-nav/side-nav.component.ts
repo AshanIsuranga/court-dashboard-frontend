@@ -1,5 +1,5 @@
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, Inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 // import { ThemeService } from '../../theme.service';
 import { FormsModule } from '@angular/forms';
@@ -57,16 +57,12 @@ export class SideNavComponent {
   isSelectTab: string = '';
   menuItems = MENU_ITEMS;
 
-  logOutView = false;
-
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
     // private themeService: ThemeService,
     private router: Router,
     private tokenSrv: TokenServiceService,
     // private toastSrv: ToastAlertService,
     @Inject(DOCUMENT) private document: Document
-
   ) {
     this.role = tokenSrv.getUserDetails().role;
     console.log('role', this.role)
@@ -124,23 +120,6 @@ export class SideNavComponent {
 
   isTabSelected(tab: string): boolean {
     return this.isSelectTab === tab;
-  }
-
-  logOut(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.logOutView = !this.logOutView;
-    }
-  }
-
-  confirmLogOut() {
-    this.logOutView = !this.logOutView;
-    this.tokenSrv.clearLoginDetails();
-    this.router.navigate(['login']);
-    // this.toastSrv.success(`<b>Logged Out!`);
-  }
-
-  cancelLogOut() {
-    this.logOutView = !this.logOutView;
   }
 
   selectIdealTab() {
