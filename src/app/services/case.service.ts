@@ -51,4 +51,62 @@ export class CaseService {
 
     return this.http.get(url, { headers });
   }
+
+  getPendingConnectionDetails(page: number = 1, limit: number = 10, searchText: string =''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    console.log('token', this.token)
+
+    let url = `${this.apiUrl}/get-pending-connections?page=${page}&limit=${limit}`;
+
+    if (searchText) {
+      url += `&searchText=${searchText}`
+    }
+
+    return this.http.get(url, { headers });
+  }
+
+  cerateConnection(partyId: number, userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+  
+    const url = `${this.apiUrl}/create-connection`;
+  
+    return this.http.post(
+      url,
+      { partyId, userId }, // body
+      { headers }          // config
+    );
+  }
+
+  cerateConnectionForOrg(partyId: number, userId: number, orgId: number, orgUserId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+  
+    const url = `${this.apiUrl}/create-connection-for-org`;
+  
+    return this.http.post(
+      url,
+      { partyId, userId, orgId, orgUserId }, // body
+      { headers }          // config
+    );
+  }
+
+
+
+  getDataForCreateHearing(caseId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    console.log('token', this.token)
+
+    let url = `${this.apiUrl}/get-selected-case/${caseId}`;
+
+    return this.http.get(url, { headers });
+  }
 }

@@ -11,6 +11,9 @@
 
     <!-- Page Header -->
     <div class="mb-6">
+      <button (click)="navigateToScheduleHearing()" class="px-3 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
+        Create a Schedule
+      </button>
       <h1 class="text-2xl font-semibold text-gray-900 mb-2">Case {{ caseDetail.casenumber }}</h1>
       <div class="flex items-center gap-2  text-gray-500">
         <span
@@ -145,11 +148,15 @@
     
               <div>
                 <div class="font-semibold text-gray-800 dark:text-white">
-                  {{ party.ispolicestation === 1 ? party.stationname : party.partyname }}
+                  {{ party.partytype === 'Organization' ? party.oranizationname : party.partyname }}
                 </div>
     
-                <div class="text-gray-500 ">
+                <div *ngIf="party.partytype !== 'Organization'" class="text-gray-500 ">
                   NIC: {{ party.partynic }}
+                </div>
+
+                <div *ngIf="party.partytype === 'Organization'" class="text-gray-500 ">
+                  {{ party.partytype }}
                 </div>
               </div>
     
@@ -175,7 +182,7 @@
               ? 'max-h-[600px] opacity-100 p-4'
               : 'max-h-0 opacity-0 p-0'">
     
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
     
               <div>
                 <p class="text-gray-500 ">Party Role</p>
@@ -201,6 +208,19 @@
                     : 'bg-red-100 text-red-700'">
     
                   {{ party.lawyerstatus === 1 ? 'Yes' : 'No' }}
+                </span>
+              </div>
+
+              <div>
+                <p class="text-gray-500 ">Connected to Mobile App</p>
+    
+                <span
+                  class="px-3 py-1 rounded-xl "
+                  [ngClass]="party.connectionstatus === 'Connected'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'">
+    
+                  {{ party.connectionstatus }}
                 </span>
               </div>
     

@@ -5,6 +5,7 @@ import { LoginComponentComponent } from './application/login-component/login-com
 import { AllCasesComponent } from './application/cases/all-cases/all-cases.component';
 import { ViewSelectedCaseComponent } from './application/cases/view-selected-case/view-selected-case.component';
 import { ViewClientCaseConnectionsComponent } from './application/client-connections/view-client-case-connections/view-client-case-connections.component';
+import { CreateScheduleComponent } from './application/scheduling/create-schedule/create-schedule.component';
 
 export const routes: Routes = [
     {
@@ -40,6 +41,21 @@ export const routes: Routes = [
             },
 
             {
+              path: 'connections',
+              children: [
+
+                {
+                      path: '',
+                      component: ViewClientCaseConnectionsComponent
+                },
+                // {
+                //   path: 'view-selected-case/:id',
+                //   component: 
+                // }
+              ]
+          },
+
+            {
                 path: 'cases',
                 children: [
 
@@ -54,18 +70,29 @@ export const routes: Routes = [
                 ]
             },
 
+            // {
+            //     path: 'schedule',
+            //     children: [
+
+            //       {
+            //             path: '',
+            //             component: AllCasesComponent
+            //       },
+            //       {
+            //         path: 'create-schedule-for-case/:id',
+            //         component: CreateScheduleComponent
+            //       }
+            //     ]
+            // },
+
             {
-                path: 'connections',
+                path: 'hearing',
                 children: [
 
                   {
-                        path: '',
-                        component: ViewClientCaseConnectionsComponent
+                        path: 'create-schedule-for-case/:id',
+                        component: CreateScheduleComponent
                   },
-                //   {
-                //     path: 'view-selected-case/:id',
-                //     component: ViewSelectedCaseComponent
-                //   }
                 ]
             }
             

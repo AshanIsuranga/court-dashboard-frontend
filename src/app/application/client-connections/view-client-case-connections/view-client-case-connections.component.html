@@ -10,42 +10,14 @@
         <div class="flex flex-row items-center justify-between min-w-max max-w-[80vw] mx-auto">
             <div class="flex flex-col justify-between flex-shrink-0">
                 <p class="font-semibold md:text-lg lg:text-lg mb-1 dark:text-white whitespace-nowrap">Total Centres
-                    {{ (itemsArr.length < 10 ? '0' + itemsArr.length : itemsArr.length) || 0 }}</p>
+                    {{ (connectionsArr.length < 10 ? '0' + connectionsArr.length : connectionsArr.length) || 0 }}</p>
             </div>
             <div class="flex flex-row items-center gap-8 flex-shrink-0">
                 <i class="fa-solid fa-list md:text-2xl lg:text-lg dark:text-white flex-shrink-0 ml-8"></i>
                 <p class="md:text-2xl lg:text-lg dark:text-white whitespace-nowrap flex-shrink-0">Filter By</p>
 
-                <div class="flex gap-4 flex-shrink-0">
-                    <!-- Province Dropdown -->
-                    <div class="w-40 flex-shrink-0">
-                        <app-serchable-dropdown
-                            [items]="provinceItems"
-                            [placeholder]="'Province'"
-                            [searchPlaceholder]="'Search...'"
-                            [clearable]="true"
-                            [showSelected]="true"
-                            [(ngModel)]="selectProvince"
-                            (selectionChange)="onProvinceChange($event)">
-                        </app-serchable-dropdown>
-                    </div>
-                
-                    <!-- District Dropdown -->
-                    <div class="w-40 flex-shrink-0">
-                        <app-serchable-dropdown
-                            [items]="districtItems"
-                            [placeholder]="'District'"
-                            [searchPlaceholder]="'Search...'"
-                            [clearable]="true"
-                            [showSelected]="true"
-                            [(ngModel)]="selectDistrict"
-                            (selectionChange)="onDistrictChange($event)">
-                        </app-serchable-dropdown>
-                    </div>
-                </div>
-
                 <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929] flex-shrink-0">
-                    <input type="text" placeholder="Search by Case Number / Case Type.." [(ngModel)]="searchText"
+                    <input type="text" placeholder="Search by NIC / Party Name.." [(ngModel)]="searchText"
                         class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
                         (keydown.enter)="onSearch()" (keydown.esc)="offSearch()" />
                     <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
@@ -68,35 +40,96 @@
             </div>
         </div>
 
-        <div class="flex flex-row mt-3 mb-0">
-            <button class="bg-[#415CFF] text-white font-semibold px-4 py-2 rounded-lg" (click)="addCase()">Create a
-                Case</button>
-        </div>
-
 
         <div *ngIf="hasData" class=" min-w-max mt-5 mr-5 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]">
             <table class="w-full min-w-max divide-y-2">
                 <thead class="text-gray-700 dark:text-gray-300 dark:bg-[#0F0F0F] dark:border-[#202021] cursor-default">
                     <tr>
-                        <th class="px-6 py-3 text-left font-normal w-10">No</th>
-                        <th class="px-6 py-3 text-left font-normal w-32">Case Number</th>
-                        <th class="px-6 py-3 text-left font-normal w-48 whitespace-nowrap">Case Type</th>
-                        <th class="px-6 py-3 text-center font-normal w-28">Status</th>
-                        <th class="px-6 py-3 text-center font-normal w-28">Created Date</th>
+                        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">No</th>
+                        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">Case Number</th>
+                        <th class="px-4 py-3 text-left font-normal  whitespace-nowrap">Case Type</th>
+                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Case Status</th>
+                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Created Date</th>
+                        <th class="px-4 py-3 text-center font-normal ">Connection Status</th>
+                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party Role</th>
+                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party Status</th>
+                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party Type</th>
+                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Organization Name</th>
+                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party NIC</th>
+                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Organization User NIC</th>
+                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party Name</th>
+                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Organization User Name</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
-                    <tr class="hover:bg-[#415CFF] hover:text-white dark:text-gray-300 cursor-pointer"
-                        *ngFor="let item of itemsArr | paginate : { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }; let i = index"
-                        (click)="navigateToDashboard(item.id)">
+                    <tr class=" dark:text-gray-300 "
+                        *ngFor="let item of connectionsArr | paginate : { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }; let i = index"
+                        >
                         <td class="px-6 py-3 font-medium text-left">
                             {{ ('0' + ((currentPage - 1) * itemsPerPage + i + 1)).slice(-2) }}
                         </td>
-                        <td class="px-6 py-3 font-medium text-left">{{ item.casenumber }}</td>
-                        <td class="px-6 py-3 font-medium text-left whitespace-nowrap">{{ item.casetype }}</td>
-                        <td class="px-6 py-3 font-medium text-center">{{ item.casestatus }}</td>
-                        <td class="px-6 py-3 font-medium text-center">{{ item.createdat | date : 'yyyy/MM/dd' }}</td>
-                        
+                        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">{{ item.casenumber }}</td>
+                        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">{{ item.casetype }}</td>
+                        <td class="px-4 py-3 text-center whitespace-nowrap">
+                            <span
+                              class="px-3 py-1 rounded-xl min-w-44 font-semibold"
+                              [ngClass]="{
+                                'bg-blue-100 text-blue-800': item.casestatus === 'CREATED',
+                                'bg-purple-100 text-purple-800': item.casestatus === 'HEARING_SCHEDULED',
+                                'bg-yellow-100 text-yellow-800': item.casestatus === 'IN_PROGRESS',
+                                'bg-orange-100 text-orange-800': item.casestatus === 'STAYED',
+                                'bg-green-100 text-green-800': item.casestatus === 'CLOSED'
+                              }"
+                            >
+                              {{ item.casestatus }}
+                            </span>
+                          </td>
+                        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">{{ item.createdat | date : 'yyyy/MM/dd' }}</td>
+                        <td (click)="opencreateConnectionPopUp(item)" class="px-4 py-3 text-center whitespace-nowrap">
+                            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-xl min-w-44 font-semibold cursor-pointer">Required</span>
+                        </td>
+                        <td class="px-4 py-3 text-center whitespace-nowrap">
+                            <span
+                              class="px-3 py-1 rounded-xl min-w-44 font-semibold"
+                              [ngClass]="{
+                                'bg-blue-100 text-blue-800': item.partyrole === 'PLAINTIFF',
+                                'bg-red-100 text-red-800': item.partyrole === 'DEFENDENT',
+                                'bg-purple-100 text-purple-800': item.partyrole === 'COMPLAINANT',
+                                'bg-orange-100 text-orange-800': item.partyrole === 'ACCUSED',
+                                'bg-gray-100 text-gray-800': item.partyrole === 'STATE',
+                                'bg-indigo-100 text-indigo-800': item.partyrole === 'GUARDIAN',
+                                'bg-yellow-100 text-yellow-800': item.partyrole === 'OTHER',
+                                'bg-green-100 text-green-800': item.partyrole === 'WITNESS',
+                                'bg-pink-100 text-pink-800': item.partyrole === 'PETITIONER',
+                                'bg-teal-100 text-teal-800': item.partyrole === 'RESPONDENT'
+                              }"
+                            >
+                              {{ item.partyrole | titlecase }}
+                            </span>
+                          </td>
+                          <td class="px-4 py-3 text-center whitespace-nowrap">
+                            <span
+                              class="px-3 py-1 rounded-xl min-w-32 font-semibold"
+                              [ngClass]="{
+                                'bg-green-100 text-green-800': item.partystatus === 'ACTIVE',
+                                'bg-yellow-100 text-yellow-800': item.partystatus === 'NOT_APPEARED',
+                                'bg-red-100 text-red-800': item.partystatus === 'DEFAULTED',
+                                'bg-orange-100 text-orange-800': item.partystatus === 'ACCUSED',
+                                'bg-gray-100 text-gray-800': item.partystatus === 'WITHDRAWN',
+                                'bg-blue-100 text-blue-800': item.partystatus === 'DISCHARGED',
+                                'bg-purple-100 text-purple-800': item.partystatus === 'CONCLUDED'
+                              }"
+                            >
+                              {{ item.partystatus | titlecase }}
+                            </span>
+                          </td>
+
+                        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">{{ item.partytype }}</td>
+                        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">{{ item.organizationname }}</td>
+                        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">{{ item.partynic }}</td>
+                        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">{{ item.organizationusernic }}</td>
+                        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">{{ item.partyname }}</td>
+                        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">{{ item.organizationusername }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -115,4 +148,50 @@
             <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
         </div>
     </div>
-
+    
+    <div
+    *ngIf="isCreateConnectionPopUpOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+    (click)="closecreateConnectionPopup()"
+  >
+  
+    <!-- MODAL -->
+    <div
+      class="bg-white dark:bg-gray-900 w-full max-w-md rounded-2xl shadow-xl p-6 relative"
+      (click)="$event.stopPropagation()"
+    >
+  
+      <!-- HEADER -->
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">
+        Connection Required
+      </h2>
+  
+      <!-- BODY -->
+      <p class="text-gray-600 dark:text-gray-300">
+        This party already has a mobile app user. An immediate connection is required to continue.
+      </p>
+  
+      <!-- ACTIONS -->
+      <div class="mt-6 flex justify-end gap-3">
+  
+        <!-- NO / BACK -->
+        <button
+          (click)="closecreateConnectionPopup()"
+          class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 
+                 dark:bg-gray-700 dark:text-white"
+        >
+          No, Go Back
+        </button>
+  
+        <!-- CREATE CONNECTION -->
+        <button
+          (click)="createConnection()"
+          class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          Create Connection
+        </button>
+  
+      </div>
+  
+    </div>
+  </div>

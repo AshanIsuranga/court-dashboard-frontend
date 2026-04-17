@@ -34,10 +34,10 @@ export const MENU_ITEMS = [
   },
 
   {
-    id: 3,
-    key: 'requests',
-    path: '/requests',
-    label: 'Requests',
+    id: 4,
+    key: 'hearing',
+    path: '/hearing',
+    label: 'Hearing',
     icon: 'fa-solid fa-user-plus',
     // permission: [''],
   },

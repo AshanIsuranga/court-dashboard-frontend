@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CaseService } from './../../../services/case.service'
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -24,7 +24,7 @@ export class ViewSelectedCaseComponent {
 
   isLoading: boolean = true;
 
-  caseId: number = 1;
+  caseId!: number;
 
   activeIndex: number | null = null;
 
@@ -71,10 +71,12 @@ isOpen(i: number): boolean {
   constructor(
     private router: Router,
     private casesSrv: CaseService,
+    private route: ActivatedRoute
 ) { }
 
 ngOnInit(): void {
   console.log('opened')
+  this.caseId = this.route.snapshot.params['id'];
   this.fetchAllCaseDetails(this.caseId);
 }
 
@@ -111,6 +113,10 @@ fetchAllCaseDetails(caseId: number) {
 
   closeLawyerPopup() {
     this.isViewLawyerPopUpOpen = false;
+  }
+
+  navigateToScheduleHearing() {
+    this.router.navigate([`/hearing/create-schedule-for-case/${this.caseId}`]);
   }
 
 }
@@ -153,16 +159,19 @@ class Party {
   partydistrict!: string;
   partyprovince!: string;
   partycity!: string;
+  linkeduserid!: number;
+  partytype!: string;
+  connectionstatus!: string;
 
-
-  stationname!: string;
-  policephoneno!: string;
-  policephonecode!: string;
-  policehouseno!: string;
-  policestreetname!: string;
-  policecity!: string;
-  policedistrict!: string;
-  policeprovince!: string;
+  oranizationid!: number;
+  oranizationname!: string;
+  registration_number!: string;
+  oranizationemail!: string;
+  oranizationphone!: string;
+  oranizationaddress!: string;
+  oranizationcity!: string;
+  oranizationdistrict!: string;
+  oranizationprovince!: string;
 
 
   lawyerfirstname!: string;
