@@ -1,0 +1,219 @@
+<app-loading-spinner *ngIf="isLoading" />
+
+<div *ngIf="!isLoading">
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 cursor-pointer mb-4">
+        <p class="font-semibold text-[#424242] dark:text-[#FFFFFF] cursor-pointer hover:underline" (click)="goBack()">Courts</p>
+        <i class="fa-solid fa-chevron-right text-xs text-gray-400 dark:text-gray-400"></i>
+        <p class="font-semibold text-[#424242] dark:text-[#FFFFFF] cursor-pointer hover:underline" (click)="goBack()">Officers</p>
+        <i class="fa-solid fa-chevron-right text-xs text-gray-400 dark:text-gray-400"></i>
+        <p class="font-semibold text-[#415CFF] dark:text-[#415CFF]">Create Registrar</p>
+    </div>
+
+    <div class="w-full px-10 py-8 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <p class="font-bold text-xl text-[#424242] dark:text-white">Create New Registrar</p>
+                <p class="text-sm text-gray-400 dark:text-gray-400 mt-1">Fill in the details below to register a new court officer</p>
+            </div>
+            <button type="button" (click)="goBack()"
+                class="flex items-center gap-2 text-gray-500 dark:text-gray-300 hover:text-[#415CFF] dark:hover:text-[#415CFF] transition-colors">
+                <i class="fa-solid fa-arrow-left text-sm"></i>
+                <span class="text-sm font-medium">Back</span>
+            </button>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" #registrarForm="ngForm">
+
+            <!-- Section: Court Assignment -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-5 bg-[#415CFF] rounded-full"></div>
+                    <p class="font-semibold text-[#424242] dark:text-white text-sm uppercase tracking-wide">Court Assignment</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Court <span class="text-red-500">*</span></label>
+                        <app-serchable-dropdown
+                            [items]="courtItems"
+                            [placeholder]="'Select Court'"
+                            [searchPlaceholder]="'Search court...'"
+                            [clearable]="true"
+                            [showSelected]="true"
+                            [(ngModel)]="formData.courtid"
+                            name="courtid"
+                            required>
+                        </app-serchable-dropdown>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Officer Role <span class="text-red-500">*</span></label>
+                        <app-serchable-dropdown
+                            [items]="roleItems"
+                            [placeholder]="'Select Role'"
+                            [searchPlaceholder]="'Search role...'"
+                            [clearable]="true"
+                            [showSelected]="true"
+                            [(ngModel)]="formData.officerrole"
+                            name="officerrole"
+                            required>
+                        </app-serchable-dropdown>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Personal Information -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-5 bg-[#415CFF] rounded-full"></div>
+                    <p class="font-semibold text-[#424242] dark:text-white text-sm uppercase tracking-wide">Personal Information</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">First Name <span class="text-red-500">*</span></label>
+                        <input type="text" [(ngModel)]="formData.firstname" name="firstname" required maxlength="50"
+                            placeholder="Enter first name"
+                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Last Name <span class="text-red-500">*</span></label>
+                        <input type="text" [(ngModel)]="formData.lastname" name="lastname" required maxlength="50"
+                            placeholder="Enter last name"
+                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">NIC <span class="text-red-500">*</span></label>
+                        <input type="text" [(ngModel)]="formData.nic" name="nic" required maxlength="15"
+                            placeholder="e.g. 200012345678"
+                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Email <span class="text-red-500">*</span></label>
+                        <input type="email" [(ngModel)]="formData.email" name="email" required maxlength="100"
+                            placeholder="officer@courts.gov.lk"
+                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Contact Numbers -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-5 bg-[#415CFF] rounded-full"></div>
+                    <p class="font-semibold text-[#424242] dark:text-white text-sm uppercase tracking-wide">Contact Numbers</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Primary Mobile -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Primary Mobile <span class="text-red-500">*</span></label>
+                        <div class="flex gap-2">
+                            <div class="flex items-center px-3 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-gray-100 dark:bg-[#1e1e1e] text-gray-500 dark:text-gray-400 text-sm font-medium select-none whitespace-nowrap">
+                                +94
+                            </div>
+                            <input type="text" [(ngModel)]="formData.phonenumber01" name="phonenumber01" required maxlength="20"
+                                placeholder="7X XXX XXXX"
+                                class="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
+                        </div>
+                    </div>
+                    <!-- Secondary Mobile (Optional) -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">
+                            Secondary Mobile
+                            <span class="text-xs text-gray-400 dark:text-gray-500 font-normal ml-1">(Optional)</span>
+                        </label>
+                        <div class="flex gap-2">
+                            <div class="flex items-center px-3 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-gray-100 dark:bg-[#1e1e1e] text-gray-500 dark:text-gray-400 text-sm font-medium select-none whitespace-nowrap">
+                                +94
+                            </div>
+                            <input type="text" [(ngModel)]="formData.phonenumber02" name="phonenumber02" maxlength="20"
+                                placeholder="7X XXX XXXX"
+                                class="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Address -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-1 h-5 bg-[#415CFF] rounded-full"></div>
+                    <p class="font-semibold text-[#424242] dark:text-white text-sm uppercase tracking-wide">Address</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">House / Building Number <span class="text-red-500">*</span></label>
+                        <input type="text" [(ngModel)]="formData.housenumber" name="housenumber" required maxlength="20"
+                            placeholder="No. 12A"
+                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Street Name <span class="text-red-500">*</span></label>
+                        <input type="text" [(ngModel)]="formData.streetname" name="streetname" required maxlength="100"
+                            placeholder="Main Street"
+                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">City <span class="text-red-500">*</span></label>
+                        <input type="text" [(ngModel)]="formData.city" name="city" required maxlength="50"
+                            placeholder="Colombo"
+                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">District <span class="text-red-500">*</span></label>
+                        <app-serchable-dropdown
+                            [items]="districtItems"
+                            [placeholder]="'Select District'"
+                            [searchPlaceholder]="'Search district...'"
+                            [clearable]="true"
+                            [showSelected]="true"
+                            [(ngModel)]="formData.district"
+                            name="district"
+                            required>
+                        </app-serchable-dropdown>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Province <span class="text-red-500">*</span></label>
+                        <app-serchable-dropdown
+                            [items]="provinceItems"
+                            [placeholder]="'Select Province'"
+                            [searchPlaceholder]="'Search province...'"
+                            [clearable]="true"
+                            [showSelected]="true"
+                            [(ngModel)]="formData.province"
+                            name="province"
+                            required>
+                        </app-serchable-dropdown>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Country <span class="text-red-500">*</span></label>
+                        <input type="text" [(ngModel)]="formData.country" name="country" required maxlength="50"
+                            placeholder="Sri Lanka"
+                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-200 dark:border-[#4a4a4a] mb-6"></div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-end gap-4">
+                <button type="button" (click)="onReset()"
+                    class="px-6 py-2.5 rounded-lg border border-gray-300 dark:border-[#4a4a4a] text-gray-600 dark:text-gray-300 font-medium text-sm hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-colors">
+                    Reset
+                </button>
+                <button type="button" (click)="goBack()"
+                    class="px-6 py-2.5 rounded-lg border border-gray-300 dark:border-[#4a4a4a] text-gray-600 dark:text-gray-300 font-medium text-sm hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" [disabled]="registrarForm.invalid || isSaving"
+                    class="px-8 py-2.5 rounded-lg bg-[#415CFF] text-white font-semibold text-sm hover:bg-[#3045e0] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2">
+                    <i *ngIf="isSaving" class="fa-solid fa-spinner fa-spin"></i>
+                    <span>{{ isSaving ? 'Saving...' : 'Create Registrar' }}</span>
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>

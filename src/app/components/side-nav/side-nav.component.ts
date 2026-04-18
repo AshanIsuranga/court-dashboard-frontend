@@ -14,7 +14,7 @@ export const MENU_ITEMS = [
     path: '/dashbord',
     label: 'Dashboard',
     icon: 'fas fa-th-large',
-    // permission: [''],
+    roles: ['Registrar', 'Clerk', 'Admin'],
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ export const MENU_ITEMS = [
     path: '/cases',
     label: 'Cases',
     icon: 'fa-solid fa-bullseye',
-    // permission: [''],
+    roles: ['Registrar', 'Clerk'],
   },
   {
     id: 3,
@@ -30,7 +30,7 @@ export const MENU_ITEMS = [
     path: '/connections',
     label: 'Connections',
     icon: 'fa-solid fa-user-plus',
-    // permission: [''],
+    roles: ['Registrar', 'Clerk'],
   },
 
   {
@@ -39,7 +39,16 @@ export const MENU_ITEMS = [
     path: '/hearing',
     label: 'Hearing',
     icon: 'fa-solid fa-user-plus',
-    // permission: [''],
+    roles: ['Registrar', 'Clerk'],
+  },
+
+  {
+    id: 5,
+    key: 'courts',
+    path: '/courts',
+    label: 'Courts',
+    icon: 'fa-solid fa-user-plus',
+    roles: ['Admin'],
   },
 
 ];
@@ -65,6 +74,8 @@ export class SideNavComponent {
     @Inject(DOCUMENT) private document: Document
   ) {
     this.role = tokenSrv.getUserDetails().role;
+    console.log('role', this.role)
+    this.menuItems = MENU_ITEMS.filter(item => item.roles.includes(this.role ?? ''));
     console.log('role', this.role)
     this.setActiveTabFromRoute();
 
