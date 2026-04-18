@@ -13,6 +13,7 @@ import { CourtOfficersComponent } from './application/courts/court-officers/cour
 import { CreateRegistarComponent } from './application/courts/create-registar/create-registar.component';
 import { ViewOfficersComponent } from './application/manage-officers/view-officers/view-officers.component';
 import { CreataClerkComponent } from './application/manage-officers/creata-clerk/creata-clerk.component';
+import { CreateACaseComponent } from './application/cases/create-a-case/create-a-case.component';
 
 export const routes: Routes = [
     {
@@ -70,7 +71,11 @@ export const routes: Routes = [
                   {
                     path: 'view-selected-case/:id',
                     component: ViewSelectedCaseComponent
-                  }
+                  },
+                  {
+                        path: 'add-a-case',
+                        component: CreateACaseComponent
+                  },
                 ]
             },
 

@@ -1,1 +1,437 @@
-<p>create-a-case works!</p>
+<app-loading-spinner *ngIf="isLoading" />
+
+<div *ngIf="!isLoading" class="min-h-screen pb-10">
+
+  <!-- Breadcrumb -->
+  <div class="flex items-center gap-2 mb-5">
+    <span class="font-semibold text-gray-500 dark:text-gray-400 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition" (click)="goBack()">Cases</span>
+    <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+    <span class="font-semibold text-gray-800 dark:text-white">Create a Case</span>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #caseForm="ngForm" novalidate>
+
+    <!-- ── Case Details Card ─────────────────────────────────────── -->
+    <div class="bg-white dark:bg-[#1D1D1F] shadow-lg rounded-2xl border border-gray-200 dark:border-[#2e2e30] p-6 mb-6">
+
+      <p class="font-semibold text-gray-400 uppercase tracking-widest mb-5 text-sm">Case Details</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+
+        <!-- Case Number -->
+        <div>
+          <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Case Number <span class="text-red-500">*</span></label>
+          <input
+            type="text"
+            [(ngModel)]="casenumber"
+            name="casenumber"
+            placeholder="Enter case number"
+            class="w-full h-11 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition"
+            [ngClass]="caseErrors['casenumber'] ? 'border-red-400' : 'border-[#828282]'"
+          />
+          <p *ngIf="caseErrors['casenumber']" class="text-red-500 text-xs mt-1">{{ caseErrors['casenumber'] }}</p>
+        </div>
+
+        <!-- Case Type -->
+        <div>
+          <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Case Type <span class="text-red-500">*</span></label>
+          <app-serchable-dropdown
+            [items]="caseTypeItems"
+            [placeholder]="'Select case type'"
+            [(ngModel)]="casetype"
+            name="casetype"
+            (selectionChange)="onCaseTypeChange($event)"
+            [dropdownTriggerClass]="caseErrors['casetype'] ? 'border-red-400' : ''">
+          </app-serchable-dropdown>
+          <p *ngIf="caseErrors['casetype']" class="text-red-500 text-xs mt-1">{{ caseErrors['casetype'] }}</p>
+        </div>
+
+        <!-- Case Status -->
+        <div>
+          <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Case Status <span class="text-red-500">*</span></label>
+          <app-serchable-dropdown
+            [items]="caseStatusItems"
+            [placeholder]="'Select status'"
+            [(ngModel)]="casestatus"
+            name="casestatus"
+            (selectionChange)="onCaseStatusChange($event)"
+            [dropdownTriggerClass]="caseErrors['casestatus'] ? 'border-red-400' : ''">
+          </app-serchable-dropdown>
+          <p *ngIf="caseErrors['casestatus']" class="text-red-500 text-xs mt-1">{{ caseErrors['casestatus'] }}</p>
+        </div>
+
+        <!-- Description English -->
+        <div class="md:col-span-2">
+          <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Description (English) <span class="text-red-500">*</span></label>
+          <textarea
+            [(ngModel)]="descriptionEnglish"
+            name="descriptionEnglish"
+            rows="3"
+            placeholder="Enter case description in English"
+            class="w-full px-3 py-2 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 resize-none transition"
+            [ngClass]="caseErrors['descriptionEnglish'] ? 'border-red-400' : 'border-[#828282]'"
+          ></textarea>
+          <p *ngIf="caseErrors['descriptionEnglish']" class="text-red-500 text-xs mt-1">{{ caseErrors['descriptionEnglish'] }}</p>
+        </div>
+
+        <!-- Description Sinhala -->
+        <div>
+          <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Description (සිංහල)</label>
+          <textarea
+            [(ngModel)]="descriptionSinhala"
+            name="descriptionSinhala"
+            rows="3"
+            placeholder="සිංහල විස්තරය"
+            class="w-full px-3 py-2 border-[1.8px] border-[#828282] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 resize-none transition"
+          ></textarea>
+        </div>
+
+        <!-- Description Tamil -->
+        <div>
+          <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Description (தமிழ்)</label>
+          <textarea
+            [(ngModel)]="descriptionTamil"
+            name="descriptionTamil"
+            rows="3"
+            placeholder="தமிழ் விவரம்"
+            class="w-full px-3 py-2 border-[1.8px] border-[#828282] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 resize-none transition"
+          ></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Parties Section ───────────────────────────────────────── -->
+    <div class="mb-4 flex items-center justify-between">
+      <p class="font-semibold text-gray-700 dark:text-white text-base">Parties</p>
+      <button type="button"
+        class="flex items-center gap-2 bg-[#415CFF] hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
+        (click)="addParty()">
+        <i class="fa-solid fa-plus text-xs"></i> Add Party
+      </button>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="parties.length === 0"
+      class="bg-white dark:bg-[#1D1D1F] border-2 border-dashed border-gray-300 dark:border-[#3a3a3c] rounded-2xl p-10 text-center mb-6">
+      <i class="fa-solid fa-users text-3xl text-gray-300 dark:text-gray-600 mb-3 block"></i>
+      <p class="text-gray-400 dark:text-gray-500">No parties added yet. Click <strong>Add Party</strong> to begin.</p>
+    </div>
+
+    <!-- Party Cards -->
+    <div *ngFor="let party of parties; let pi = index; trackBy: trackByIndex" class="bg-white dark:bg-[#1D1D1F] shadow-lg rounded-2xl border border-gray-200 dark:border-[#2e2e30] p-6 mb-6">
+
+      <!-- Party Card Header -->
+      <div class="flex items-center justify-between mb-5">
+        <p class="font-semibold text-gray-400 uppercase tracking-widest text-sm">Party {{ pi + 1 }}</p>
+        <button type="button"
+          class="flex items-center gap-1 text-red-400 hover:text-red-600 text-sm font-medium transition"
+          (click)="removeParty(pi)">
+          <i class="fa-solid fa-trash-can text-xs"></i> Remove
+        </button>
+      </div>
+
+      <!-- Party Role / Status / Type row -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-5 mb-5">
+
+        <!-- Party Role -->
+        <div>
+          <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Party Role <span class="text-red-500">*</span></label>
+          <app-serchable-dropdown
+            [items]="partyRoleItems"
+            [placeholder]="'Select role'"
+            [(ngModel)]="party.partyrole"
+            [name]="'partyrole_' + pi"
+            (selectionChange)="onPartyRoleChange(pi, $event)"
+            [dropdownTriggerClass]="partyErrors[pi]['partyrole'] ? 'border-red-400' : ''">
+          </app-serchable-dropdown>
+          <p *ngIf="partyErrors[pi]['partyrole']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['partyrole'] }}</p>
+        </div>
+
+        <!-- Party Status -->
+        <div>
+          <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Party Status <span class="text-red-500">*</span></label>
+          <app-serchable-dropdown
+            [items]="partyStatusItems"
+            [placeholder]="'Select status'"
+            [(ngModel)]="party.partystatus"
+            [name]="'partystatus_' + pi"
+            (selectionChange)="onPartyStatusChange(pi, $event)"
+            [dropdownTriggerClass]="partyErrors[pi]['partystatus'] ? 'border-red-400' : ''">
+          </app-serchable-dropdown>
+          <p *ngIf="partyErrors[pi]['partystatus']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['partystatus'] }}</p>
+        </div>
+
+        <!-- Party Type -->
+        <div>
+          <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Party Type <span class="text-red-500">*</span></label>
+          <app-serchable-dropdown
+            [items]="partyTypeItems"
+            [placeholder]="'Select type'"
+            [(ngModel)]="party.partytype"
+            [name]="'partytype_' + pi"
+            (selectionChange)="onPartyTypeChange(pi, $event)"
+            [dropdownTriggerClass]="partyErrors[pi]['partytype'] ? 'border-red-400' : ''">
+          </app-serchable-dropdown>
+          <p *ngIf="partyErrors[pi]['partytype']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['partytype'] }}</p>
+        </div>
+
+      </div>
+
+      <!-- ── Individual Fields ──────────────────────────────────── -->
+      <div *ngIf="party.partytype === 'Individual'">
+        <div class="border-t border-gray-100 dark:border-[#2e2e30] pt-5">
+          <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4">Individual Details</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+
+            <!-- NIC -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">NIC <span class="text-red-500">*</span></label>
+              <input type="text" [(ngModel)]="party.nic" [name]="'nic_' + pi"
+                placeholder="e.g. 123456789V or 200012345678"
+                class="w-full h-11 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition"
+                [ngClass]="partyErrors[pi]['nic'] ? 'border-red-400' : 'border-[#828282]'" />
+              <p *ngIf="partyErrors[pi]['nic']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['nic'] }}</p>
+            </div>
+
+            <!-- Name -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Full Name <span class="text-red-500">*</span></label>
+              <input type="text" [(ngModel)]="party.name" [name]="'name_' + pi"
+                placeholder="Enter full name"
+                class="w-full h-11 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition"
+                [ngClass]="partyErrors[pi]['name'] ? 'border-red-400' : 'border-[#828282]'" />
+              <p *ngIf="partyErrors[pi]['name']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['name'] }}</p>
+            </div>
+
+            <!-- Phone -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Phone <span class="text-red-500">*</span></label>
+              <input type="text" [(ngModel)]="party.phone" [name]="'phone_' + pi"
+                placeholder="Enter phone number"
+                class="w-full h-11 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition"
+                [ngClass]="partyErrors[pi]['phone'] ? 'border-red-400' : 'border-[#828282]'" />
+              <p *ngIf="partyErrors[pi]['phone']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['phone'] }}</p>
+            </div>
+
+            <!-- Province -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Province <span class="text-red-500">*</span></label>
+              <app-serchable-dropdown
+                [items]="provinceItems"
+                [placeholder]="'Select province'"
+                [(ngModel)]="party.province"
+                [name]="'province_' + pi"
+                (selectionChange)="onPartyProvinceChange(pi, $event)"
+                [dropdownTriggerClass]="partyErrors[pi]['province'] ? 'border-red-400' : ''">
+              </app-serchable-dropdown>
+              <p *ngIf="partyErrors[pi]['province']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['province'] }}</p>
+            </div>
+
+            <!-- District -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">District <span class="text-red-500">*</span></label>
+              <app-serchable-dropdown
+                [items]="districtItems"
+                [placeholder]="'Select district'"
+                [(ngModel)]="party.district"
+                [name]="'district_' + pi"
+                (selectionChange)="onPartyDistrictChange(pi, $event)"
+                [dropdownTriggerClass]="partyErrors[pi]['district'] ? 'border-red-400' : ''">
+              </app-serchable-dropdown>
+              <p *ngIf="partyErrors[pi]['district']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['district'] }}</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Organization Fields ───────────────────────────────── -->
+      <div *ngIf="party.partytype === 'Organization'">
+        <div class="border-t border-gray-100 dark:border-[#2e2e30] pt-5">
+          <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4">Organization Details</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 mb-6">
+
+            <!-- Org Name -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Organization Name <span class="text-red-500">*</span></label>
+              <input type="text" [(ngModel)]="party.organization.organizationname" [name]="'orgname_' + pi"
+                placeholder="Enter organization name"
+                class="w-full h-11 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition"
+                [ngClass]="partyErrors[pi]['orgname'] ? 'border-red-400' : 'border-[#828282]'" />
+              <p *ngIf="partyErrors[pi]['orgname']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['orgname'] }}</p>
+            </div>
+
+            <!-- Reg No -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Registration Number <span class="text-red-500">*</span></label>
+              <input type="text" [(ngModel)]="party.organization.regno" [name]="'regno_' + pi"
+                placeholder="Enter registration number"
+                class="w-full h-11 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition"
+                [ngClass]="partyErrors[pi]['regno'] ? 'border-red-400' : 'border-[#828282]'" />
+              <p *ngIf="partyErrors[pi]['regno']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['regno'] }}</p>
+            </div>
+
+            <!-- Org Email -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Email <span class="text-red-500">*</span></label>
+              <input type="email" [(ngModel)]="party.organization.organizationemail" [name]="'orgemail_' + pi"
+                placeholder="organization@email.com"
+                class="w-full h-11 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition"
+                [ngClass]="partyErrors[pi]['orgemail'] ? 'border-red-400' : 'border-[#828282]'" />
+              <p *ngIf="partyErrors[pi]['orgemail']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['orgemail'] }}</p>
+            </div>
+
+            <!-- Org Phone -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Phone <span class="text-red-500">*</span></label>
+              <input type="text" [(ngModel)]="party.organization.organizationphone" [name]="'orgphone_' + pi"
+                placeholder="Enter phone number"
+                class="w-full h-11 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition"
+                [ngClass]="partyErrors[pi]['orgphone'] ? 'border-red-400' : 'border-[#828282]'" />
+              <p *ngIf="partyErrors[pi]['orgphone']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['orgphone'] }}</p>
+            </div>
+
+            <!-- Org Address -->
+            <div class="md:col-span-2">
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Address <span class="text-red-500">*</span></label>
+              <input type="text" [(ngModel)]="party.organization.organizationaddress" [name]="'orgaddress_' + pi"
+                placeholder="Enter address"
+                class="w-full h-11 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition"
+                [ngClass]="partyErrors[pi]['orgaddress'] ? 'border-red-400' : 'border-[#828282]'" />
+              <p *ngIf="partyErrors[pi]['orgaddress']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['orgaddress'] }}</p>
+            </div>
+
+            <!-- Org City -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">City <span class="text-red-500">*</span></label>
+              <input type="text" [(ngModel)]="party.organization.organizationcity" [name]="'orgcity_' + pi"
+                placeholder="Enter city"
+                class="w-full h-11 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 transition"
+                [ngClass]="partyErrors[pi]['orgcity'] ? 'border-red-400' : 'border-[#828282]'" />
+              <p *ngIf="partyErrors[pi]['orgcity']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['orgcity'] }}</p>
+            </div>
+
+            <!-- Org Province -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Province <span class="text-red-500">*</span></label>
+              <app-serchable-dropdown
+                [items]="provinceItems"
+                [placeholder]="'Select province'"
+                [(ngModel)]="party.organization.organizationprovince"
+                [name]="'orgprovince_' + pi"
+                (selectionChange)="onOrgProvinceChange(pi, $event)"
+                [dropdownTriggerClass]="partyErrors[pi]['orgprovince'] ? 'border-red-400' : ''">
+              </app-serchable-dropdown>
+              <p *ngIf="partyErrors[pi]['orgprovince']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['orgprovince'] }}</p>
+            </div>
+
+            <!-- Org District -->
+            <div>
+              <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">District <span class="text-red-500">*</span></label>
+              <app-serchable-dropdown
+                [items]="districtItems"
+                [placeholder]="'Select district'"
+                [(ngModel)]="party.organization.organizationdistrict"
+                [name]="'orgdistrict_' + pi"
+                (selectionChange)="onOrgDistrictChange(pi, $event)"
+                [dropdownTriggerClass]="partyErrors[pi]['orgdistrict'] ? 'border-red-400' : ''">
+              </app-serchable-dropdown>
+              <p *ngIf="partyErrors[pi]['orgdistrict']" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['orgdistrict'] }}</p>
+            </div>
+
+          </div>
+
+          <!-- ── Organization Users ──────────────────────────── -->
+          <div class="border-t border-gray-100 dark:border-[#2e2e30] pt-5">
+            <div class="flex items-center justify-between mb-4">
+              <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Organization Users</p>
+              <button type="button"
+                class="flex items-center gap-1 text-sm text-[#415CFF] hover:text-blue-700 font-medium transition"
+                (click)="addOrgUser(pi)">
+                <i class="fa-solid fa-plus text-xs"></i> Add User
+              </button>
+            </div>
+
+            <div *ngFor="let user of party.organization.organizationusers; let ui = index; trackBy: trackByIndex"
+              class="bg-gray-50 dark:bg-[#252527] rounded-xl border border-gray-200 dark:border-[#3a3a3c] p-4 mb-3">
+
+              <div class="flex items-center justify-between mb-3">
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">User {{ ui + 1 }}</p>
+                <button type="button"
+                  *ngIf="party.organization.organizationusers.length > 1"
+                  class="text-red-400 hover:text-red-600 text-xs transition"
+                  (click)="removeOrgUser(pi, ui)">
+                  <i class="fa-solid fa-trash-can mr-1"></i>Remove
+                </button>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+
+                <!-- User Name -->
+                <div>
+                  <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Full Name <span class="text-red-500">*</span></label>
+                  <input type="text" [(ngModel)]="user.name" [name]="'uname_' + pi + '_' + ui"
+                    placeholder="Enter full name"
+                    class="w-full h-10 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 text-sm transition"
+                    [ngClass]="partyErrors[pi]['uname_' + ui] ? 'border-red-400' : 'border-[#828282]'" />
+                  <p *ngIf="partyErrors[pi]['uname_' + ui]" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['uname_' + ui] }}</p>
+                </div>
+
+                <!-- User NIC -->
+                <div>
+                  <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">NIC <span class="text-red-500">*</span></label>
+                  <input type="text" [(ngModel)]="user.nic" [name]="'unic_' + pi + '_' + ui"
+                    placeholder="e.g. 123456789V"
+                    class="w-full h-10 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 text-sm transition"
+                    [ngClass]="partyErrors[pi]['unic_' + ui] ? 'border-red-400' : 'border-[#828282]'" />
+                  <p *ngIf="partyErrors[pi]['unic_' + ui]" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['unic_' + ui] }}</p>
+                </div>
+
+                <!-- User Phone -->
+                <div>
+                  <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Phone <span class="text-red-500">*</span></label>
+                  <input type="text" [(ngModel)]="user.phone" [name]="'uphone_' + pi + '_' + ui"
+                    placeholder="Enter phone number"
+                    class="w-full h-10 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 text-sm transition"
+                    [ngClass]="partyErrors[pi]['uphone_' + ui] ? 'border-red-400' : 'border-[#828282]'" />
+                  <p *ngIf="partyErrors[pi]['uphone_' + ui]" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['uphone_' + ui] }}</p>
+                </div>
+
+                <!-- User Email -->
+                <div>
+                  <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Email <span class="text-red-500">*</span></label>
+                  <input type="email" [(ngModel)]="user.email" [name]="'uemail_' + pi + '_' + ui"
+                    placeholder="user@email.com"
+                    class="w-full h-10 px-3 border-[1.8px] rounded-xl bg-white dark:bg-[#292929] dark:text-white outline-none focus:ring-2 focus:ring-blue-500 text-sm transition"
+                    [ngClass]="partyErrors[pi]['uemail_' + ui] ? 'border-red-400' : 'border-[#828282]'" />
+                  <p *ngIf="partyErrors[pi]['uemail_' + ui]" class="text-red-500 text-xs mt-1">{{ partyErrors[pi]['uemail_' + ui] }}</p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <!-- end org users -->
+
+        </div>
+      </div>
+      <!-- end organization fields -->
+
+    </div>
+    <!-- end party card -->
+
+    <!-- ── Action Buttons ────────────────────────────────────────── -->
+    <div class="flex items-center justify-end gap-4 mt-6">
+      <button type="button"
+        class="px-6 py-2.5 rounded-xl border-2 border-gray-300 dark:border-[#828282] text-gray-600 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-[#2a2a2c] transition"
+        (click)="goBack()">
+        Cancel
+      </button>
+      <button type="submit"
+        class="px-8 py-2.5 rounded-xl bg-[#415CFF] hover:bg-blue-700 text-white font-semibold transition shadow-md">
+        Create Case
+      </button>
+    </div>
+
+  </form>
+</div>

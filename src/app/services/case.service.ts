@@ -115,10 +115,16 @@ export class CaseService {
       Authorization: `Bearer ${this.token}`
     });
 
-    console.log('token', this.token)
-
     let url = `${this.apiUrl}/get-organization-party-details/${partyId}`;
 
     return this.http.get(url, { headers });
+  }
+
+  createCase(payload: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    return this.http.post(`${this.apiUrl}/create-case`, payload, { headers });
   }
 }
