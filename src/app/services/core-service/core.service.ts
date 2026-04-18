@@ -79,5 +79,45 @@ export class CoreService {
     return this.http.get(url, { headers });
   }
 
+  createRegistrar(fromData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    console.log('token', this.token)
+
+    let url = `${this.apiUrl}/create-registrar`;
+
+    return this.http.post(url, fromData, { headers });
+  }
+
+  getRegistrarOfficers(page: number = 1, limit: number = 10, search: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    console.log('token', this.token)
+
+    let url = `${this.apiUrl}/get-all-registrar-officer-details?page=${page}&limit=${limit}`;
+
+    if (search) {
+      url += `&searchText=${search}`;
+    }
+
+    return this.http.get(url, { headers });
+  }
+
+
+  createClerk(fromData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    console.log('token', this.token)
+
+    let url = `${this.apiUrl}/create-clerk`;
+
+    return this.http.post(url, fromData, { headers });
+  }
 
 }

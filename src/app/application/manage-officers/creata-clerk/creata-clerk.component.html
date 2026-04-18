@@ -34,21 +34,7 @@
                     <p class="font-semibold text-[#424242] dark:text-white text-sm uppercase tracking-wide">Court Assignment</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Court <span class="text-red-500">*</span></label>
-                        <app-serchable-dropdown
-                            [items]="courtItems"
-                            [placeholder]="'Select Court'"
-                            [searchPlaceholder]="'Search court...'"
-                            [clearable]="true"
-                            [showSelected]="true"
-                            [(ngModel)]="formData.courtid"
-                            name="courtid"
-                            #courtid="ngModel"
-                            required>
-                        </app-serchable-dropdown>
-                        <p *ngIf="courtid.invalid && (courtid.touched || submitted)" class="text-red-500 text-xs mt-0.5">Court is required.</p>
-                    </div>
+                    
                     <div class="flex flex-col gap-1">
                         <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Officer Role <span class="text-red-500">*</span></label>
                         <app-serchable-dropdown

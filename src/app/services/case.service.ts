@@ -109,4 +109,16 @@ export class CaseService {
 
     return this.http.get(url, { headers });
   }
+
+  getOrganizationPartyUserDetails(partyId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    console.log('token', this.token)
+
+    let url = `${this.apiUrl}/get-organization-party-details/${partyId}`;
+
+    return this.http.get(url, { headers });
+  }
 }

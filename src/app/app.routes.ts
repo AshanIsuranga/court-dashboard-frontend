@@ -11,6 +11,8 @@ import { CreateACourtComponent } from './application/courts/create-a-court/creat
 import { CourtDashboardComponent } from './application/courts/court-dashboard/court-dashboard.component';
 import { CourtOfficersComponent } from './application/courts/court-officers/court-officers.component';
 import { CreateRegistarComponent } from './application/courts/create-registar/create-registar.component';
+import { ViewOfficersComponent } from './application/manage-officers/view-officers/view-officers.component';
+import { CreataClerkComponent } from './application/manage-officers/creata-clerk/creata-clerk.component';
 
 export const routes: Routes = [
     {
@@ -112,6 +114,22 @@ export const routes: Routes = [
                     component: CreateRegistarComponent
                   }
                   
+                ]
+            },
+
+             {
+                path: 'manage-officers',
+                children: [
+
+                  {
+                        path: '',
+                        component: ViewOfficersComponent
+                  },
+
+                  {
+                        path: 'create-clerk',
+                        component: CreataClerkComponent
+                  },
                 ]
             },
             

@@ -18,6 +18,8 @@ import Swal from 'sweetalert2';
 })
 export class ViewClientCaseConnectionsComponent implements OnInit {
   connectionsArr!: Connection[];
+  individualConnections: Connection[] = [];
+  organizationConnections: Connection[] = [];
   selectedConnection: Connection = new Connection();
   searchText: string = '';
   page: number = 1;
@@ -48,18 +50,35 @@ export class ViewClientCaseConnectionsComponent implements OnInit {
   }
 
 
-  fetchPendingConnectionDetails(page: number = this.page, limit: number = this.itemsPerPage, searchText: string = this.searchText) {
-      this.isLoading = true;
-      this.casesSrv.getPendingConnectionDetails(page, limit, searchText).subscribe(
-          (res) => {
-              this.connectionsArr = res.items;
-              console.log('connectionsArr', this.connectionsArr)
-              this.totalItems = res.total;
-              this.hasData = res.items.length > 0 ? true : false;
-              this.isLoading = false;
-          }
+fetchPendingConnectionDetails(
+  page: number = this.page,
+  limit: number = this.itemsPerPage,
+  searchText: string = this.searchText
+) {
+  this.isLoading = true;
+
+  this.casesSrv.getPendingConnectionDetails(page, limit, searchText).subscribe(
+    (res) => {
+      this.connectionsArr = res.items;
+
+      // Split into two arrays
+      this.individualConnections = res.items.filter(
+        (item: any) => item.partytype === 'Individual'
       );
-  }
+
+      this.organizationConnections = res.items.filter(
+        (item: any) => item.partytype === 'Organization'
+      );
+
+      console.log('individualConnections', this.individualConnections);
+      console.log('organizationConnections', this.organizationConnections);
+
+      this.totalItems = res.total;
+      this.hasData = res.items.length > 0;
+      this.isLoading = false;
+    }
+  );
+}
 
   onPageChange(page: number) {
       this.currentPage = page;
@@ -89,6 +108,10 @@ export class ViewClientCaseConnectionsComponent implements OnInit {
 
   closecreateConnectionPopup() {
     this.isCreateConnectionPopUpOpen = false;
+  }
+
+    rejectConnection() {
+      this.isLoading = true;
   }
 
   createConnection() {
@@ -244,5 +267,9 @@ class Connection {
   organizationname!: string;
   organizationusernic!: string;
   organizationusername!: string;
+  userfullname!: string;
+  usernic!: string;
+  userphonenumber!: string;
+  userphonecode!: string;
 
 }

@@ -21,6 +21,7 @@ export class ViewSelectedCaseComponent {
   caseDetail: CaseData = new CaseData();
   parties: Party[] = [];
   selectedParty: Party = new Party();
+  organizationUsers: OrganizationUser[] = [];
 
   isLoading: boolean = true;
 
@@ -31,6 +32,7 @@ export class ViewSelectedCaseComponent {
   openIndexes = new Set<number>();
   isViewPartyPopUpOpen: boolean = false;
   isViewLawyerPopUpOpen: boolean = false;
+  isViewOrganizationPartyPopUpOpen: boolean = false;
 
 toggleParty(i: number) {
   if (this.openIndexes.has(i)) {
@@ -100,6 +102,27 @@ fetchAllCaseDetails(caseId: number) {
     this.selectedParty = seletedParty
     this.isViewPartyPopUpOpen = true;
   }
+
+  openViewOrganizationPartyPopUp(seletedParty: Party) {
+    this.selectedParty = seletedParty
+    this.isViewOrganizationPartyPopUpOpen = true;
+    this.fetchAllOrganizationPartyUsersDetails(this.selectedParty.partyid)
+  }
+
+  fetchAllOrganizationPartyUsersDetails(partyId: number) {
+  this.isLoading = true;
+  this.casesSrv.getOrganizationPartyUserDetails(partyId).subscribe(
+      (res) => {
+          this.organizationUsers = res.data;
+          console.log('caseObj', this.caseDetail)
+          this.isLoading = false;
+      }
+  );
+}
+
+closeOrganizationPartyPopup() {
+  this.isViewOrganizationPartyPopUpOpen = false;
+}
 
   closePartyPopup() {
     this.isViewPartyPopUpOpen = false;
@@ -185,4 +208,14 @@ class Party {
   lawyerdistrict!: string;
   lawyerprovince!: string;
   specialities!: string;
+}
+
+class OrganizationUser {
+  id!: number;
+  organizationuserid!: number;
+  linkeduserid!: number;
+  organizationusernic!: string;
+  organizationusername!: string;
+  district!: string;
+  province!: string;
 }

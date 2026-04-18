@@ -14,7 +14,6 @@ interface DropdownItem {
 }
 
 interface RegistrarForm {
-  courtid: number | null;
   firstname: string;
   lastname: string;
   officerrole: string | null;
@@ -29,17 +28,18 @@ interface RegistrarForm {
   city: string;
   district: string | null;
   province: string | null;
-  country: string;
+  country: string
+
 }
 
 @Component({
-  selector: 'app-create-registar',
+  selector: 'app-creata-clerk',
   standalone: true,
   imports: [CommonModule, FormsModule, LoadingSpinnerComponent, SerchableDropdownComponent],
-  templateUrl: './create-registar.component.html',
-  styleUrl: './create-registar.component.css'
+  templateUrl: './creata-clerk.component.html',
+  styleUrl: './creata-clerk.component.css'
 })
-export class CreateRegistarComponent implements OnInit {
+export class CreataClerkComponent implements OnInit {
   isLoading = false;
   isSaving = false;
   submitted = false;
@@ -47,7 +47,6 @@ export class CreateRegistarComponent implements OnInit {
   itemsArr!: Court[];
 
   formData: RegistrarForm = {
-    courtid: null,
     firstname: '',
     lastname: '',
     officerrole: null,
@@ -65,10 +64,9 @@ export class CreateRegistarComponent implements OnInit {
     country: 'Sri Lanka',
   };
 
-  courtItems: DropdownItem[] = [];
 
   roleItems: DropdownItem[] = [
-    { value: 'Registrar', label: 'Registrar' },
+    { value: 'Clerk', label: 'Clerk' },
   ];
 
   provinceItems: DropdownItem[] = [
@@ -118,29 +116,7 @@ export class CreateRegistarComponent implements OnInit {
     private location: Location
   ) { }
 
-  ngOnInit(): void {
-    this.courtId = this.route.snapshot.params['id'];
-    if (this.courtId) {
-      this.formData.courtid = this.courtId;
-    }
-
-    this.fetchAllCourts();
-  }
-
-  fetchAllCourts() {
-      this.isLoading = true;
-      this.coreSrv.getAllCourts().subscribe(
-          (res) => {
-              this.itemsArr = res.data;
-              this.courtItems = this.itemsArr.map((court: Court) => ({
-                label: court.courtnameenglish,
-                value: court.courtid
-              }));
-
-              console.log('courtItems', this.courtItems)
-              this.isLoading = false;
-          }
-      );
+  ngOnInit(): void {    
   }
 
 
@@ -158,21 +134,21 @@ export class CreateRegistarComponent implements OnInit {
   createRegistrar(formData: RegistrarForm) {
   this.isLoading = true;
 
-  this.coreSrv.createRegistrar(formData).subscribe({
+  this.coreSrv.createClerk(formData).subscribe({
     next: (res) => {
       this.isLoading = false;
 
       if (res?.status) {
         Swal.fire({
           icon: 'success',
-          title: 'Registrar Created',
+          title: 'Clerk Created Successfully',
           confirmButtonText: 'OK'
         });
         this.location.back();
       } else {
         Swal.fire({
           icon: 'warning',
-          title: 'Failed',
+          title: 'Clerk Creation Failed',
           text: res.message || 'Something went wrong'
         });
       }
@@ -194,7 +170,6 @@ export class CreateRegistarComponent implements OnInit {
   onReset(): void {
     this.submitted = false;
     this.formData = {
-      courtid: this.courtId || null,
       firstname: '',
       lastname: '',
       officerrole: null,
@@ -214,7 +189,7 @@ export class CreateRegistarComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.location.back();
   }
 }
 
