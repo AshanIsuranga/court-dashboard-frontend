@@ -1,5 +1,5 @@
 // view-centers.component.ts
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -56,8 +56,9 @@ export class CreateScheduleComponent implements OnInit {
   constructor(
     private router: Router,
     private scheduleSrv: SchedleService,
-    private route: ActivatedRoute
-) { }
+    private route: ActivatedRoute,
+    private location: Location
+  ) { }
 
  
   form: HearingForm = {
@@ -198,8 +199,7 @@ export class CreateScheduleComponent implements OnInit {
   }
  
   onCancel(): void {
-    // TODO: navigate back, e.g. this.router.navigate(['/cases', this.caseId])
-    console.log('Cancelled');
+    this.location.back();
   }
 }
 

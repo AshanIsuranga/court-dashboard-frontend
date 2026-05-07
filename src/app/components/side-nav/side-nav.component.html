@@ -1,52 +1,90 @@
 <div
-  class="flex flex-col h-full bg-white border-r dark:border-[#1D1D1F] transition-all dark:bg-[#1D1D1F]"
+  class="flex flex-col h-full transition-all duration-300"
+  [ngClass]="isCollapsed ? 'w-[72px]' : 'w-[240px]'"
+  style="background: linear-gradient(180deg, #0F2547 0%, #1A3A6B 60%, #0F2547 100%); border-right: 2px solid #C9A84C;"
 >
-  <!-- Header -->
+  <!-- Logo / Court Name -->
   <div
-  class="flex items-center gap-3 p-5 cursor-pointer mx-2"
-  (click)="toggleSidebar()"
->
-<i class="fa-solid fa-house text-xl"></i>
-  <span
-    [ngClass]="isCollapsed ? 'hidden' : 'block'"
-    class="text-xl font-bold text-gray-800 dark:text-white whitespace-nowrap"
+    class="flex items-center gap-3 px-4 py-5 cursor-pointer border-b"
+    style="border-bottom: 1px solid rgba(201,168,76,0.35);"
+    (click)="toggleSidebar()"
   >
-    <p>Magistrate Court</p>
-    <p>Colombo Branch</p>
-  </span>
-</div>
+    <div
+      class="flex items-center justify-center rounded-full flex-shrink-0"
+      style="width:40px; height:40px; background: rgba(201,168,76,0.15); border: 1.5px solid #C9A84C;"
+    >
+      <i class="fa-solid fa-scale-balanced text-lg" style="color:#C9A84C;"></i>
+    </div>
+    <div [ngClass]="isCollapsed ? 'hidden' : 'block'" class="leading-tight">
+      <p class="text-xs font-semibold tracking-widest uppercase" style="color:#C9A84C; letter-spacing:0.12em;">Magistrate Court</p>
+      <p class="text-sm font-bold text-white whitespace-nowrap">Colombo Branch</p>
+    </div>
+  </div>
+
+  <!-- Menu Label -->
+  <div
+    [ngClass]="isCollapsed ? 'hidden' : 'block'"
+    class="px-5 pt-5 pb-1"
+  >
+    <span class="text-[10px] font-semibold tracking-widest uppercase" style="color: rgba(201,168,76,0.6);">Navigation</span>
+  </div>
 
   <!-- Dynamic Menu -->
-  <div class="flex-1 overflow-y-auto scrollbar-none dark:bg-[#1D1D1F]">
-    <ul class="space-y-1  pb-4 pt-2">
+  <div class="flex-1 overflow-y-auto scrollbar-none py-2 px-2">
+    <ul class="space-y-1">
       <ng-container *ngFor="let item of menuItems">
         <li
-          class="flex flex-row items-center gap-4 p-3 rounded-lg cursor-pointer hover:bg-[#EDF5FC] group"
-          [ngClass]="{ 'bg-[#EDF5FC]': isTabSelected(item.key) }"
+          class="flex flex-row items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 group relative"
+          [ngClass]="isTabSelected(item.key)
+            ? 'bg-[rgba(201,168,76,0.18)] border-l-[3px] border-[#C9A84C]'
+            : 'border-l-[3px] border-transparent hover:bg-[rgba(255,255,255,0.07)]'"
           (click)="navigate(item.path, item.key)"
         >
           <i
-            [class]="item.icon + ' text-xl px-2'"
+            [class]="item.icon + ' text-base w-5 text-center flex-shrink-0'"
             [ngClass]="{
-              'text-[#415CFF]': isTabSelected(item.key),
-              'text-[#6B6B6B] dark:text-white': !isTabSelected(item.key),
-              'group-hover:text-[#415CFF] dark:group-hover:text-[#272F45]': true
+              'text-[#C9A84C]': isTabSelected(item.key),
+              'text-[rgba(255,255,255,0.65)] group-hover:text-white': !isTabSelected(item.key)
             }"
           ></i>
           <span
             [ngClass]="{
-              hidden: isCollapsed,
-              'text-[#415CFF]': isTabSelected(item.key),
-              'text-[#6B6B6B] dark:text-white': !isTabSelected(item.key),
-              'group-hover:text-[#415CFF] dark:group-hover:text-[#272F45]': true
+              'hidden': isCollapsed,
+              'text-[#C9A84C] font-semibold': isTabSelected(item.key),
+              'text-[rgba(255,255,255,0.75)] group-hover:text-white': !isTabSelected(item.key)
             }"
-            class="text-[16px] font-normal"
+            class="text-[14px] whitespace-nowrap"
           >
             {{ item.label }}
           </span>
+
+          <!-- Tooltip when collapsed -->
+          <div
+            *ngIf="isCollapsed"
+            class="absolute left-14 z-50 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity"
+            style="background:#1A3A6B; color:#fff; border:1px solid rgba(201,168,76,0.4); box-shadow: 0 4px 12px rgba(0,0,0,0.4);"
+          >
+            {{ item.label }}
+          </div>
         </li>
       </ng-container>
     </ul>
   </div>
 
+  <!-- Footer -->
+  <div
+    class="px-4 py-4 border-t"
+    style="border-top: 1px solid rgba(201,168,76,0.2);"
+  >
+    <p
+      [ngClass]="isCollapsed ? 'hidden' : 'block'"
+      class="text-[10px] text-center tracking-wide"
+      style="color: rgba(255,255,255,0.3);"
+    >
+      Judicial Management System
+    </p>
+    <div *ngIf="isCollapsed" class="flex justify-center">
+      <i class="fa-solid fa-scale-balanced text-sm" style="color: rgba(201,168,76,0.35);"></i>
+    </div>
+  </div>
 </div>

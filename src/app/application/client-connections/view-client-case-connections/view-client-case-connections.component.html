@@ -1,367 +1,364 @@
 <app-loading-spinner *ngIf="isLoading" />
 
-<div *ngIf="!isLoading">
-    <div class="flex gap-0 cursor-pointer">
-        <p class="font-semibold text[#424242] mb-4 mr-5 ml-0 dark:text-[#FFFFFF] dark:bg-blacks">Pending Connections</p>
-    </div>
+<div *ngIf="!isLoading" class="space-y-5">
 
-    <!-- Scrollable filter section only -->
-    <div class="w-full px-10 py-7 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg overflow-x-auto">
-        <div class="flex flex-row items-center justify-between min-w-max max-w-[80vw] mx-auto">
-            <div class="flex flex-col justify-between flex-shrink-0">
-                <p class="font-semibold md:text-lg lg:text-lg mb-1 dark:text-white whitespace-nowrap">Total Connections
-                    {{ (connectionsArr.length < 10 ? '0' + connectionsArr.length : connectionsArr.length) || 0 }}</p>
-            </div>
-            <div class="flex flex-row items-center gap-8 flex-shrink-0">
-                <i class="fa-solid fa-list md:text-2xl lg:text-lg dark:text-white flex-shrink-0 ml-8"></i>
-                <p class="md:text-2xl lg:text-lg dark:text-white whitespace-nowrap flex-shrink-0">Filter By</p>
-
-                <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929] flex-shrink-0">
-                    <input type="text" placeholder="Search by NIC / Party Name.." [(ngModel)]="searchText"
-                        class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-                        (keydown.enter)="onSearch()" (keydown.esc)="offSearch()" />
-                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-                        (click)="onSearch()">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-                        </svg>
-                    </button>
-                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
-                        (click)="offSearch()">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-<h2 class="px-4 mt-6 text-lg font-semibold dark:text-white">Individual Connections</h2>
-
-<div *ngIf="individualConnections.length > 0"
-     class="min-w-max mt-5 mr-5 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]">
-
-  <table class="w-full min-w-max divide-y-2">
-    <thead class="text-gray-700 dark:text-gray-300 dark:bg-[#0F0F0F] dark:border-[#202021] cursor-default">
-      <tr>
-        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">No</th>
-        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">Case Number</th>
-        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">Case Type</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Case Status</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Created Date</th>
-        <th class="px-4 py-3 text-center font-normal">Connection Status</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party Role</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party Status</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party Type</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party NIC</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party Name</th>
-      </tr>
-    </thead>
-
-    <tbody class="bg-white dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
-      <tr class="dark:text-gray-300"
-          *ngFor="let item of individualConnections; let i = index">
-
-        <td class="px-6 py-3 font-medium text-left">
-          {{ ('0' + ((currentPage - 1) * itemsPerPage + i + 1)).slice(-2) }}
-        </td>
-
-        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">{{ item.casenumber }}</td>
-        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">{{ item.casetype }}</td>
-
-        <!-- Case Status -->
-        <td class="px-4 py-3 text-center whitespace-nowrap">
-          <span class="px-3 py-1 rounded-xl min-w-44 font-semibold"
-                [ngClass]="{
-                  'bg-blue-100 text-blue-800': item.casestatus === 'CREATED',
-                  'bg-purple-100 text-purple-800': item.casestatus === 'HEARING_SCHEDULED',
-                  'bg-yellow-100 text-yellow-800': item.casestatus === 'IN_PROGRESS',
-                  'bg-orange-100 text-orange-800': item.casestatus === 'STAYED',
-                  'bg-green-100 text-green-800': item.casestatus === 'CLOSED'
-                }">
-            {{ item.casestatus }}
-          </span>
-        </td>
-
-        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">
-          {{ item.createdat | date : 'yyyy/MM/dd' }}
-        </td>
-
-        <td (click)="opencreateConnectionPopUp(item)"
-            class="px-4 py-3 text-center whitespace-nowrap">
-          <span class="bg-red-100 text-red-800 px-3 py-1 rounded-xl min-w-44 font-semibold cursor-pointer">
-            Required
-          </span>
-        </td>
-
-        <!-- Party Role -->
-        <td class="px-4 py-3 text-center whitespace-nowrap">
-          <span class="px-3 py-1 rounded-xl min-w-44 font-semibold"
-                [ngClass]="{
-                  'bg-blue-100 text-blue-800': item.partyrole === 'PLAINTIFF',
-                  'bg-red-100 text-red-800': item.partyrole === 'DEFENDENT',
-                  'bg-purple-100 text-purple-800': item.partyrole === 'COMPLAINANT',
-                  'bg-orange-100 text-orange-800': item.partyrole === 'ACCUSED',
-                  'bg-gray-100 text-gray-800': item.partyrole === 'STATE',
-                  'bg-indigo-100 text-indigo-800': item.partyrole === 'GUARDIAN',
-                  'bg-yellow-100 text-yellow-800': item.partyrole === 'OTHER',
-                  'bg-green-100 text-green-800': item.partyrole === 'WITNESS',
-                  'bg-pink-100 text-pink-800': item.partyrole === 'PETITIONER',
-                  'bg-teal-100 text-teal-800': item.partyrole === 'RESPONDENT'
-                }">
-            {{ item.partyrole | titlecase }}
-          </span>
-        </td>
-
-        <!-- Party Status -->
-        <td class="px-4 py-3 text-center whitespace-nowrap">
-          <span class="px-3 py-1 rounded-xl min-w-32 font-semibold"
-                [ngClass]="{
-                  'bg-green-100 text-green-800': item.partystatus === 'ACTIVE',
-                  'bg-yellow-100 text-yellow-800': item.partystatus === 'NOT_APPEARED',
-                  'bg-red-100 text-red-800': item.partystatus === 'DEFAULTED',
-                  'bg-orange-100 text-orange-800': item.partystatus === 'ACCUSED',
-                  'bg-gray-100 text-gray-800': item.partystatus === 'WITHDRAWN',
-                  'bg-blue-100 text-blue-800': item.partystatus === 'DISCHARGED',
-                  'bg-purple-100 text-purple-800': item.partystatus === 'CONCLUDED'
-                }">
-            {{ item.partystatus | titlecase }}
-          </span>
-        </td>
-
-        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">{{ item.partytype }}</td>
-        <td class="px-4 py-3 text-center">{{ item.partynic }}</td>
-        <td class="px-4 py-3 text-center">{{ item.partyname }}</td>
-
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<h2 class="px-4 mt-12 text-lg font-semibold dark:text-white">Organization Connections</h2>
-
-<div *ngIf="organizationConnections.length > 0"
-     class="min-w-max mt-5 mr-5 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]">
-
-  
-
-  <table class="w-full min-w-max divide-y-2">
-    <thead class="text-gray-700 dark:text-gray-300 dark:bg-[#0F0F0F] dark:border-[#202021] cursor-default">
-      <tr>
-        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">No</th>
-        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">Case Number</th>
-        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">Case Type</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Case Status</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Created Date</th>
-        <th class="px-4 py-3 text-center font-normal">Connection Status</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party Role</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party Status</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Party Type</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Organization Name</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Organization User NIC</th>
-        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Organization User Name</th>
-      </tr>
-    </thead>
-
-    <tbody class="bg-white dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
-      <tr class="dark:text-gray-300"
-          *ngFor="let item of organizationConnections; let i = index">
-
-        <!-- No -->
-        <td class="px-6 py-3 font-medium text-left">
-          {{ ('0' + ((currentPage - 1) * itemsPerPage + i + 1)).slice(-2) }}
-        </td>
-
-        <!-- Case Number -->
-        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">
-          {{ item.casenumber }}
-        </td>
-
-        <!-- Case Type -->
-        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">
-          {{ item.casetype }}
-        </td>
-
-        <!-- Case Status -->
-        <td class="px-4 py-3 text-center whitespace-nowrap">
-          <span
-            class="px-3 py-1 rounded-xl min-w-44 font-semibold"
-            [ngClass]="{
-              'bg-blue-100 text-blue-800': item.casestatus === 'CREATED',
-              'bg-purple-100 text-purple-800': item.casestatus === 'HEARING_SCHEDULED',
-              'bg-yellow-100 text-yellow-800': item.casestatus === 'IN_PROGRESS',
-              'bg-orange-100 text-orange-800': item.casestatus === 'STAYED',
-              'bg-green-100 text-green-800': item.casestatus === 'CLOSED'
-            }"
-          >
-            {{ item.casestatus }}
-          </span>
-        </td>
-
-        <!-- Created Date -->
-        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">
-          {{ item.createdat | date : 'yyyy/MM/dd' }}
-        </td>
-
-        <!-- Connection Status -->
-        <td (click)="opencreateConnectionPopUp(item)"
-            class="px-4 py-3 text-center whitespace-nowrap">
-          <span class="bg-red-100 text-red-800 px-3 py-1 rounded-xl min-w-44 font-semibold cursor-pointer">
-            Required
-          </span>
-        </td>
-
-        <!-- Party Role -->
-        <td class="px-4 py-3 text-center whitespace-nowrap">
-          <span
-            class="px-3 py-1 rounded-xl min-w-44 font-semibold"
-            [ngClass]="{
-              'bg-blue-100 text-blue-800': item.partyrole === 'PLAINTIFF',
-              'bg-red-100 text-red-800': item.partyrole === 'DEFENDENT',
-              'bg-purple-100 text-purple-800': item.partyrole === 'COMPLAINANT',
-              'bg-orange-100 text-orange-800': item.partyrole === 'ACCUSED',
-              'bg-gray-100 text-gray-800': item.partyrole === 'STATE',
-              'bg-indigo-100 text-indigo-800': item.partyrole === 'GUARDIAN',
-              'bg-yellow-100 text-yellow-800': item.partyrole === 'OTHER',
-              'bg-green-100 text-green-800': item.partyrole === 'WITNESS',
-              'bg-pink-100 text-pink-800': item.partyrole === 'PETITIONER',
-              'bg-teal-100 text-teal-800': item.partyrole === 'RESPONDENT'
-            }"
-          >
-            {{ item.partyrole | titlecase }}
-          </span>
-        </td>
-
-        <!-- Party Status -->
-        <td class="px-4 py-3 text-center whitespace-nowrap">
-          <span
-            class="px-3 py-1 rounded-xl min-w-32 font-semibold"
-            [ngClass]="{
-              'bg-green-100 text-green-800': item.partystatus === 'ACTIVE',
-              'bg-yellow-100 text-yellow-800': item.partystatus === 'NOT_APPEARED',
-              'bg-red-100 text-red-800': item.partystatus === 'DEFAULTED',
-              'bg-orange-100 text-orange-800': item.partystatus === 'ACCUSED',
-              'bg-gray-100 text-gray-800': item.partystatus === 'WITHDRAWN',
-              'bg-blue-100 text-blue-800': item.partystatus === 'DISCHARGED',
-              'bg-purple-100 text-purple-800': item.partystatus === 'CONCLUDED'
-            }"
-          >
-            {{ item.partystatus | titlecase }}
-          </span>
-        </td>
-
-        <!-- Party Type -->
-        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">
-          {{ item.partytype }}
-        </td>
-
-        <!-- Organization Name -->
-        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">
-          {{ item.organizationname }}
-        </td>
-
-        <!-- Organization User NIC -->
-        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">
-          {{ item.organizationusernic }}
-        </td>
-
-        <!-- Organization User Name -->
-        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">
-          {{ item.organizationusername }}
-        </td>
-
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-        <div *ngIf="!hasData"
-            class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6">
-            <p class="text-[#494949] my-6 dark:text-textDark">--No Data Availabale--</p>
-            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
-        </div>
-    </div>
-    
-  <div
-    *ngIf="isCreateConnectionPopUpOpen"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-    (click)="closecreateConnectionPopup()"
-  >
-  
-    <!-- MODAL -->
+  <!-- Breadcrumb Navigation -->
+  <div class="flex items-center gap-2">
     <div
-      class="bg-white dark:bg-gray-900 w-full max-w-md rounded-2xl shadow-xl p-6 relative"
-      (click)="$event.stopPropagation()"
+      class="flex items-center justify-center rounded-full flex-shrink-0"
+      style="width:36px; height:36px; background:#0F2547; border: 1.5px solid #C9A84C;"
     >
-  
-      <!-- HEADER -->
-      <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-      Connection Required
-    </h2>
-
-    <!-- INFO SECTION -->
-    <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-
-      <div>
-        <span class="font-semibold">Mobile App User Full Name:</span>
-        {{ selectedConnection.userfullname }}
-      </div>
-
-      <div>
-        <span class="font-semibold">Mobile App User NIC:</span>
-        {{ selectedConnection.usernic }}
-      </div>
-
-      <div>
-        <span class="font-semibold">Party/Organization user name:</span>
-        {{ selectedConnection.partyname || selectedConnection.organizationusername }}
-      </div>
-
-      <div>
-        <span class="font-semibold">Contact Number:</span>
-        {{ selectedConnection.userphonecode }} {{ selectedConnection.userphonenumber }}
-      </div>
-
-
+      <i class="fa-solid fa-link text-base" style="color:#C9A84C;"></i>
     </div>
+    <span class="text-base font-bold" style="color:#0F2547;">Connections</span>
+  </div>
 
-    <!-- MESSAGE -->
-    <p class="mt-4 text-gray-600 dark:text-gray-400 text-sm">
-      This party already has a mobile app user. You can proceed with creating the connection or reject it.
-    </p>
-      <!-- ACTIONS -->
-      <div class="mt-6 flex justify-end gap-3">
-  
-        <!-- NO / BACK -->
-        <button
-          (click)="closecreateConnectionPopup()"
-          class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 
-                 dark:bg-gray-700 dark:text-white"
-        >
-          No, Go Back
-        </button>
-
-        <!-- <button
-          (click)="rejectConnection()"
-          class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 
-                 dark:bg-gray-700 dark:text-white"
-        >
-          Reject Connection
-        </button> -->
-  
-        <!-- CREATE CONNECTION -->
-        <button
-          (click)="createConnection()"
-          class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
-        >
-          Create Connection
-        </button>
-  
+  <!-- Search & Filter Card -->
+  <div
+    class="rounded-xl px-6 py-5 shadow-md"
+    style="background:#fff; border: 1px solid rgba(201,168,76,0.25); border-left: 4px solid #C9A84C;"
+  >
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <p class="text-lg font-bold" style="color:#0F2547;">Pending Connections</p>
+        <span
+          class="px-3 py-0.5 rounded-full text-base font-bold"
+          style="background: rgba(15,37,71,0.08); color:#0F2547;"
+        >{{ (connectionsArr.length).toString().padStart(2, '0') }}</span>
       </div>
-  
+
+      <div
+        class="flex items-center rounded-lg px-4 py-2.5 gap-2 w-80"
+        style="background:#F4F6FA; border: 1px solid rgba(15,37,71,0.18);"
+      >
+        <i class="fa-solid fa-magnifying-glass" style="color:#9CA3AF;"></i>
+        <input
+          type="text"
+          placeholder="Search by NIC / Party Name..."
+          [(ngModel)]="searchText"
+          class="bg-transparent outline-none w-full text-base"
+          style="color:#0F2547;"
+          (keydown.enter)="onSearch()"
+          (keydown.esc)="offSearch()"
+        />
+        <button *ngIf="searchText" type="button" (click)="offSearch()" style="color:#9CA3AF;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
     </div>
   </div>
+
+  <!-- Individual Connections Table -->
+  <div class="rounded-xl shadow-md overflow-hidden" style="border: 1px solid rgba(201,168,76,0.25);">
+    <div class="px-6 py-4 flex items-center gap-2" style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;">
+      <i class="fa-solid fa-user" style="color:#C9A84C;"></i>
+      <p class="text-lg font-bold text-white">Individual Connections</p>
+      <span class="ml-2 px-2.5 py-0.5 rounded-full text-base font-semibold" style="background:rgba(201,168,76,0.2); color:#C9A84C;">
+        {{ individualConnections.length }}
+      </span>
+    </div>
+
+    <div *ngIf="individualConnections.length > 0" class="overflow-x-auto">
+      <table class="w-full min-w-max">
+        <thead>
+          <tr style="background: rgba(15,37,71,0.04); border-bottom: 1px solid rgba(201,168,76,0.25);">
+            <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">No</th>
+            <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Case Number</th>
+            <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Case Type</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Case Status</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Created Date</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Connection</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Party Role</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Party Status</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Party Type</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">NIC</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Party Name</th>
+          </tr>
+        </thead>
+        <tbody style="background:#fff;">
+          <tr
+            *ngFor="let item of individualConnections; let i = index"
+            class="transition-colors"
+            style="border-bottom: 1px solid rgba(15,37,71,0.06);"
+            onmouseover="this.style.background='rgba(15,37,71,0.03)'"
+            onmouseout="this.style.background='transparent'"
+          >
+            <td class="px-5 py-3.5 font-medium text-left" style="color:#6B7280;">
+              {{ ('0' + ((currentPage - 1) * itemsPerPage + i + 1)).slice(-2) }}
+            </td>
+            <td class="px-5 py-3.5 font-semibold text-left whitespace-nowrap" style="color:#0F2547;">{{ item.casenumber || '--' }}</td>
+            <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.casetype || '--' }}</td>
+
+            <!-- Case Status -->
+            <td class="px-5 py-3.5 text-center whitespace-nowrap">
+              <span class="inline-block px-3 py-1 rounded-full font-semibold text-base"
+                [ngClass]="{
+                  'bg-blue-100 text-blue-700':   item.casestatus === 'CREATED',
+                  'bg-purple-100 text-purple-700': item.casestatus === 'HEARING_SCHEDULED',
+                  'bg-yellow-100 text-yellow-700': item.casestatus === 'IN_PROGRESS',
+                  'bg-orange-100 text-orange-700': item.casestatus === 'STAYED',
+                  'bg-green-100 text-green-700':  item.casestatus === 'CLOSED'
+                }">{{ item.casestatus || '--' }}</span>
+            </td>
+
+            <td class="px-5 py-3.5 font-medium text-center whitespace-nowrap" style="color:#6B7280;">
+              {{ item.createdat | date:'yyyy/MM/dd' }}
+            </td>
+
+            <!-- Connection Status -->
+            <td class="px-5 py-3.5 text-center whitespace-nowrap" (click)="opencreateConnectionPopUp(item)">
+              <span class="inline-block px-3 py-1 rounded-full font-semibold text-base cursor-pointer transition-colors"
+                style="background: rgba(220,38,38,0.1); color:#DC2626; border: 1px solid rgba(220,38,38,0.2);"
+                onmouseover="this.style.background='rgba(220,38,38,0.18)'"
+                onmouseout="this.style.background='rgba(220,38,38,0.1)'"
+              >Required</span>
+            </td>
+
+            <!-- Party Role -->
+            <td class="px-5 py-3.5 text-center whitespace-nowrap">
+              <span class="inline-block px-3 py-1 rounded-full font-semibold text-base"
+                [ngClass]="{
+                  'bg-blue-100 text-blue-700':     item.partyrole === 'PLAINTIFF',
+                  'bg-red-100 text-red-700':       item.partyrole === 'DEFENDENT',
+                  'bg-purple-100 text-purple-700': item.partyrole === 'COMPLAINANT',
+                  'bg-orange-100 text-orange-700': item.partyrole === 'ACCUSED',
+                  'bg-gray-100 text-gray-700':     item.partyrole === 'STATE',
+                  'bg-indigo-100 text-indigo-700': item.partyrole === 'GUARDIAN',
+                  'bg-yellow-100 text-yellow-700': item.partyrole === 'OTHER',
+                  'bg-green-100 text-green-700':   item.partyrole === 'WITNESS',
+                  'bg-pink-100 text-pink-700':     item.partyrole === 'PETITIONER',
+                  'bg-teal-100 text-teal-700':     item.partyrole === 'RESPONDENT'
+                }">{{ item.partyrole | titlecase }}</span>
+            </td>
+
+            <!-- Party Status -->
+            <td class="px-5 py-3.5 text-center whitespace-nowrap">
+              <span class="inline-block px-3 py-1 rounded-full font-semibold text-base"
+                [ngClass]="{
+                  'bg-green-100 text-green-700':   item.partystatus === 'ACTIVE',
+                  'bg-yellow-100 text-yellow-700': item.partystatus === 'NOT_APPEARED',
+                  'bg-red-100 text-red-700':       item.partystatus === 'DEFAULTED',
+                  'bg-orange-100 text-orange-700': item.partystatus === 'ACCUSED',
+                  'bg-gray-100 text-gray-700':     item.partystatus === 'WITHDRAWN',
+                  'bg-blue-100 text-blue-700':     item.partystatus === 'DISCHARGED',
+                  'bg-purple-100 text-purple-700': item.partystatus === 'CONCLUDED'
+                }">{{ item.partystatus | titlecase }}</span>
+            </td>
+
+            <td class="px-5 py-3.5 font-medium text-center whitespace-nowrap" style="color:#374151;">{{ item.partytype || '--' }}</td>
+            <td class="px-5 py-3.5 font-medium text-center whitespace-nowrap" style="color:#374151;">{{ item.partynic || '--' }}</td>
+            <td class="px-5 py-3.5 font-medium text-center whitespace-nowrap" style="color:#374151;">{{ item.partyname || '--' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty individual -->
+    <div *ngIf="individualConnections.length === 0" class="flex flex-col items-center py-10" style="background:#fff;">
+      <i class="fa-solid fa-user text-2xl mb-2" style="color:rgba(201,168,76,0.4);"></i>
+      <p class="text-base" style="color:#9CA3AF;">No individual connections pending</p>
+    </div>
+  </div>
+
+  <!-- Organization Connections Table -->
+  <div class="rounded-xl shadow-md overflow-hidden" style="border: 1px solid rgba(201,168,76,0.25);">
+    <div class="px-6 py-4 flex items-center gap-2" style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;">
+      <i class="fa-solid fa-building" style="color:#C9A84C;"></i>
+      <p class="text-lg font-bold text-white">Organization Connections</p>
+      <span class="ml-2 px-2.5 py-0.5 rounded-full text-base font-semibold" style="background:rgba(201,168,76,0.2); color:#C9A84C;">
+        {{ organizationConnections.length }}
+      </span>
+    </div>
+
+    <div *ngIf="organizationConnections.length > 0" class="overflow-x-auto">
+      <table class="w-full min-w-max">
+        <thead>
+          <tr style="background: rgba(15,37,71,0.04); border-bottom: 1px solid rgba(201,168,76,0.25);">
+            <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">No</th>
+            <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Case Number</th>
+            <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Case Type</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Case Status</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Created Date</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Connection</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Party Role</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Party Status</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Party Type</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Organization</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">User NIC</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">User Name</th>
+          </tr>
+        </thead>
+        <tbody style="background:#fff;">
+          <tr
+            *ngFor="let item of organizationConnections; let i = index"
+            class="transition-colors"
+            style="border-bottom: 1px solid rgba(15,37,71,0.06);"
+            onmouseover="this.style.background='rgba(15,37,71,0.03)'"
+            onmouseout="this.style.background='transparent'"
+          >
+            <td class="px-5 py-3.5 font-medium text-left" style="color:#6B7280;">
+              {{ ('0' + ((currentPage - 1) * itemsPerPage + i + 1)).slice(-2) }}
+            </td>
+            <td class="px-5 py-3.5 font-semibold text-left whitespace-nowrap" style="color:#0F2547;">{{ item.casenumber || '--' }}</td>
+            <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.casetype || '--' }}</td>
+
+            <!-- Case Status -->
+            <td class="px-5 py-3.5 text-center whitespace-nowrap">
+              <span class="inline-block px-3 py-1 rounded-full font-semibold text-base"
+                [ngClass]="{
+                  'bg-blue-100 text-blue-700':     item.casestatus === 'CREATED',
+                  'bg-purple-100 text-purple-700': item.casestatus === 'HEARING_SCHEDULED',
+                  'bg-yellow-100 text-yellow-700': item.casestatus === 'IN_PROGRESS',
+                  'bg-orange-100 text-orange-700': item.casestatus === 'STAYED',
+                  'bg-green-100 text-green-700':   item.casestatus === 'CLOSED'
+                }">{{ item.casestatus || '--' }}</span>
+            </td>
+
+            <td class="px-5 py-3.5 font-medium text-center whitespace-nowrap" style="color:#6B7280;">
+              {{ item.createdat | date:'yyyy/MM/dd' }}
+            </td>
+
+            <!-- Connection Status -->
+            <td class="px-5 py-3.5 text-center whitespace-nowrap" (click)="opencreateConnectionPopUp(item)">
+              <span class="inline-block px-3 py-1 rounded-full font-semibold text-base cursor-pointer transition-colors"
+                style="background: rgba(220,38,38,0.1); color:#DC2626; border: 1px solid rgba(220,38,38,0.2);"
+                onmouseover="this.style.background='rgba(220,38,38,0.18)'"
+                onmouseout="this.style.background='rgba(220,38,38,0.1)'"
+              >Required</span>
+            </td>
+
+            <!-- Party Role -->
+            <td class="px-5 py-3.5 text-center whitespace-nowrap">
+              <span class="inline-block px-3 py-1 rounded-full font-semibold text-base"
+                [ngClass]="{
+                  'bg-blue-100 text-blue-700':     item.partyrole === 'PLAINTIFF',
+                  'bg-red-100 text-red-700':       item.partyrole === 'DEFENDENT',
+                  'bg-purple-100 text-purple-700': item.partyrole === 'COMPLAINANT',
+                  'bg-orange-100 text-orange-700': item.partyrole === 'ACCUSED',
+                  'bg-gray-100 text-gray-700':     item.partyrole === 'STATE',
+                  'bg-indigo-100 text-indigo-700': item.partyrole === 'GUARDIAN',
+                  'bg-yellow-100 text-yellow-700': item.partyrole === 'OTHER',
+                  'bg-green-100 text-green-700':   item.partyrole === 'WITNESS',
+                  'bg-pink-100 text-pink-700':     item.partyrole === 'PETITIONER',
+                  'bg-teal-100 text-teal-700':     item.partyrole === 'RESPONDENT'
+                }">{{ item.partyrole | titlecase }}</span>
+            </td>
+
+            <!-- Party Status -->
+            <td class="px-5 py-3.5 text-center whitespace-nowrap">
+              <span class="inline-block px-3 py-1 rounded-full font-semibold text-base"
+                [ngClass]="{
+                  'bg-green-100 text-green-700':   item.partystatus === 'ACTIVE',
+                  'bg-yellow-100 text-yellow-700': item.partystatus === 'NOT_APPEARED',
+                  'bg-red-100 text-red-700':       item.partystatus === 'DEFAULTED',
+                  'bg-orange-100 text-orange-700': item.partystatus === 'ACCUSED',
+                  'bg-gray-100 text-gray-700':     item.partystatus === 'WITHDRAWN',
+                  'bg-blue-100 text-blue-700':     item.partystatus === 'DISCHARGED',
+                  'bg-purple-100 text-purple-700': item.partystatus === 'CONCLUDED'
+                }">{{ item.partystatus | titlecase }}</span>
+            </td>
+
+            <td class="px-5 py-3.5 font-medium text-center whitespace-nowrap" style="color:#374151;">{{ item.partytype || '--' }}</td>
+            <td class="px-5 py-3.5 font-medium text-center whitespace-nowrap" style="color:#374151;">{{ item.organizationname || '--' }}</td>
+            <td class="px-5 py-3.5 font-medium text-center whitespace-nowrap" style="color:#374151;">{{ item.organizationusernic || '--' }}</td>
+            <td class="px-5 py-3.5 font-medium text-center whitespace-nowrap" style="color:#374151;">{{ item.organizationusername || '--' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty organization -->
+    <div *ngIf="organizationConnections.length === 0" class="flex flex-col items-center py-10" style="background:#fff;">
+      <i class="fa-solid fa-building text-2xl mb-2" style="color:rgba(201,168,76,0.4);"></i>
+      <p class="text-base" style="color:#9CA3AF;">No organization connections pending</p>
+    </div>
+  </div>
+
+  <!-- No Data at all -->
+  <div
+    *ngIf="!hasData"
+    class="flex flex-col items-center justify-center py-20 rounded-xl"
+    style="background:#fff; border: 1px solid rgba(201,168,76,0.25);"
+  >
+    <div
+      class="flex items-center justify-center rounded-full mb-4"
+      style="width:64px; height:64px; background: rgba(15,37,71,0.06); border: 1.5px solid rgba(201,168,76,0.4);"
+    >
+      <i class="fa-solid fa-link-slash text-2xl" style="color:#C9A84C;"></i>
+    </div>
+    <p class="text-base font-medium" style="color:#6B7280;">No pending connections found</p>
+    <p class="text-base mt-1" style="color:#9CA3AF;">Try adjusting your search query</p>
+  </div>
+
+</div>
+
+<!-- Create Connection Modal -->
+<div
+  *ngIf="isCreateConnectionPopUpOpen"
+  class="fixed inset-0 z-50 flex items-center justify-center"
+  style="background: rgba(15,37,71,0.7);"
+  (click)="closecreateConnectionPopup()"
+>
+  <div
+    class="w-full max-w-md rounded-xl shadow-2xl overflow-hidden"
+    style="background:#fff; border-top: 4px solid #C9A84C;"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex items-center gap-2 px-6 py-4" style="background:#0F2547;">
+      <i class="fa-solid fa-link" style="color:#C9A84C;"></i>
+      <h2 class="text-lg font-bold text-white">Connection Required</h2>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="px-6 py-5 space-y-3">
+      <div
+        class="rounded-lg px-4 py-3 space-y-3"
+        style="background:#F4F6FA; border: 1px solid rgba(15,37,71,0.08);"
+      >
+        <div class="flex flex-col gap-0.5">
+          <span class="text-base font-semibold" style="color:#9CA3AF;">Mobile App User</span>
+          <span class="text-base font-semibold" style="color:#0F2547;">{{ selectedConnection.userfullname || '--' }}</span>
+        </div>
+        <div class="flex flex-col gap-0.5" style="border-top: 1px solid rgba(15,37,71,0.07); padding-top: 10px;">
+          <span class="text-base font-semibold" style="color:#9CA3AF;">NIC</span>
+          <span class="text-base" style="color:#374151;">{{ selectedConnection.usernic || '--' }}</span>
+        </div>
+        <div class="flex flex-col gap-0.5" style="border-top: 1px solid rgba(15,37,71,0.07); padding-top: 10px;">
+          <span class="text-base font-semibold" style="color:#9CA3AF;">Party / Organization User</span>
+          <span class="text-base" style="color:#374151;">{{ selectedConnection.partyname || selectedConnection.organizationusername || '--' }}</span>
+        </div>
+        <div class="flex flex-col gap-0.5" style="border-top: 1px solid rgba(15,37,71,0.07); padding-top: 10px;">
+          <span class="text-base font-semibold" style="color:#9CA3AF;">Contact Number</span>
+          <span class="text-base" style="color:#374151;">{{ selectedConnection.userphonecode }} {{ selectedConnection.userphonenumber }}</span>
+        </div>
+      </div>
+
+      <p class="text-base" style="color:#6B7280;">
+        This party already has a mobile app user. You can proceed with creating the connection or go back.
+      </p>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 flex justify-end gap-3" style="border-top: 1px solid rgba(201,168,76,0.2);">
+      <button
+        (click)="closecreateConnectionPopup()"
+        class="px-5 py-2.5 rounded-lg font-medium text-base transition-all"
+        style="border: 1.5px solid rgba(15,37,71,0.25); color:#374151; background:#F4F6FA;"
+        onmouseover="this.style.background='#E8EDF5'"
+        onmouseout="this.style.background='#F4F6FA'"
+      >No, Go Back</button>
+
+      <button
+        (click)="createConnection()"
+        class="px-5 py-2.5 rounded-lg font-semibold text-base transition-all flex items-center gap-2"
+        style="background:#0F2547; color:#C9A84C; border: 1.5px solid #C9A84C;"
+        onmouseover="this.style.background='#1A3A6B'"
+        onmouseout="this.style.background='#0F2547'"
+      >
+        <i class="fa-solid fa-link"></i>
+        Create Connection
+      </button>
+    </div>
+  </div>
+</div>

@@ -122,13 +122,96 @@ export class CreataClerkComponent implements OnInit {
 
   onSubmit(): void {
     this.submitted = true;
-    console.log('formData', this.formData)
     if (this.isSaving) return;
+
+    const errors = this.getValidationErrors();
+    if (errors.length > 0) {
+      Swal.fire({
+        title: 'Please fix the following issues',
+        html: `
+          <div style="text-align:left; margin-top:8px;">
+            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+              ${errors.map(e => `
+                <li style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:rgba(15,37,71,0.05); border-left:3px solid #C9A84C; border-radius:6px; font-size:15px; color:#0F2547;">
+                  <i class="fa-solid fa-circle-exclamation" style="color:#C9A84C; flex-shrink:0;"></i>
+                  ${e}
+                </li>`).join('')}
+            </ul>
+          </div>`,
+        icon: undefined,
+        confirmButtonText: 'Fix Issues',
+        customClass: {
+          popup: 'swal-court-popup',
+          title: 'swal-court-title',
+          confirmButton: 'swal-court-confirm',
+        },
+        didOpen: () => {
+          const popup = Swal.getPopup()!;
+          popup.style.borderTop = '4px solid #C9A84C';
+          popup.style.borderRadius = '12px';
+          const title = Swal.getTitle()!;
+          title.style.color = '#0F2547';
+          title.style.fontSize = '18px';
+          const btn = Swal.getConfirmButton()!;
+          btn.style.background = '#0F2547';
+          btn.style.color = '#C9A84C';
+          btn.style.border = '1.5px solid #C9A84C';
+          btn.style.borderRadius = '8px';
+          btn.style.padding = '10px 28px';
+          btn.style.fontWeight = '600';
+          btn.style.fontSize = '15px';
+        }
+      });
+      return;
+    }
+
     this.isSaving = true;
-    // Backend integration goes here
-    console.log('Form submitted:', this.formData);
-    setTimeout(() => { this.isSaving = false; }, 1000);
     this.createRegistrar(this.formData);
+  }
+
+  private getValidationErrors(): string[] {
+    const errors: string[] = [];
+    const f = this.formData;
+
+    const nicOld = /^\d{9}[VvXx]$/;
+    const nicNew = /^\d{12}$/;
+    const emailPattern = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+    const mobilePattern = /^[1-9]\d{8}$/;
+
+    if (!f.officerrole)        errors.push('Officer Role is required');
+    if (!f.firstname?.trim())  errors.push('First Name is required');
+    if (!f.lastname?.trim())   errors.push('Last Name is required');
+
+    if (!f.nic?.trim()) {
+      errors.push('NIC is required');
+    } else if (!nicOld.test(f.nic.trim()) && !nicNew.test(f.nic.trim())) {
+      errors.push('NIC must be in old format (e.g. 123456789V) or new format (e.g. 200012345678)');
+    }
+
+    if (!f.email?.trim()) {
+      errors.push('Email is required');
+    } else if (!emailPattern.test(f.email.trim())) {
+      errors.push('Email must be a valid address (e.g. officer@courts.gov.lk)');
+    }
+
+    if (!f.phonenumber01?.trim()) {
+      errors.push('Primary Mobile number is required');
+    } else if (!mobilePattern.test(f.phonenumber01.trim())) {
+      errors.push('Primary Mobile must be 9 digits starting with a non-zero digit (e.g. 712345678)');
+    }
+
+    if (f.phonenumber02?.trim() && !mobilePattern.test(f.phonenumber02.trim())) {
+      errors.push('Secondary Mobile must be 9 digits starting with a non-zero digit (e.g. 712345678)');
+    }
+
+    if (!f.housenumber?.trim()) errors.push('House / Building Number is required');
+    if (!f.streetname?.trim())  errors.push('Street Name is required');
+    if (!f.city?.trim())        errors.push('City is required');
+    if (!f.district)            errors.push('District is required');
+    if (!f.province)            errors.push('Province is required');
+    if (!f.country?.trim())     errors.push('Country is required');
+
+    return errors;
   }
 
   createRegistrar(formData: RegistrarForm) {

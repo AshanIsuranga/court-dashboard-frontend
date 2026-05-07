@@ -1,232 +1,412 @@
 <app-loading-spinner *ngIf="isLoading" />
 
-<div *ngIf="!isLoading">
-    <!-- Breadcrumb -->
-    <div class="flex items-center gap-2 cursor-pointer mb-4">
-        <p class="font-semibold text-[#424242] dark:text-[#FFFFFF] cursor-pointer hover:underline" (click)="goBack()">Courts</p>
-        <i class="fa-solid fa-chevron-right text-xs text-gray-400 dark:text-gray-400"></i>
-        <p class="font-semibold text-[#424242] dark:text-[#FFFFFF] cursor-pointer hover:underline" (click)="goBack()">Officers</p>
-        <i class="fa-solid fa-chevron-right text-xs text-gray-400 dark:text-gray-400"></i>
-        <p class="font-semibold text-[#415CFF] dark:text-[#415CFF]">Create Registrar</p>
+<div *ngIf="!isLoading" class="space-y-5">
+
+    <!-- Breadcrumb Navigation -->
+    <div class="flex items-center gap-2">
+        <div
+            class="flex items-center justify-center rounded-full flex-shrink-0"
+            style="width:36px; height:36px; background:#0F2547; border: 1.5px solid #C9A84C;"
+        >
+            <i class="fa-solid fa-users text-base" style="color:#C9A84C;"></i>
+        </div>
+        <button
+            class="text-base font-medium transition-colors"
+            style="color:#C9A84C;"
+            onmouseover="this.style.color='#0F2547'"
+            onmouseout="this.style.color='#C9A84C'"
+            (click)="goBack()"
+        >Manage Officers</button>
+        <i class="fa-solid fa-chevron-right" style="color:#9CA3AF;"></i>
+        <span class="text-base font-bold" style="color:#0F2547;">Create Clerk</span>
     </div>
 
-    <div class="w-full px-10 py-8 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg">
-
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-8">
+    <!-- Form Card -->
+    <div
+        class="rounded-xl shadow-md overflow-hidden"
+        style="border: 1px solid rgba(201,168,76,0.25);"
+    >
+        <!-- Card Header -->
+        <div
+            class="flex items-center justify-between px-6 py-4"
+            style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;"
+        >
             <div>
-                <p class="font-bold text-xl text-[#424242] dark:text-white">Create New Registrar</p>
-                <p class="text-sm text-gray-400 dark:text-gray-400 mt-1">Fill in the details below to register a new court officer</p>
+                <p class="text-lg font-bold text-white">Create New Court Officer</p>
+                <p class="text-base mt-0.5" style="color:rgba(255,255,255,0.6);">Fill in the details below to register a new court officer</p>
             </div>
-            <button type="button" (click)="goBack()"
-                class="flex items-center gap-2 text-gray-500 dark:text-gray-300 hover:text-[#415CFF] dark:hover:text-[#415CFF] transition-colors">
-                <i class="fa-solid fa-arrow-left text-sm"></i>
-                <span class="text-sm font-medium">Back</span>
+            <button
+                type="button"
+                (click)="goBack()"
+                class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-base font-medium"
+                style="background: rgba(201,168,76,0.15); color:#C9A84C; border: 1.5px solid rgba(201,168,76,0.5);"
+                onmouseover="this.style.background='rgba(201,168,76,0.25)'"
+                onmouseout="this.style.background='rgba(201,168,76,0.15)'"
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+                Back
             </button>
         </div>
 
-        <form (ngSubmit)="onSubmit()" #registrarForm="ngForm">
+        <div class="bg-white px-8 py-7">
+            <form (ngSubmit)="onSubmit()" #registrarForm="ngForm">
 
-            <!-- Section: Court Assignment -->
-            <div class="mb-8">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-1 h-5 bg-[#415CFF] rounded-full"></div>
-                    <p class="font-semibold text-[#424242] dark:text-white text-sm uppercase tracking-wide">Court Assignment</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Officer Role <span class="text-red-500">*</span></label>
-                        <app-serchable-dropdown
-                            [items]="roleItems"
-                            [placeholder]="'Select Role'"
-                            [searchPlaceholder]="'Search role...'"
-                            [clearable]="true"
-                            [showSelected]="true"
-                            [(ngModel)]="formData.officerrole"
-                            name="officerrole"
-                            #officerrole="ngModel"
-                            required>
-                        </app-serchable-dropdown>
-                        <p *ngIf="officerrole.invalid && (officerrole.touched || submitted)" class="text-red-500 text-xs mt-0.5">Officer role is required.</p>
+                <!-- Section: Court Assignment -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-1 h-6 rounded-full" style="background:#C9A84C;"></div>
+                        <p class="text-lg font-bold" style="color:#0F2547;">Court Assignment</p>
                     </div>
-                </div>
-            </div>
-
-            <!-- Section: Personal Information -->
-            <div class="mb-8">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-1 h-5 bg-[#415CFF] rounded-full"></div>
-                    <p class="font-semibold text-[#424242] dark:text-white text-sm uppercase tracking-wide">Personal Information</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">First Name <span class="text-red-500">*</span></label>
-                        <input type="text" [(ngModel)]="formData.firstname" name="firstname" #firstname="ngModel" required maxlength="50"
-                            placeholder="Enter first name"
-                            [class.border-red-500]="firstname.invalid && (firstname.touched || submitted)"
-                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
-                        <p *ngIf="firstname.invalid && (firstname.touched || submitted)" class="text-red-500 text-xs mt-0.5">First name is required.</p>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Last Name <span class="text-red-500">*</span></label>
-                        <input type="text" [(ngModel)]="formData.lastname" name="lastname" #lastname="ngModel" required maxlength="50"
-                            placeholder="Enter last name"
-                            [class.border-red-500]="lastname.invalid && (lastname.touched || submitted)"
-                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
-                        <p *ngIf="lastname.invalid && (lastname.touched || submitted)" class="text-red-500 text-xs mt-0.5">Last name is required.</p>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">NIC <span class="text-red-500">*</span></label>
-                        <input type="text" [(ngModel)]="formData.nic" name="nic" #nic="ngModel" required maxlength="15"
-                            placeholder="e.g. 200012345678"
-                            [class.border-red-500]="nic.invalid && (nic.touched || submitted)"
-                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
-                        <p *ngIf="nic.invalid && (nic.touched || submitted)" class="text-red-500 text-xs mt-0.5">NIC is required.</p>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Email <span class="text-red-500">*</span></label>
-                        <input type="email" [(ngModel)]="formData.email" name="email" #email="ngModel" required maxlength="100"
-                            placeholder="officer@courts.gov.lk"
-                            [class.border-red-500]="email.invalid && (email.touched || submitted)"
-                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
-                        <p *ngIf="email.errors?.['required'] && (email.touched || submitted)" class="text-red-500 text-xs mt-0.5">Email is required.</p>
-                        <p *ngIf="email.errors?.['email'] && (email.touched || submitted)" class="text-red-500 text-xs mt-0.5">Please enter a valid email address.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section: Contact Numbers -->
-            <div class="mb-8">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-1 h-5 bg-[#415CFF] rounded-full"></div>
-                    <p class="font-semibold text-[#424242] dark:text-white text-sm uppercase tracking-wide">Contact Numbers</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <!-- Primary Mobile -->
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Primary Mobile <span class="text-red-500">*</span></label>
-                        <div class="flex gap-2">
-                            <div class="flex items-center px-3 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-gray-100 dark:bg-[#1e1e1e] text-gray-500 dark:text-gray-400 text-sm font-medium select-none whitespace-nowrap">
-                                +94
-                            </div>
-                            <input type="text" [(ngModel)]="formData.phonenumber01" name="phonenumber01" #phonenumber01="ngModel" required maxlength="20"
-                                placeholder="7X XXX XXXX"
-                                [class.border-red-500]="phonenumber01.invalid && (phonenumber01.touched || submitted)"
-                                class="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
-                        </div>
-                        <p *ngIf="phonenumber01.invalid && (phonenumber01.touched || submitted)" class="text-red-500 text-xs mt-0.5">Primary mobile number is required.</p>
-                    </div>
-                    <!-- Secondary Mobile (Optional) -->
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                            Secondary Mobile
-                            <span class="text-xs text-gray-400 dark:text-gray-500 font-normal ml-1">(Optional)</span>
-                        </label>
-                        <div class="flex gap-2">
-                            <div class="flex items-center px-3 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-gray-100 dark:bg-[#1e1e1e] text-gray-500 dark:text-gray-400 text-sm font-medium select-none whitespace-nowrap">
-                                +94
-                            </div>
-                            <input type="text" [(ngModel)]="formData.phonenumber02" name="phonenumber02" maxlength="20"
-                                placeholder="7X XXX XXXX"
-                                class="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">Officer Role <span class="text-red-500">*</span></label>
+                            <app-serchable-dropdown
+                                [items]="roleItems"
+                                [placeholder]="'Select Role'"
+                                [searchPlaceholder]="'Search role...'"
+                                [clearable]="true"
+                                [showSelected]="true"
+                                [(ngModel)]="formData.officerrole"
+                                name="officerrole"
+                                #officerrole="ngModel"
+                                required>
+                            </app-serchable-dropdown>
+                            <p *ngIf="officerrole.invalid && (officerrole.touched || submitted)" class="text-red-500 text-base mt-0.5">Officer role is required.</p>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Section: Address -->
-            <div class="mb-8">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-1 h-5 bg-[#415CFF] rounded-full"></div>
-                    <p class="font-semibold text-[#424242] dark:text-white text-sm uppercase tracking-wide">Address</p>
+                <!-- Divider -->
+                <div class="mb-8" style="border-top: 1px solid rgba(201,168,76,0.2);"></div>
+
+                <!-- Section: Personal Information -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-1 h-6 rounded-full" style="background:#C9A84C;"></div>
+                        <p class="text-lg font-bold" style="color:#0F2547;">Personal Information</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">First Name <span class="text-red-500">*</span></label>
+                            <input
+                                type="text"
+                                [(ngModel)]="formData.firstname"
+                                name="firstname"
+                                #firstname="ngModel"
+                                required
+                                maxlength="50"
+                                placeholder="Enter first name"
+                                [class.border-red-400]="firstname.invalid && (firstname.touched || submitted)"
+                                class="px-4 py-3 rounded-lg text-base outline-none transition-colors"
+                                style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                onfocus="this.style.borderColor='#C9A84C'"
+                                onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+                            />
+                            <p *ngIf="firstname.invalid && (firstname.touched || submitted)" class="text-red-500 text-base">First name is required.</p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">Last Name <span class="text-red-500">*</span></label>
+                            <input
+                                type="text"
+                                [(ngModel)]="formData.lastname"
+                                name="lastname"
+                                #lastname="ngModel"
+                                required
+                                maxlength="50"
+                                placeholder="Enter last name"
+                                [class.border-red-400]="lastname.invalid && (lastname.touched || submitted)"
+                                class="px-4 py-3 rounded-lg text-base outline-none transition-colors"
+                                style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                onfocus="this.style.borderColor='#C9A84C'"
+                                onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+                            />
+                            <p *ngIf="lastname.invalid && (lastname.touched || submitted)" class="text-red-500 text-base">Last name is required.</p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">NIC <span class="text-red-500">*</span></label>
+                            <input
+                                type="text"
+                                [(ngModel)]="formData.nic"
+                                name="nic"
+                                #nic="ngModel"
+                                required
+                                pattern="^\d{9}[VvXx]$|^\d{12}$"
+                                maxlength="15"
+                                placeholder="e.g. 200012345678 or 123456789V"
+                                [class.border-red-400]="nic.invalid && (nic.touched || submitted)"
+                                class="px-4 py-3 rounded-lg text-base outline-none transition-colors"
+                                style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                onfocus="this.style.borderColor='#C9A84C'"
+                                onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+                            />
+                            <p *ngIf="nic.errors?.['required'] && (nic.touched || submitted)" class="text-red-500 text-base">NIC is required.</p>
+                            <p *ngIf="nic.errors?.['pattern'] && (nic.touched || submitted)" class="text-red-500 text-base">
+                                NIC must be old format (9 digits + V/X, e.g. 123456789V) or new format (12 digits, e.g. 200012345678).
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">Email <span class="text-red-500">*</span></label>
+                            <input
+                                type="email"
+                                [(ngModel)]="formData.email"
+                                name="email"
+                                #email="ngModel"
+                                required
+                                pattern="^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
+                                maxlength="100"
+                                placeholder="officer@courts.gov.lk"
+                                [class.border-red-400]="email.invalid && (email.touched || submitted)"
+                                class="px-4 py-3 rounded-lg text-base outline-none transition-colors"
+                                style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                onfocus="this.style.borderColor='#C9A84C'"
+                                onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+                            />
+                            <p *ngIf="email.errors?.['required'] && (email.touched || submitted)" class="text-red-500 text-base">Email is required.</p>
+                            <p *ngIf="(email.errors?.['email'] || email.errors?.['pattern']) && (email.touched || submitted)" class="text-red-500 text-base">
+                                Enter a valid email address (e.g. officer&#64;courts.gov.lk).
+                            </p>
+                        </div>
+
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">House / Building Number <span class="text-red-500">*</span></label>
-                        <input type="text" [(ngModel)]="formData.housenumber" name="housenumber" #housenumber="ngModel" required maxlength="20"
-                            placeholder="No. 12A"
-                            [class.border-red-500]="housenumber.invalid && (housenumber.touched || submitted)"
-                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
-                        <p *ngIf="housenumber.invalid && (housenumber.touched || submitted)" class="text-red-500 text-xs mt-0.5">House / building number is required.</p>
+
+                <!-- Divider -->
+                <div class="mb-8" style="border-top: 1px solid rgba(201,168,76,0.2);"></div>
+
+                <!-- Section: Contact Numbers -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-1 h-6 rounded-full" style="background:#C9A84C;"></div>
+                        <p class="text-lg font-bold" style="color:#0F2547;">Contact Numbers</p>
                     </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Street Name <span class="text-red-500">*</span></label>
-                        <input type="text" [(ngModel)]="formData.streetname" name="streetname" #streetname="ngModel" required maxlength="100"
-                            placeholder="Main Street"
-                            [class.border-red-500]="streetname.invalid && (streetname.touched || submitted)"
-                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
-                        <p *ngIf="streetname.invalid && (streetname.touched || submitted)" class="text-red-500 text-xs mt-0.5">Street name is required.</p>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">City <span class="text-red-500">*</span></label>
-                        <input type="text" [(ngModel)]="formData.city" name="city" #city="ngModel" required maxlength="50"
-                            placeholder="Colombo"
-                            [class.border-red-500]="city.invalid && (city.touched || submitted)"
-                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
-                        <p *ngIf="city.invalid && (city.touched || submitted)" class="text-red-500 text-xs mt-0.5">City is required.</p>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">District <span class="text-red-500">*</span></label>
-                        <app-serchable-dropdown
-                            [items]="districtItems"
-                            [placeholder]="'Select District'"
-                            [searchPlaceholder]="'Search district...'"
-                            [clearable]="true"
-                            [showSelected]="true"
-                            [(ngModel)]="formData.district"
-                            name="district"
-                            #district="ngModel"
-                            required>
-                        </app-serchable-dropdown>
-                        <p *ngIf="district.invalid && (district.touched || submitted)" class="text-red-500 text-xs mt-0.5">District is required.</p>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Province <span class="text-red-500">*</span></label>
-                        <app-serchable-dropdown
-                            [items]="provinceItems"
-                            [placeholder]="'Select Province'"
-                            [searchPlaceholder]="'Search province...'"
-                            [clearable]="true"
-                            [showSelected]="true"
-                            [(ngModel)]="formData.province"
-                            name="province"
-                            #province="ngModel"
-                            required>
-                        </app-serchable-dropdown>
-                        <p *ngIf="province.invalid && (province.touched || submitted)" class="text-red-500 text-xs mt-0.5">Province is required.</p>
-                    </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Country <span class="text-red-500">*</span></label>
-                        <input type="text" [(ngModel)]="formData.country" name="country" #country="ngModel" required maxlength="50"
-                            placeholder="Sri Lanka"
-                            [class.border-red-500]="country.invalid && (country.touched || submitted)"
-                            class="px-4 py-2.5 rounded-lg border border-gray-200 dark:border-[#4a4a4a] bg-white dark:bg-[#2a2a2a] text-[#424242] dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none focus:border-[#415CFF] dark:focus:border-[#415CFF] transition-colors text-sm" />
-                        <p *ngIf="country.invalid && (country.touched || submitted)" class="text-red-500 text-xs mt-0.5">Country is required.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">Primary Mobile <span class="text-red-500">*</span></label>
+                            <div class="flex gap-2">
+                                <div
+                                    class="flex items-center px-4 py-3 rounded-lg text-base font-medium select-none whitespace-nowrap"
+                                    style="background: rgba(15,37,71,0.06); border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                >+94</div>
+                                <input
+                                    type="text"
+                                    [(ngModel)]="formData.phonenumber01"
+                                    name="phonenumber01"
+                                    #phonenumber01="ngModel"
+                                    required
+                                    pattern="^[1-9]\d{8}$"
+                                    maxlength="9"
+                                    placeholder="712345678"
+                                    [class.border-red-400]="phonenumber01.invalid && (phonenumber01.touched || submitted)"
+                                    class="flex-1 px-4 py-3 rounded-lg text-base outline-none transition-colors"
+                                    style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                    onfocus="this.style.borderColor='#C9A84C'"
+                                    onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+                                />
+                            </div>
+                            <p *ngIf="phonenumber01.errors?.['required'] && (phonenumber01.touched || submitted)" class="text-red-500 text-base">Primary mobile number is required.</p>
+                            <p *ngIf="phonenumber01.errors?.['pattern'] && (phonenumber01.touched || submitted)" class="text-red-500 text-base">
+                                Enter 9 digits without leading zero (e.g. 712345678).
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">
+                                Secondary Mobile
+                                <span class="font-normal ml-1" style="color:#9CA3AF;">(Optional)</span>
+                            </label>
+                            <div class="flex gap-2">
+                                <div
+                                    class="flex items-center px-4 py-3 rounded-lg text-base font-medium select-none whitespace-nowrap"
+                                    style="background: rgba(15,37,71,0.06); border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                >+94</div>
+                                <input
+                                    type="text"
+                                    [(ngModel)]="formData.phonenumber02"
+                                    name="phonenumber02"
+                                    #phonenumber02="ngModel"
+                                    pattern="^[1-9]\d{8}$"
+                                    maxlength="9"
+                                    placeholder="712345678"
+                                    [class.border-red-400]="phonenumber02.invalid && phonenumber02.touched"
+                                    class="flex-1 px-4 py-3 rounded-lg text-base outline-none transition-colors"
+                                    style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                    onfocus="this.style.borderColor='#C9A84C'"
+                                    onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+                                />
+                            </div>
+                            <p *ngIf="phonenumber02.errors?.['pattern'] && phonenumber02.touched" class="text-red-500 text-base">
+                                Enter 9 digits without leading zero (e.g. 712345678).
+                            </p>
+                        </div>
+
                     </div>
                 </div>
-            </div>
 
-            <!-- Divider -->
-            <div class="border-t border-gray-200 dark:border-[#4a4a4a] mb-6"></div>
+                <!-- Divider -->
+                <div class="mb-8" style="border-top: 1px solid rgba(201,168,76,0.2);"></div>
 
-            <!-- Action Buttons -->
-            <div class="flex items-center justify-end gap-4">
-                <button type="button" (click)="onReset()"
-                    class="px-6 py-2.5 rounded-lg border border-gray-300 dark:border-[#4a4a4a] text-gray-600 dark:text-gray-300 font-medium text-sm hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-colors">
-                    Reset
-                </button>
-                <button type="button" (click)="goBack()"
-                    class="px-6 py-2.5 rounded-lg border border-gray-300 dark:border-[#4a4a4a] text-gray-600 dark:text-gray-300 font-medium text-sm hover:bg-gray-100 dark:hover:bg-[#2a2a2a] transition-colors">
-                    Cancel
-                </button>
-                <button type="submit" [disabled]="isSaving"
-                    class="px-8 py-2.5 rounded-lg bg-[#415CFF] text-white font-semibold text-sm hover:bg-[#3045e0] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2">
-                    <i *ngIf="isSaving" class="fa-solid fa-spinner fa-spin"></i>
-                    <span>{{ isSaving ? 'Saving...' : 'Create Registrar' }}</span>
-                </button>
-            </div>
+                <!-- Section: Address -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-1 h-6 rounded-full" style="background:#C9A84C;"></div>
+                        <p class="text-lg font-bold" style="color:#0F2547;">Address</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-        </form>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">House / Building Number <span class="text-red-500">*</span></label>
+                            <input
+                                type="text"
+                                [(ngModel)]="formData.housenumber"
+                                name="housenumber"
+                                #housenumber="ngModel"
+                                required
+                                maxlength="20"
+                                placeholder="No. 12A"
+                                [class.border-red-400]="housenumber.invalid && (housenumber.touched || submitted)"
+                                class="px-4 py-3 rounded-lg text-base outline-none transition-colors"
+                                style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                onfocus="this.style.borderColor='#C9A84C'"
+                                onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+                            />
+                            <p *ngIf="housenumber.invalid && (housenumber.touched || submitted)" class="text-red-500 text-base">House / building number is required.</p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">Street Name <span class="text-red-500">*</span></label>
+                            <input
+                                type="text"
+                                [(ngModel)]="formData.streetname"
+                                name="streetname"
+                                #streetname="ngModel"
+                                required
+                                maxlength="100"
+                                placeholder="Main Street"
+                                [class.border-red-400]="streetname.invalid && (streetname.touched || submitted)"
+                                class="px-4 py-3 rounded-lg text-base outline-none transition-colors"
+                                style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                onfocus="this.style.borderColor='#C9A84C'"
+                                onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+                            />
+                            <p *ngIf="streetname.invalid && (streetname.touched || submitted)" class="text-red-500 text-base">Street name is required.</p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">City <span class="text-red-500">*</span></label>
+                            <input
+                                type="text"
+                                [(ngModel)]="formData.city"
+                                name="city"
+                                #city="ngModel"
+                                required
+                                maxlength="50"
+                                placeholder="Colombo"
+                                [class.border-red-400]="city.invalid && (city.touched || submitted)"
+                                class="px-4 py-3 rounded-lg text-base outline-none transition-colors"
+                                style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                onfocus="this.style.borderColor='#C9A84C'"
+                                onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+                            />
+                            <p *ngIf="city.invalid && (city.touched || submitted)" class="text-red-500 text-base">City is required.</p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">District <span class="text-red-500">*</span></label>
+                            <app-serchable-dropdown
+                                [items]="districtItems"
+                                [placeholder]="'Select District'"
+                                [searchPlaceholder]="'Search district...'"
+                                [clearable]="true"
+                                [showSelected]="true"
+                                [(ngModel)]="formData.district"
+                                name="district"
+                                #district="ngModel"
+                                required>
+                            </app-serchable-dropdown>
+                            <p *ngIf="district.invalid && (district.touched || submitted)" class="text-red-500 text-base">District is required.</p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">Province <span class="text-red-500">*</span></label>
+                            <app-serchable-dropdown
+                                [items]="provinceItems"
+                                [placeholder]="'Select Province'"
+                                [searchPlaceholder]="'Search province...'"
+                                [clearable]="true"
+                                [showSelected]="true"
+                                [(ngModel)]="formData.province"
+                                name="province"
+                                #province="ngModel"
+                                required>
+                            </app-serchable-dropdown>
+                            <p *ngIf="province.invalid && (province.touched || submitted)" class="text-red-500 text-base">Province is required.</p>
+                        </div>
+
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-base font-medium" style="color:#374151;">Country <span class="text-red-500">*</span></label>
+                            <input
+                                type="text"
+                                [(ngModel)]="formData.country"
+                                name="country"
+                                #country="ngModel"
+                                required
+                                maxlength="50"
+                                placeholder="Sri Lanka"
+                                [class.border-red-400]="country.invalid && (country.touched || submitted)"
+                                class="px-4 py-3 rounded-lg text-base outline-none transition-colors"
+                                style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+                                onfocus="this.style.borderColor='#C9A84C'"
+                                onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+                            />
+                            <p *ngIf="country.invalid && (country.touched || submitted)" class="text-red-500 text-base">Country is required.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div
+                    class="flex items-center justify-end gap-4 pt-6"
+                    style="border-top: 1px solid rgba(201,168,76,0.2);"
+                >
+                    <button
+                        type="button"
+                        (click)="onReset()"
+                        class="px-6 py-2.5 rounded-lg font-medium text-base transition-all"
+                        style="border: 1.5px solid rgba(15,37,71,0.25); color:#374151; background:#F4F6FA;"
+                        onmouseover="this.style.background='#E8EDF5'"
+                        onmouseout="this.style.background='#F4F6FA'"
+                    >Reset</button>
+
+                    <button
+                        type="button"
+                        (click)="goBack()"
+                        class="px-6 py-2.5 rounded-lg font-medium text-base transition-all"
+                        style="border: 1.5px solid rgba(15,37,71,0.25); color:#374151; background:#F4F6FA;"
+                        onmouseover="this.style.background='#E8EDF5'"
+                        onmouseout="this.style.background='#F4F6FA'"
+                    >Cancel</button>
+
+                    <button
+                        type="submit"
+                        [disabled]="isSaving"
+                        class="px-8 py-2.5 rounded-lg font-semibold text-base transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        style="background:#0F2547; color:#C9A84C; border: 1.5px solid #C9A84C;"
+                        onmouseover="this.style.background='#1A3A6B'"
+                        onmouseout="this.style.background='#0F2547'"
+                    >
+                        <i *ngIf="isSaving" class="fa-solid fa-spinner fa-spin"></i>
+                        <span>{{ isSaving ? 'Saving...' : 'Create Officer' }}</span>
+                    </button>
+                </div>
+
+            </form>
+        </div>
     </div>
+
 </div>

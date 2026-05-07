@@ -1,5 +1,5 @@
 // view-centers.component.ts
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -73,8 +73,13 @@ isOpen(i: number): boolean {
   constructor(
     private router: Router,
     private casesSrv: CaseService,
-    private route: ActivatedRoute
-) { }
+    private route: ActivatedRoute,
+    private location: Location
+  ) { }
+
+  goBack(): void {
+    this.location.back();
+  }
 
 ngOnInit(): void {
   console.log('opened')

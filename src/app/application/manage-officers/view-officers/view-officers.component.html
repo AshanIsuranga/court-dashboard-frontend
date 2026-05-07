@@ -1,106 +1,191 @@
 <app-loading-spinner *ngIf="isLoading" />
 
-<div *ngIf="!isLoading">
-    <div class="flex gap-0 cursor-pointer">
-        <p class="font-semibold text[#424242] mb-4 mr-5 ml-0 dark:text-[#FFFFFF] dark:bg-blacks">Manage Officers</p>
+<div *ngIf="!isLoading" class="space-y-5">
+
+    <!-- Breadcrumb Navigation -->
+    <div class="flex items-center gap-2">
+        <div
+            class="flex items-center justify-center rounded-full flex-shrink-0"
+            style="width:36px; height:36px; background:#0F2547; border: 1.5px solid #C9A84C;"
+        >
+            <i class="fa-solid fa-users text-base" style="color:#C9A84C;"></i>
+        </div>
+        <span class="text-base font-bold" style="color:#0F2547;">Manage Officers</span>
     </div>
 
-    <!-- Scrollable filter section only -->
-    <div class="w-full px-10 py-7 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg overflow-x-auto">
-        <div class="flex flex-row items-center justify-between min-w-max max-w-[80vw] mx-auto">
-            <div class="flex flex-col justify-between flex-shrink-0">
-                <p class="font-semibold md:text-lg lg:text-lg mb-1 dark:text-white whitespace-nowrap">All
-                    ({{ (itemsArr.length < 10 ? '0' + itemsArr.length : itemsArr.length) || 0 }})</p>
-            </div>
-            <div class="flex flex-row items-center gap-8 flex-shrink-0">
+    <!-- Filter & Search Card -->
+    <div
+        class="rounded-xl px-6 py-5 shadow-md"
+        style="background:#fff; border: 1px solid rgba(201,168,76,0.25); border-left: 4px solid #C9A84C;"
+    >
+        <div class="flex flex-wrap items-center justify-between gap-4">
 
-                <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929] flex-shrink-0">
-                    <input type="text" placeholder="Search by Officer Name, Code, Role.." [(ngModel)]="searchText"
-                        class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-                        (keydown.enter)="onSearch()" (keydown.esc)="offSearch()" />
-                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-                        (click)="onSearch()">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-                        </svg>
-                    </button>
-                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
-                        (click)="offSearch()">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+            <!-- Left: total count -->
+            <div class="flex items-center gap-3">
+                <p class="text-lg font-bold" style="color:#0F2547;">All Officers</p>
+                <span
+                    class="px-3 py-0.5 rounded-full text-base font-bold"
+                    style="background: rgba(15,37,71,0.08); color:#0F2547;"
+                >
+                    {{ (itemsArr.length < 10 ? '0' + itemsArr.length : itemsArr.length) || '00' }}
+                </span>
+            </div>
+
+            <!-- Right: search -->
+            <div class="flex flex-wrap items-center gap-3">
+                <div
+                    class="flex items-center rounded-lg px-4 py-2.5 w-80 gap-2"
+                    style="background:#F4F6FA; border: 1px solid rgba(15,37,71,0.18);"
+                >
+                    <i class="fa-solid fa-magnifying-glass" style="color:#9CA3AF;"></i>
+                    <input
+                        type="text"
+                        placeholder="Search by Name, Code, Role..."
+                        [(ngModel)]="searchText"
+                        class="bg-transparent outline-none w-full text-base"
+                        style="color:#0F2547;"
+                        (keydown.enter)="onSearch()"
+                        (keydown.esc)="offSearch()"
+                    />
+                    <button
+                        *ngIf="searchText"
+                        type="button"
+                        (click)="offSearch()"
+                        style="color:#9CA3AF;"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div class="flex flex-row mt-3 mb-0">
-            <button class="bg-[#415CFF] text-white font-semibold px-4 py-2 rounded-lg" (click)="addClerk()">Create new
-                Clerk</button>
-        </div>
-
-
-        <div *ngIf="hasData" class=" min-w-max mt-5 mr-5 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]">
-            <table class="w-full min-w-max divide-y-2">
-                <thead class="text-gray-700 dark:text-gray-300 dark:bg-[#0F0F0F] dark:border-[#202021] cursor-default">
-                    <tr>
-                        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">No</th>
-                        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">Officer Name</th>
-                        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">Officer Code</th>
-                        <th class="px-4 py-3 text-left font-normal whitespace-nowrap">Officer Role</th>
-                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Contact Number</th>
-                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">District</th>
-                        <th class="px-4 py-3 text-center font-normal whitespace-nowrap">Province</th>
-                        <th class="px-4 py-3 text-center text-sm font-medium whitespace-nowrap"></th>
-                        <th class="px-4 py-3 text-center text-sm font-medium whitespace-nowrap"></th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
-                    <tr class="  dark:text-gray-300 cursor-pointer"
-                        *ngFor="let item of itemsArr | paginate : { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }; let i = index"
-                        >
-                        <td class="px-4 py-3 font-medium text-left">
-                            {{ ('0' + ((currentPage - 1) * itemsPerPage + i + 1)).slice(-2) }}
-                        </td>
-                        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">{{ item.firstname }}{{ item.lastname }}</td>
-                        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">{{ item.officercode }}</td>
-                        <td class="px-4 py-3 font-medium text-left whitespace-nowrap">{{ item.officerrole }}</td>
-                        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">{{ item.phonecode01}} {{item.phonenumber01}}</td>
-                        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">{{ item.district }}</td>
-                        <td class="px-4 py-3 font-medium text-center whitespace-nowrap">{{ item.province }}</td>
-
-                        <td class="px-3 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">
-                            <button class="text-gray-400 hover:text-gray-600 px-2" (click)="navigateToDashboard(item.id)">
-                                <i class="fa-solid fa-pen-to-square text-lg  text-blue-500 dark:text-white"></i>
-                            </button>
-                        </td>
-
-                        <td class="px-3 py-4 text-sm text-gray-900 dark:text-gray-300 text-center">
-                            <button class="text-gray-400 hover:text-gray-600 px-2" (click)="navigateToDashboard(item.id)">
-                                <i class="fa-solid fa-trash text-lg  text-red-500 dark:text-white"></i>
-                            </button>
-                        </td>
-                        
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div *ngIf="hasData" class="flex justify-end items-center my-5 mr-5 pt-3 dark:bg-[#1D1D1F] text-right">
-            <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-                [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-                [screenReaderCurrentLabel]="'Youre on page'">
-            </pagination-controls>
-        </div>
-
-        <div *ngIf="!hasData"
-            class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6">
-            <p class="text-[#494949] my-6 dark:text-textDark">--No Data Availabale--</p>
-            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
+        <!-- Action row -->
+        <div class="flex mt-4 pt-4" style="border-top: 1px solid rgba(201,168,76,0.2);">
+            <button
+                class="flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-base transition-all shadow-sm"
+                style="background:#0F2547; color:#C9A84C; border: 1.5px solid #C9A84C;"
+                onmouseover="this.style.background='#1A3A6B'"
+                onmouseout="this.style.background='#0F2547'"
+                (click)="addClerk()"
+            >
+                <i class="fa-solid fa-plus"></i>
+                Create New Clerk
+            </button>
         </div>
     </div>
 
+    <!-- Table Card -->
+    <div
+        *ngIf="hasData"
+        class="rounded-xl shadow-md overflow-hidden"
+        style="border: 1px solid rgba(201,168,76,0.25);"
+    >
+        <table class="w-full min-w-max">
+            <thead>
+                <tr style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;">
+                    <th class="px-5 py-4 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#C9A84C;">No</th>
+                    <th class="px-5 py-4 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#C9A84C;">Officer Name</th>
+                    <th class="px-5 py-4 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#C9A84C;">Officer Code</th>
+                    <th class="px-5 py-4 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#C9A84C;">Role</th>
+                    <th class="px-5 py-4 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#C9A84C;">Contact</th>
+                    <th class="px-5 py-4 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#C9A84C;">District</th>
+                    <th class="px-5 py-4 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#C9A84C;">Province</th>
+                    <th class="px-5 py-4 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#C9A84C;">Actions</th>
+                </tr>
+            </thead>
+            <tbody style="background:#fff;">
+                <tr
+                    class="transition-colors"
+                    style="border-bottom: 1px solid rgba(15,37,71,0.07);"
+                    *ngFor="let item of itemsArr | paginate : { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }; let i = index"
+                    onmouseover="this.style.background='rgba(15,37,71,0.04)'"
+                    onmouseout="this.style.background='transparent'"
+                >
+                    <td class="px-5 py-4 font-medium text-left" style="color:#6B7280;">
+                        {{ ('0' + ((currentPage - 1) * itemsPerPage + i + 1)).slice(-2) }}
+                    </td>
+                    <td class="px-5 py-4 font-semibold text-left whitespace-nowrap" style="color:#0F2547;">
+                        {{ (item.firstname || item.lastname) ? (item.firstname + ' ' + item.lastname) : '--' }}
+                    </td>
+                    <td class="px-5 py-4 font-medium text-left whitespace-nowrap" style="color:#374151;">
+                        {{ item.officercode || '--' }}
+                    </td>
+                    <td class="px-5 py-4 text-left whitespace-nowrap">
+                        <span
+                            *ngIf="item.officerrole"
+                            class="inline-block px-3 py-1 rounded-full font-medium"
+                            style="background: rgba(15,37,71,0.08); color:#0F2547;"
+                        >{{ item.officerrole }}</span>
+                        <span *ngIf="!item.officerrole" style="color:#9CA3AF;">--</span>
+                    </td>
+                    <td class="px-5 py-4 font-medium text-center whitespace-nowrap" style="color:#374151;">
+                        {{ (item.phonecode01 || item.phonenumber01) ? (item.phonecode01 + ' ' + item.phonenumber01) : '--' }}
+                    </td>
+                    <td class="px-5 py-4 font-medium text-center whitespace-nowrap" style="color:#374151;">
+                        {{ item.district || '--' }}
+                    </td>
+                    <td class="px-5 py-4 font-medium text-center whitespace-nowrap" style="color:#374151;">
+                        {{ item.province || '--' }}
+                    </td>
+                    <td class="px-5 py-4 text-center">
+                        <div class="flex items-center justify-center gap-3">
+                            <button
+                                class="flex items-center justify-center rounded-lg w-9 h-9 transition-colors"
+                                style="background: rgba(15,37,71,0.07); border: 1px solid rgba(15,37,71,0.15);"
+                                onmouseover="this.style.background='rgba(201,168,76,0.2)'; this.style.borderColor='#C9A84C'"
+                                onmouseout="this.style.background='rgba(15,37,71,0.07)'; this.style.borderColor='rgba(15,37,71,0.15)'"
+                                title="Edit"
+                                (click)="navigateToDashboard(item.id)"
+                            >
+                                <i class="fa-solid fa-pen-to-square" style="color:#0F2547;"></i>
+                            </button>
+                            <button
+                                class="flex items-center justify-center rounded-lg w-9 h-9 transition-colors"
+                                style="background: rgba(220,38,38,0.07); border: 1px solid rgba(220,38,38,0.2);"
+                                onmouseover="this.style.background='rgba(220,38,38,0.15)'"
+                                onmouseout="this.style.background='rgba(220,38,38,0.07)'"
+                                title="Delete"
+                                (click)="navigateToDashboard(item.id)"
+                            >
+                                <i class="fa-solid fa-trash" style="color:#DC2626;"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div
+            class="flex justify-end items-center px-6 py-4"
+            style="background:#F9FAFB; border-top: 1px solid rgba(201,168,76,0.2);"
+        >
+            <pagination-controls
+                (pageChange)="onPageChange($event)"
+                [responsive]="true"
+                [previousLabel]="'Previous'"
+                [nextLabel]="'Next'"
+                [screenReaderPaginationLabel]="'Pagination'"
+                [screenReaderPageLabel]="'page'"
+                [screenReaderCurrentLabel]="'Youre on page'">
+            </pagination-controls>
+        </div>
+    </div>
+
+    <!-- No Data -->
+    <div
+        *ngIf="!hasData"
+        class="flex flex-col items-center justify-center py-20 rounded-xl"
+        style="background:#fff; border: 1px solid rgba(201,168,76,0.25);"
+    >
+        <div
+            class="flex items-center justify-center rounded-full mb-4"
+            style="width:64px; height:64px; background: rgba(15,37,71,0.06); border: 1.5px solid rgba(201,168,76,0.4);"
+        >
+            <i class="fa-solid fa-users text-2xl" style="color:#C9A84C;"></i>
+        </div>
+        <p class="text-base font-medium" style="color:#6B7280;">No officers found</p>
+        <p class="text-base mt-1" style="color:#9CA3AF;">Try adjusting your search query</p>
+    </div>
+
+</div>

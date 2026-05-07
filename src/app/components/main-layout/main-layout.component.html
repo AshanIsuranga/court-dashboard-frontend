@@ -1,15 +1,12 @@
-<div class="h-screen flex flex-row min-h-screen">
+<div class="h-screen flex flex-row min-h-screen overflow-hidden">
     <app-side-nav></app-side-nav>
-  
+
     <div
-      class="flex-grow bg-primaryMainLight dark:bg-primaryMainDark overflow-auto"
+      class="flex flex-col flex-grow overflow-hidden"
+      style="background: #F4F6FA;"
     >
-      <div
-        class="transition-all duration-300 ease-in-out h-auto w-auto max-w-full scrollbar-none"
-      >
-        <app-header></app-header>
-      </div>
-      <div class="flex-1 overflow-y-auto px-10 pb-10 pt-4">
+      <app-header></app-header>
+      <div class="flex-1 overflow-y-auto px-8 pb-10 pt-5">
         <router-outlet></router-outlet>
       </div>
     </div>

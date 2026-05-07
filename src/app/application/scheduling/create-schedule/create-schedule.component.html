@@ -1,250 +1,302 @@
 <app-loading-spinner *ngIf="isLoading" />
 
-<div *ngIf="!isLoading">
-    <div class="flex gap-0 cursor-pointer ">
-        <p class="font-semibold text[#424242]  mb-4 mr-5 ml-0 dark:text-[#FFFFFF] dark:bg-blacks">Create Hearing</p>
-        
+<div *ngIf="!isLoading" class="space-y-5 pb-10">
+
+  <!-- Breadcrumb Navigation -->
+  <div class="flex items-center gap-2">
+    <div
+      class="flex items-center justify-center rounded-full flex-shrink-0"
+      style="width:36px; height:36px; background:#0F2547; border: 1.5px solid #C9A84C;"
+    >
+      <i class="fa-solid fa-calendar-days text-base" style="color:#C9A84C;"></i>
+    </div>
+    <button
+      class="text-base font-medium transition-colors"
+      style="color:#C9A84C;"
+      onmouseover="this.style.color='#0F2547'"
+      onmouseout="this.style.color='#C9A84C'"
+      (click)="onCancel()"
+    >Hearing</button>
+    <i class="fa-solid fa-chevron-right" style="color:#9CA3AF;"></i>
+    <span class="text-base font-bold" style="color:#0F2547;">Create Schedule</span>
+  </div>
+
+  <!-- Case Context Card -->
+  <div class="rounded-xl shadow-md overflow-hidden" style="border: 1px solid rgba(201,168,76,0.25);">
+    <div class="px-6 py-4 flex items-center gap-2" style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;">
+      <i class="fa-solid fa-scale-balanced" style="color:#C9A84C;"></i>
+      <p class="text-lg font-bold text-white">Case Reference</p>
     </div>
 
-<div class="min-h-screen py-2 px-8 shadow-lg">
-  
-      <p class="text-lg font-medium text-gray-900 mb-5">Schedule a hearing</p>
-  
-      <!-- Case context card -->
-      <div class="bg-white border border-gray-200 rounded-xl p-5 mb-4">
-        <div class="flex items-start gap-3 pb-4 mb-4 border-b border-gray-100">
-          <span class="font-medium bg-gray-100 border border-gray-200 rounded-lg px-3 py-1 text-gray-500 whitespace-nowrap mt-0.5">
-            {{ caseDetail.casenumber }}
-          </span>
-          <div>
-            <p class="font-medium text-gray-900"></p>
-            <p class=" text-gray-500 mt-0.5">
-              {{ caseDetail.courtnameenglish }} &nbsp;&middot;&nbsp; {{ caseDetail.courttype }} &nbsp;&middot;&nbsp; Filed: {{ caseDetail.createdat }}
-            </p>
-          </div>
-        </div>
-  
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-  
-          <div class="flex flex-col gap-1.5">
-            <label for="hearingType" class="font-medium text-gray-500">Hearing type</label>
-
-            <app-serchable-dropdown
-              [items]="hearingTypes"
-              placeholder="Select Type"
-              searchPlaceholder="Search types..."
-              [(ngModel)]="form.hearingType"
-              (selectionChange)="onHearingTypeChange($event)"
-              [clearable]="true"
-              [showSelected]="true"
-              [disabled]="false"
-              class="block w-full mb-4"
-            ></app-serchable-dropdown>
-
-            <p *ngIf="submitted && !form.hearingType" class=" text-red-500">Hearing type is required.</p>
-          </div>
-  
-          <div class="flex flex-col gap-1.5">
-            <label for="hearingStatus" class="font-medium text-gray-500">Hearing status</label>
-
-            <app-serchable-dropdown
-              [items]="hearingStatuses"
-              placeholder="Select Status"
-              searchPlaceholder="Search statuses..."
-              [(ngModel)]="form.hearingStatus"
-              (selectionChange)="onHearingStatusChange($event)"
-              [clearable]="true"
-              [showSelected]="true"
-              [disabled]="false"
-              class="block w-full mb-4"
-            ></app-serchable-dropdown>
-
-            <p *ngIf="submitted && !form.hearingStatus" class=" text-red-500">Hearing status is required.</p>
-          </div>
-  
-          <div class="flex flex-col gap-1.5">
-            <label for="hearingDate" class="font-medium text-gray-500">Hearing date</label>
-
-            <app-custom-datepicker
-              [placeholder]="'Hearing Date'"
-              [selectedDate]="form.hearingDate"
-              (dateChange)="onDateChange($event)"
-            ></app-custom-datepicker>
-
-          
-            <p *ngIf="submitted && !form.hearingDate" class=" text-red-500">Hearing date is required.</p>
-          </div>
-
-          <div class="flex flex-col gap-1.5"></div>
-
-  
-          <div class="flex flex-col gap-1.5">
-            <label for="presidingJudge" class="font-medium text-gray-500">Presiding judge</label>
-            <input
-              type="text"
-              id="presidingJudge"
-              [(ngModel)]="form.presidingJudge"
-              placeholder="e.g. Hon. Justice R.M. Dissanayake"
-              class=" text-gray-900 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition placeholder-gray-400"
-            />
-          </div>
-  
+    <div class="bg-white px-6 py-5">
+      <!-- Case info strip -->
+      <div class="flex flex-wrap items-center gap-3 pb-5 mb-5" style="border-bottom: 1px solid rgba(201,168,76,0.2);">
+        <span
+          class="px-3 py-1 rounded-lg font-bold text-base"
+          style="background: rgba(15,37,71,0.08); color:#0F2547; border: 1px solid rgba(15,37,71,0.15);"
+        >{{ caseDetail.casenumber }}</span>
+        <div class="flex flex-wrap items-center gap-2 text-base" style="color:#6B7280;">
+          <span>{{ caseDetail.courtnameenglish }}</span>
+          <span style="color:rgba(201,168,76,0.6);">·</span>
+          <span>{{ caseDetail.courttype }}</span>
+          <span style="color:rgba(201,168,76,0.6);">·</span>
+          <span>Filed: {{ caseDetail.createdat | date:'d MMM yyyy' }}</span>
         </div>
       </div>
-  
-      <!-- Description card -->
-      <div class="bg-white border border-gray-200 rounded-xl p-5 mb-4">
-        <p class="font-medium text-gray-400 uppercase tracking-widest mb-3">Description</p>
-  
-        <div class="flex gap-1.5 mb-3">
-          <button
-            *ngFor="let lang of languages"
-            type="button"
-            (click)="activeLang = lang.code"
-            [ngClass]="activeLang === lang.code
-              ? 'border-blue-200 bg-blue-50 text-blue-700 font-medium'
-              : 'border-gray-200 bg-transparent text-gray-500 hover:bg-gray-50'"
-            class="px-3 py-1.5 rounded-lg border transition"
-          >
-            {{ lang.label }}
-          </button>
-        </div>
-  
-        <textarea
-          *ngIf="activeLang === 'en'"
-          [(ngModel)]="form.descEn"
-          rows="3"
-          placeholder="Enter hearing description in English…"
-          class="w-full  text-gray-900 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition placeholder-gray-400 leading-relaxed resize-y"
-        ></textarea>
-  
-        <textarea
-          *ngIf="activeLang === 'si'"
-          [(ngModel)]="form.descSi"
-          rows="3"
-          placeholder="විභාගයේ විස්තරය සිංහලෙන් ඇතුළු කරන්න…"
-          class="w-full text-base text-gray-900 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition placeholder-gray-400 leading-relaxed resize-y"
-        ></textarea>
-  
-        <textarea
-          *ngIf="activeLang === 'ta'"
-          [(ngModel)]="form.descTa"
-          rows="3"
-          placeholder="விசாரணையின் விளக்கத்தை தமிழில் உள்ளிடவும்…"
-          class="w-full text-base text-gray-900 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition placeholder-gray-400 leading-relaxed resize-y"
-        ></textarea>
-      </div>
-  
-      <!-- Parties card -->
-      <div class="bg-white border border-gray-200 rounded-xl p-5 mb-4">
-        <p class="font-medium text-gray-400 uppercase tracking-widest mb-3">Parties summoned</p>
-  
-        <!-- Mode toggle -->
-        <div class="flex gap-2 mb-4">
-          <button
-            type="button"
-            (click)="setMode('all')"
-            [ngClass]="partyMode === 'all'
-              ? 'border-blue-200 bg-blue-50 text-blue-700 font-medium'
-              : 'border-gray-200 bg-transparent text-gray-500 hover:bg-gray-50'"
-            class="flex-1 py-2  rounded-lg border transition"
-          >
-            Select all parties
-          </button>
-          <button
-            type="button"
-            (click)="setMode('custom')"
-            [ngClass]="partyMode === 'custom'
-              ? 'border-blue-200 bg-blue-50 text-blue-700 font-medium'
-              : 'border-gray-200 bg-transparent text-gray-500 hover:bg-gray-50'"
-            class="flex-1 py-2  rounded-lg border transition"
-          >
-            Select specific parties
-          </button>
-        </div>
-  
-        <!-- All-selected banner -->
-        <div
-          *ngIf="partyMode === 'all'"
-          class="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-4 py-2.5  text-green-700 mb-3"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="shrink-0">
-            <circle cx="8" cy="8" r="7" stroke="#3b6d11" stroke-width="1.2"/>
-            <polyline points="4.5,8.5 7,11 11.5,5.5" stroke="#3b6d11" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          All {{ parties.length }} parties associated with this case will be summoned for this hearing.
-        </div>
-  
-        <!-- Custom mode selected count -->
-        <p *ngIf="partyMode === 'custom'" class=" text-gray-400 mb-3">
-          {{ selectedPartyIds.size }} of {{ parties.length }} parties selected
-        </p>
-  
-        <!-- Validation error -->
-        <p *ngIf="submitted && selectedPartyIds.size === 0" class=" text-red-500 mb-2">
-          Please select at least one party to summon.
-        </p>
-  
-        <!-- Party grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <div
-            *ngFor="let party of parties"
-            (click)="toggleParty(party.partyid)"
-            [ngClass]="{
-              'border-blue-300 bg-blue-50': selectedPartyIds.has(party.partyid),
-              'border-gray-100 bg-gray-50': !selectedPartyIds.has(party.partyid),
-              'cursor-pointer hover:border-gray-300': partyMode === 'custom',
-              'cursor-default': partyMode === 'all'
-            }"
-            class="flex items-start gap-2.5 p-3 rounded-lg border transition select-none"
-          >
-            <!-- Checkbox -->
-            <div
-              [ngClass]="selectedPartyIds.has(party.partyid) ? 'bg-blue-600 border-blue-600' : 'border-gray-300'"
-              class="mt-0.5 w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition"
-            >
-              <svg *ngIf="selectedPartyIds.has(party.partyid)" class="w-2.5 h-2.5" viewBox="0 0 10 10" fill="none">
-                <polyline points="1.5,5 4,7.5 8.5,2.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-  
-            <!-- Avatar -->
-            <div
-              class="w-9 h-9 rounded-full flex items-center justify-center font-semibold shrink-0"
-            >
-            <i class="fa-solid fa-user"></i>
-            </div>
-  
-            <!-- Info -->
-            <div class="flex-1 min-w-0">
-              <p *ngIf="party.partytype === 'Individual'" class="font-semibold text-gray-800 truncate" [title]="party.partyname">{{ party.partyname }}</p>
-              <p *ngIf="party.partytype === 'Organization'" class="font-semibold text-gray-800 truncate" [title]="party.partyname">{{ party.oranizationname }}</p>
-              <span class="inline-block text-[10px] font-medium px-2 py-0.5 rounded-full mt-1">
-                {{ party.partyrole }}
-              </span>
-              <p class="text-[11px] text-gray-400 truncate">NIC/Reg: {{ party.partynic }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Actions -->
-      <div class="flex justify-end gap-2.5 mt-5 pb-8">
-        <button
-          type="button"
-          (click)="onCancel()"
-          class="px-5 py-2  text-gray-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          (click)="onSubmit()"
-          class="px-6 py-2  font-medium text-white bg-gray-900 border border-gray-800 rounded-lg hover:opacity-85 active:scale-95 transition"
-        >
-          Schedule hearing
-        </button>
-      </div>
 
+      <!-- Hearing form fields -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+
+        <!-- Hearing Type -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-base font-medium" style="color:#374151;">Hearing Type <span class="text-red-500">*</span></label>
+          <app-serchable-dropdown
+            [items]="hearingTypes"
+            placeholder="Select type"
+            searchPlaceholder="Search types..."
+            [(ngModel)]="form.hearingType"
+            (selectionChange)="onHearingTypeChange($event)"
+            [clearable]="true"
+            [showSelected]="true"
+            [dropdownTriggerClass]="submitted && !form.hearingType ? 'border-red-400' : ''"
+          ></app-serchable-dropdown>
+          <p *ngIf="submitted && !form.hearingType" class="text-red-500 text-base">Hearing type is required.</p>
+        </div>
+
+        <!-- Hearing Status -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-base font-medium" style="color:#374151;">Hearing Status <span class="text-red-500">*</span></label>
+          <app-serchable-dropdown
+            [items]="hearingStatuses"
+            placeholder="Select status"
+            searchPlaceholder="Search statuses..."
+            [(ngModel)]="form.hearingStatus"
+            (selectionChange)="onHearingStatusChange($event)"
+            [clearable]="true"
+            [showSelected]="true"
+            [dropdownTriggerClass]="submitted && !form.hearingStatus ? 'border-red-400' : ''"
+          ></app-serchable-dropdown>
+          <p *ngIf="submitted && !form.hearingStatus" class="text-red-500 text-base">Hearing status is required.</p>
+        </div>
+
+        <!-- Hearing Date -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-base font-medium" style="color:#374151;">Hearing Date <span class="text-red-500">*</span></label>
+          <app-custom-datepicker
+            [placeholder]="'Select hearing date'"
+            [selectedDate]="form.hearingDate"
+            (dateChange)="onDateChange($event)"
+          ></app-custom-datepicker>
+          <p *ngIf="submitted && !form.hearingDate" class="text-red-500 text-base">Hearing date is required.</p>
+        </div>
+
+        <!-- Presiding Judge -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-base font-medium" style="color:#374151;">Presiding Judge <span class="font-normal" style="color:#9CA3AF;">(Optional)</span></label>
+          <input
+            type="text"
+            [(ngModel)]="form.presidingJudge"
+            placeholder="e.g. Hon. Justice R.M. Dissanayake"
+            class="w-full px-4 py-3 rounded-lg text-base outline-none transition-colors"
+            style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+            onfocus="this.style.borderColor='#C9A84C'"
+            onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+          />
+        </div>
+
+      </div>
+    </div>
   </div>
+
+  <!-- Description Card -->
+  <div class="rounded-xl shadow-md overflow-hidden" style="border: 1px solid rgba(201,168,76,0.25);">
+    <div class="px-6 py-4 flex items-center gap-2" style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;">
+      <i class="fa-solid fa-file-lines" style="color:#C9A84C;"></i>
+      <p class="text-lg font-bold text-white">Description</p>
+      <span class="ml-1 text-base font-normal" style="color:rgba(255,255,255,0.5);">(Optional)</span>
+    </div>
+
+    <div class="bg-white px-6 py-5">
+      <!-- Language tabs -->
+      <div class="flex gap-2 mb-4">
+        <button
+          *ngFor="let lang of languages"
+          type="button"
+          (click)="activeLang = lang.code"
+          class="px-4 py-2 rounded-lg text-base font-medium transition-all"
+          [ngStyle]="{
+            'background':   activeLang === lang.code ? '#0F2547' : 'transparent',
+            'color':        activeLang === lang.code ? '#C9A84C' : '#6B7280',
+            'border':       activeLang === lang.code ? '1.5px solid #C9A84C' : '1.5px solid rgba(15,37,71,0.15)'
+          }"
+        >{{ lang.label }}</button>
+      </div>
+
+      <textarea
+        *ngIf="activeLang === 'en'"
+        [(ngModel)]="form.descEn"
+        rows="4"
+        placeholder="Enter hearing description in English…"
+        class="w-full px-4 py-3 rounded-lg text-base outline-none resize-y transition-colors"
+        style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+        onfocus="this.style.borderColor='#C9A84C'"
+        onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+      ></textarea>
+
+      <textarea
+        *ngIf="activeLang === 'si'"
+        [(ngModel)]="form.descSi"
+        rows="4"
+        placeholder="විභාගයේ විස්තරය සිංහලෙන් ඇතුළු කරන්න…"
+        class="w-full px-4 py-3 rounded-lg text-base outline-none resize-y transition-colors"
+        style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+        onfocus="this.style.borderColor='#C9A84C'"
+        onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+      ></textarea>
+
+      <textarea
+        *ngIf="activeLang === 'ta'"
+        [(ngModel)]="form.descTa"
+        rows="4"
+        placeholder="விசாரணையின் விளக்கத்தை தமிழில் உள்ளிடவும்…"
+        class="w-full px-4 py-3 rounded-lg text-base outline-none resize-y transition-colors"
+        style="border: 1px solid rgba(15,37,71,0.2); color:#0F2547;"
+        onfocus="this.style.borderColor='#C9A84C'"
+        onblur="this.style.borderColor='rgba(15,37,71,0.2)'"
+      ></textarea>
+    </div>
+  </div>
+
+  <!-- Parties Summoned Card -->
+  <div class="rounded-xl shadow-md overflow-hidden" style="border: 1px solid rgba(201,168,76,0.25);">
+    <div class="px-6 py-4 flex items-center gap-2" style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;">
+      <i class="fa-solid fa-users" style="color:#C9A84C;"></i>
+      <p class="text-lg font-bold text-white">Parties Summoned</p>
+    </div>
+
+    <div class="bg-white px-6 py-5">
+
+      <!-- Mode toggle -->
+      <div class="flex gap-3 mb-5">
+        <button
+          type="button"
+          (click)="setMode('all')"
+          class="flex-1 py-2.5 rounded-lg text-base font-medium transition-all"
+          [ngStyle]="{
+            'background': partyMode === 'all' ? '#0F2547' : 'transparent',
+            'color':      partyMode === 'all' ? '#C9A84C' : '#6B7280',
+            'border':     partyMode === 'all' ? '1.5px solid #C9A84C' : '1.5px solid rgba(15,37,71,0.15)'
+          }"
+        >
+          <i class="fa-solid fa-check-double mr-2"></i>Select All Parties
+        </button>
+        <button
+          type="button"
+          (click)="setMode('custom')"
+          class="flex-1 py-2.5 rounded-lg text-base font-medium transition-all"
+          [ngStyle]="{
+            'background': partyMode === 'custom' ? '#0F2547' : 'transparent',
+            'color':      partyMode === 'custom' ? '#C9A84C' : '#6B7280',
+            'border':     partyMode === 'custom' ? '1.5px solid #C9A84C' : '1.5px solid rgba(15,37,71,0.15)'
+          }"
+        >
+          <i class="fa-solid fa-list-check mr-2"></i>Select Specific Parties
+        </button>
+      </div>
+
+      <!-- All-selected banner -->
+      <div
+        *ngIf="partyMode === 'all'"
+        class="flex items-center gap-3 px-4 py-3 rounded-lg mb-4 text-base"
+        style="background: rgba(15,37,71,0.05); border: 1px solid rgba(201,168,76,0.3);"
+      >
+        <i class="fa-solid fa-circle-check" style="color:#C9A84C;"></i>
+        <span style="color:#0F2547;">All <strong>{{ parties.length }}</strong> parties associated with this case will be summoned.</span>
+      </div>
+
+      <!-- Custom count -->
+      <p *ngIf="partyMode === 'custom'" class="text-base mb-3" style="color:#6B7280;">
+        <span class="font-semibold" style="color:#0F2547;">{{ selectedPartyIds.size }}</span> of {{ parties.length }} parties selected
+      </p>
+
+      <!-- Validation error -->
+      <p *ngIf="submitted && selectedPartyIds.size === 0" class="text-red-500 text-base mb-3">
+        Please select at least one party to summon.
+      </p>
+
+      <!-- Party grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div
+          *ngFor="let party of parties"
+          (click)="toggleParty(party.partyid)"
+          class="flex items-center gap-3 p-4 rounded-lg transition-all select-none"
+          [ngStyle]="{
+            'background': selectedPartyIds.has(party.partyid) ? 'rgba(15,37,71,0.06)' : '#FAFAFA',
+            'border':     selectedPartyIds.has(party.partyid) ? '1.5px solid #C9A84C'  : '1px solid rgba(15,37,71,0.1)',
+            'cursor':     partyMode === 'custom' ? 'pointer' : 'default'
+          }"
+        >
+          <!-- Checkbox indicator -->
+          <div
+            class="flex items-center justify-center rounded-full flex-shrink-0 transition-all"
+            style="width:22px; height:22px;"
+            [ngStyle]="{
+              'background': selectedPartyIds.has(party.partyid) ? '#0F2547' : 'transparent',
+              'border':     selectedPartyIds.has(party.partyid) ? '2px solid #C9A84C' : '2px solid rgba(15,37,71,0.25)'
+            }"
+          >
+            <i *ngIf="selectedPartyIds.has(party.partyid)" class="fa-solid fa-check" style="color:#C9A84C; font-size:10px;"></i>
+          </div>
+
+          <!-- Avatar -->
+          <div
+            class="flex items-center justify-center rounded-full flex-shrink-0"
+            style="width:38px; height:38px; background: rgba(15,37,71,0.08); border: 1.5px solid rgba(201,168,76,0.35);"
+          >
+            <i class="fa-solid fa-user" style="color:#0F2547;"></i>
+          </div>
+
+          <!-- Info -->
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-base truncate" style="color:#0F2547;">
+              {{ party.partytype === 'Individual' ? party.partyname : party.oranizationname }}
+            </p>
+            <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+              <span
+                class="inline-block px-2 py-0.5 rounded-full text-base font-medium"
+                style="background: rgba(201,168,76,0.15); color:#92701E;"
+              >{{ party.partyrole }}</span>
+              <span class="text-base truncate" style="color:#9CA3AF;">{{ party.partynic }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex items-center justify-end gap-4 pt-2" style="border-top: 1px solid rgba(201,168,76,0.2);">
+    <button
+      type="button"
+      (click)="onCancel()"
+      class="px-6 py-2.5 rounded-lg font-medium text-base transition-all"
+      style="border: 1.5px solid rgba(15,37,71,0.25); color:#374151; background:#F4F6FA;"
+      onmouseover="this.style.background='#E8EDF5'"
+      onmouseout="this.style.background='#F4F6FA'"
+    >Cancel</button>
+
+    <button
+      type="button"
+      (click)="onSubmit()"
+      class="px-8 py-2.5 rounded-lg font-semibold text-base transition-all flex items-center gap-2"
+      style="background:#0F2547; color:#C9A84C; border: 1.5px solid #C9A84C;"
+      onmouseover="this.style.background='#1A3A6B'"
+      onmouseout="this.style.background='#0F2547'"
+    >
+      <i class="fa-solid fa-calendar-check"></i>
+      Schedule Hearing
+    </button>
+  </div>
+
 </div>
