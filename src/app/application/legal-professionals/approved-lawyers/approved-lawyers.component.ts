@@ -4,18 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
 import { CaseService } from '../../../services/case.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { SerchableDropdownComponent } from '../../../components/serchable-dropdown/serchable-dropdown.component';
 
+
 @Component({
-  selector: 'app-pending-legal-professionals',
+  selector: 'app-approved-lawyers',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, SerchableDropdownComponent, NgxPaginationModule],
-  templateUrl: './pending-legal-professionals.component.html',
-  styleUrl: './pending-legal-professionals.component.css'
+    imports: [CommonModule, FormsModule, LoadingSpinnerComponent, SerchableDropdownComponent, NgxPaginationModule],
+  templateUrl: './approved-lawyers.component.html',
+  styleUrl: './approved-lawyers.component.css'
 })
-export class PendingLegalProfessionalsComponent implements OnInit {
+export class ApprovedLawyersComponent implements OnInit {
 
   professionals: LegalProfessional[] = [];
   allProfessionals: LegalProfessional[] = [];
@@ -39,6 +40,8 @@ export class PendingLegalProfessionalsComponent implements OnInit {
 
   isProvinceDropdownOpen = false;
   isDistrictDropdownOpen = false;
+
+  tab: string | null = '';
 
   provinces: string[] = [
       'Western',
@@ -85,12 +88,15 @@ export class PendingLegalProfessionalsComponent implements OnInit {
   filteredDistricts: { name: string, province: string }[] = [];
 
   ngOnInit(): void {
-    this.fetchPendingProfessionals();
+    this.tab = this.route.snapshot.queryParamMap.get('tab');
+    console.log('tab param:', this.tab);
+    this.fetchApprovedProfessionals();
   }
 
   constructor(
         private router: Router,
         private casesSrv: CaseService,
+        private route: ActivatedRoute
     ) { }
 
 get provinceItems() {
@@ -128,7 +134,7 @@ onProvinceChange(selectedProvince: string | null): void {
       }
   }
   
-  this.fetchPendingProfessionals();
+  this.fetchApprovedProfessionals();
 }
 
 // Handle district selection change
@@ -143,7 +149,7 @@ onDistrictChange(selectedDistrict: string | null): void {
       }
   }
   
-  this.fetchPendingProfessionals();
+  this.fetchApprovedProfessionals();
 }
 
 
@@ -165,7 +171,8 @@ onDistrictChange(selectedDistrict: string | null): void {
 
   }
 
-fetchPendingProfessionals(
+fetchApprovedProfessionals(
+  tab: string | null = this.tab,
   page: number = this.page,
   limit: number = this.itemsPerPage,
   searchText: string = this.searchText,
@@ -174,7 +181,7 @@ fetchPendingProfessionals(
 ) {
   this.isLoading = true;
 
-  this.casesSrv.getPendingLawyers(page, limit, searchText, district, province).subscribe(
+  this.casesSrv.getApprovedLawyers(tab, page, limit, searchText, district, province).subscribe(
     (res) => {
       // this.connectionsArr = res.items;
       this.professionals = res.items;
@@ -188,18 +195,18 @@ fetchPendingProfessionals(
 
 onPageChange(page: number) {
       this.currentPage = page;
-      this.fetchPendingProfessionals();
+      this.fetchApprovedProfessionals();
   }
 
   onSearch() {
       this.searchText = this.searchText?.trim() || '';
       this.currentPage = 1; // Reset to first page on new search
-      this.fetchPendingProfessionals();
+      this.fetchApprovedProfessionals();
   }
 
   offSearch() {
       this.searchText='';
-      this.fetchPendingProfessionals();
+      this.fetchApprovedProfessionals();
   }
 
   getTotalPages(): number {
@@ -238,7 +245,7 @@ onPageChange(page: number) {
                   title: 'dark:text-white',
                 }
               })
-              this.fetchPendingProfessionals();
+              this.fetchApprovedProfessionals();
     
             } else {
       
@@ -274,18 +281,6 @@ onPageChange(page: number) {
         );
   }
 
-  navigateToApprovedConnections() {
-  console.log('calling');
-  this.router.navigate(['/lawyers/approved-lawyer'], {
-    queryParams: { tab: 'Approved' }
-  });
-}
-
-  navigateToRejectedConnections() {
-    this.router.navigate(['/lawyers/rejected-lawyer'], {
-    queryParams: { tab: 'Rejected' }
-  });
-  }
 
 }
 

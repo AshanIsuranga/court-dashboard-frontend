@@ -12,7 +12,8 @@
     </div>
     <span class="text-base font-bold" style="color:#0F2547;">Legal Professionals</span>
     <i class="fa-solid fa-chevron-right text-xs" style="color:#9CA3AF;"></i>
-    <span class="text-base font-semibold" style="color:#C9A84C;">Pending Approvals</span>
+    <span *ngIf="tab ==='Approved' " class="text-base font-semibold" style="color:#C9A84C;">Approved Legal Professionals</span>
+    <span *ngIf="tab ==='Rejected' " class="text-base font-semibold" style="color:#C9A84C;">Rejected Legal Professionals</span>
   </div>
 
   <!-- Search & Count Card -->
@@ -22,7 +23,7 @@
   >
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <p class="text-lg font-bold" style="color:#0F2547;">Pending Legal Professionals</p>
+        <p class="text-lg font-bold" style="color:#0F2547;"><span *ngIf="tab ==='Approved' ">Approved</span><span *ngIf="tab ==='Rejected' ">Rejected</span> Legal Professionals</p>
         <span
           class="px-3 py-0.5 rounded-full text-base font-bold"
           style="background: rgba(15,37,71,0.08); color:#0F2547;"
@@ -78,24 +79,6 @@
     </div>
   </div>
 
-   <button
-        (click)="navigateToApprovedConnections()"
-        class="px-5 py-2.5 rounded-lg font-semibold text-base transition-all flex items-center gap-2"
-        style="background:#0F2547; color:#C9A84C; border: 1.5px solid #C9A84C;"
-      >
-        <i class="fa-solid fa-link"></i>
-        approved
-  </button>
-
-  <button
-        (click)="navigateToRejectedConnections()"
-        class="px-5 py-2.5 rounded-lg font-semibold text-base transition-all flex items-center gap-2"
-        style="background:#0F2547; color:#C9A84C; border: 1.5px solid #C9A84C;"
-      >
-        <i class="fa-solid fa-link"></i>
-        Rejected
-  </button>
-
   <!-- Table -->
   <div class="rounded-xl shadow-md overflow-hidden" style="border: 1px solid rgba(201,168,76,0.25);">
     <div
@@ -103,7 +86,8 @@
       style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;"
     >
       <i class="fa-solid fa-user-tie" style="color:#C9A84C;"></i>
-      <p class="text-lg font-bold text-white">Lawyer Profiles Awaiting Approval</p>
+      <p *ngIf="tab ==='Rejected'" class="text-lg font-bold text-white">Rejected Legal Professional Profiles</p>
+      <p *ngIf="tab ==='Approved'" class="text-lg font-bold text-white">Approved Legal Professional Profiles</p>
       <span
         class="ml-2 px-2.5 py-0.5 rounded-full text-base font-semibold"
         style="background:rgba(201,168,76,0.2); color:#C9A84C;"
@@ -125,7 +109,7 @@
             <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Province</th>
             <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">City</th>
             <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Nearest court</th>
-            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Action</th>
+            <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Approval Status</th>
           </tr>
         </thead>
         <tbody style="background:#fff;">
@@ -160,25 +144,18 @@
                         <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.courtnameenglish || '--' }}</td>
             <td class="px-5 py-3.5 text-center whitespace-nowrap">
               <div class="flex items-center justify-center gap-2">
-                <button
-                  (click)="openApproveModal(item)"
+                <button *ngIf="tab ==='Approved'"
                   class="px-3 py-1.5 rounded-lg font-semibold text-base transition-all flex items-center gap-1.5"
                   style="background: rgba(22,163,74,0.1); color:#16A34A; border: 1px solid rgba(22,163,74,0.25);"
-                  onmouseover="this.style.background='rgba(22,163,74,0.2)'"
-                  onmouseout="this.style.background='rgba(22,163,74,0.1)'"
                 >
-                  <i class="fa-solid fa-check text-xs"></i>
-                  Approve
+                  Approved
                 </button>
-                <button
+                <button *ngIf="tab ==='Rejected'"
                   (click)="openRejectModal(item)"
                   class="px-3 py-1.5 rounded-lg font-semibold text-base transition-all flex items-center gap-1.5"
                   style="background: rgba(220,38,38,0.1); color:#DC2626; border: 1px solid rgba(220,38,38,0.2);"
-                  onmouseover="this.style.background='rgba(220,38,38,0.2)'"
-                  onmouseout="this.style.background='rgba(220,38,38,0.1)'"
                 >
-                  <i class="fa-solid fa-xmark text-xs"></i>
-                  Reject
+                  Rejected
                 </button>
               </div>
             </td>

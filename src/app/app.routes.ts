@@ -17,6 +17,7 @@ import { CreateACaseComponent } from './application/cases/create-a-case/create-a
 import { ApprovedConnectionsComponent } from './application/client-connections/approved-connections/approved-connections.component';
 import { RejecteConnectionsComponent } from './application/client-connections/rejecte-connections/rejecte-connections.component';
 import { PendingLegalProfessionalsComponent } from './application/legal-professionals/pending-legal-professionals/pending-legal-professionals.component';
+import { ApprovedLawyersComponent } from './application/legal-professionals/approved-lawyers/approved-lawyers.component';
 
 export const routes: Routes = [
     {
@@ -113,6 +114,16 @@ export const routes: Routes = [
                   {
                         path: '',
                         component: PendingLegalProfessionalsComponent
+                  },
+
+                  {
+                        path: 'approved-lawyer',
+                        component: ApprovedLawyersComponent
+                  },
+
+                  {
+                        path: 'rejected-lawyer',
+                        component: ApprovedLawyersComponent
                   },
                 ]
             },

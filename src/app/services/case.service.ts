@@ -188,4 +188,67 @@ export class CaseService {
 
     return this.http.get(url, { headers });
   }
+
+  getPendingLawyers(page: number = 1, limit: number = 10, searchText: string ='', district: string ='', province: string =''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    console.log('token', this.token)
+
+    let url = `${this.apiUrl}/get-pending-lawyers?page=${page}&limit=${limit}`;
+
+    if (searchText) {
+      url += `&searchText=${searchText}`
+    }
+
+    if (district) {
+      url += `&district=${district}`
+    }
+
+    if (province) {
+      url += `&province=${province}`
+    }
+
+    return this.http.get(url, { headers });
+  }
+
+  approveLawyer(id: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+  
+    const url = `${this.apiUrl}/approve-lawyer`;
+  
+    return this.http.post(
+      url,
+      { id, status }, // body
+      { headers }          // config
+    );
+  }
+
+  getApprovedLawyers(tab: string | null, page: number = 1, limit: number = 10, searchText: string ='', district: string ='', province: string =''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    console.log('token', this.token)
+
+    let url = `${this.apiUrl}/get-approved-lawyers?page=${page}&limit=${limit}&tab=${tab}`;
+
+    if (searchText) {
+      url += `&searchText=${searchText}`
+    }
+
+    if (district) {
+      url += `&district=${district}`
+    }
+
+    if (province) {
+      url += `&province=${province}`
+    }
+
+    return this.http.get(url, { headers });
+  }
 }
+
