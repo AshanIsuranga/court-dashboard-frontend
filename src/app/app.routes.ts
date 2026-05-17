@@ -58,6 +58,7 @@ export const routes: Routes = [
 
             {
               path: 'connections',
+              data: { roles: ['Registrar', 'Clerk'] },
               children: [
 
                 {
@@ -82,6 +83,7 @@ export const routes: Routes = [
 
             {
                 path: 'cases',
+                data: { roles: ['Registrar', 'Clerk'] },
                 children: [
 
                   {
@@ -113,6 +115,7 @@ export const routes: Routes = [
 
             {
                 path: 'lawyers',
+                data: { roles: ['Admin'] },
                 children: [
 
                   {
@@ -134,6 +137,7 @@ export const routes: Routes = [
 
             {
                 path: 'courts',
+                data: { roles: ['Admin'] },
                 children: [
 
                   {

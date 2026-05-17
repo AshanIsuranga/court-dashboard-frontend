@@ -121,14 +121,22 @@ export class CoreService {
   }
 
   getClerkDetailsById(userId: number | null): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`
-  });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
 
-  return this.http.get(
-    `${this.apiUrl}/get-clerk-details-by-id/${userId}`,
-    { headers }
-  );
-}
+    return this.http.get(
+      `${this.apiUrl}/get-clerk-details-by-id/${userId}`,
+      { headers }
+    );
+  }
+
+  updateClerk(userId: number, formData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    return this.http.put(`${this.apiUrl}/update-clerk/${userId}`, formData, { headers });
+  }
 
 }

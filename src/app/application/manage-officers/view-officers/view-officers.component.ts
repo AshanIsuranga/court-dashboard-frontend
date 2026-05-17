@@ -6,6 +6,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CoreService } from './../../../services/core-service/core.service'
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { SerchableDropdownComponent } from '../../../components/serchable-dropdown/serchable-dropdown.component'
+import { TokenServiceService } from '../../../services/token-service.service';
 
 @Component({
   selector: 'app-view-officers',
@@ -23,6 +24,9 @@ export class ViewOfficersComponent implements OnInit {
   itemsPerPage: number = 10;
   totalItems: number = 0;
 
+  officerRole!: string;
+  loggedInOfficerId!: number;
+
   isLoading: boolean = true;
   hasData: boolean = false;
 
@@ -30,10 +34,19 @@ export class ViewOfficersComponent implements OnInit {
       private router: Router,
       private coreSrv: CoreService,
       private route: ActivatedRoute,
+      private tokenSrv: TokenServiceService
   ) { }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
+      const details = this.tokenSrv.getUserDetails();
+      this.officerRole = details.role ?? '';
+      this.loggedInOfficerId = Number(details.officerId);
       this.fetchRegistrarOfficers();
+  }
+
+  canModify(item: CenterData): boolean {
+      if (item.officerrole === 'Clerk') return true;
+      return item.id === this.loggedInOfficerId;
   }
 
 

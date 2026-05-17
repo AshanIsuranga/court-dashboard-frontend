@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { SerchableDropdownComponent } from '../../../components/serchable-dropdown/serchable-dropdown.component'
@@ -28,8 +28,7 @@ interface ClerkForm {
   city: string;
   district: string | null;
   province: string | null;
-  country: string
-
+  country: string;
 }
 
 @Component({
@@ -43,9 +42,36 @@ export class EditClerkComponent implements OnInit {
   isLoading = false;
   isSaving = false;
   submitted = false;
-  courtId!: number;
-  itemsArr!: Court[];
-  userId!: number | null;
+  userId!: number;
+  officerCode = '';
+
+  readonly nicPattern = '^([0-9]{9}[vVxX]|[0-9]{12})$';
+  readonly phonePattern = '^[0-9]{9}$';
+
+  private readonly provinceDistrictMap: { [key: string]: string[] } = {
+    'Western':       ['Colombo', 'Gampaha', 'Kalutara'],
+    'Central':       ['Kandy', 'Matale', 'Nuwara Eliya'],
+    'Southern':      ['Galle', 'Matara', 'Hambantota'],
+    'Northern':      ['Jaffna', 'Kilinochchi', 'Mannar', 'Mullaitivu', 'Vavuniya'],
+    'Eastern':       ['Trincomalee', 'Batticaloa', 'Ampara'],
+    'North Western': ['Kurunegala', 'Puttalam'],
+    'North Central': ['Anuradhapura', 'Polonnaruwa'],
+    'Uva':           ['Badulla', 'Monaragala'],
+    'Sabaragamuwa':  ['Ratnapura', 'Kegalle'],
+  };
+
+  private readonly districtProvinceMap: { [key: string]: string } = {
+    'Colombo': 'Western', 'Gampaha': 'Western', 'Kalutara': 'Western',
+    'Kandy': 'Central', 'Matale': 'Central', 'Nuwara Eliya': 'Central',
+    'Galle': 'Southern', 'Matara': 'Southern', 'Hambantota': 'Southern',
+    'Jaffna': 'Northern', 'Kilinochchi': 'Northern', 'Mannar': 'Northern',
+    'Mullaitivu': 'Northern', 'Vavuniya': 'Northern',
+    'Trincomalee': 'Eastern', 'Batticaloa': 'Eastern', 'Ampara': 'Eastern',
+    'Kurunegala': 'North Western', 'Puttalam': 'North Western',
+    'Anuradhapura': 'North Central', 'Polonnaruwa': 'North Central',
+    'Badulla': 'Uva', 'Monaragala': 'Uva',
+    'Ratnapura': 'Sabaragamuwa', 'Kegalle': 'Sabaragamuwa',
+  };
 
   formData: ClerkForm = {
     firstname: '',
@@ -65,6 +91,7 @@ export class EditClerkComponent implements OnInit {
     country: 'Sri Lanka',
   };
 
+  private originalFormData!: ClerkForm;
 
   roleItems: DropdownItem[] = [
     { value: 'Clerk', label: 'Clerk' },
@@ -82,7 +109,7 @@ export class EditClerkComponent implements OnInit {
     { value: 'Sabaragamuwa', label: 'Sabaragamuwa' },
   ];
 
-  districtItems: DropdownItem[] = [
+  private readonly allDistrictItems: DropdownItem[] = [
     { value: 'Colombo', label: 'Colombo' },
     { value: 'Gampaha', label: 'Gampaha' },
     { value: 'Kalutara', label: 'Kalutara' },
@@ -110,193 +137,207 @@ export class EditClerkComponent implements OnInit {
     { value: 'Kegalle', label: 'Kegalle' },
   ];
 
+  districtItems: DropdownItem[] = [...this.allDistrictItems];
+
   constructor(
-    private router: Router,
     private coreSrv: CoreService,
     private route: ActivatedRoute,
     private location: Location
   ) { }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.userId = Number(this.route.snapshot.paramMap.get('id'));
-    console.log('userId', this.userId)
     this.fetchClerkDetails();
   }
 
-  fetchClerkDetails(userId: number | null = this.userId) {
-      console.log('clerk called')
-      this.isLoading = true;
-
-      this.coreSrv.getClerkDetailsById(userId).subscribe(
-          (res) => {
-
-
-            console.log('res', res)
-              this.isLoading = false;
-          }
-      );
+  fetchClerkDetails(): void {
+    this.isLoading = true;
+    this.coreSrv.getClerkDetailsById(this.userId).subscribe({
+      next: (res) => {
+        const data = res?.data ?? res;
+        this.officerCode = data.officercode || '';
+        this.populateForm(data);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to Load',
+          text: err?.error?.error || 'Could not fetch clerk details.',
+        });
+      }
+    });
   }
 
+  private populateForm(data: any): void {
+    // Strip leading 0 from stored phone numbers (e.g. 0712345678 → 712345678)
+    const stripLeadingZero = (num: string | null) =>
+      num ? (num.startsWith('0') ? num.slice(1) : num) : '';
+
+    this.formData = {
+      firstname:    data.firstname    || '',
+      lastname:     data.lastname     || '',
+      officerrole:  data.officerrole  || null,
+      phonecode01:  data.phonecode01  || '+94',
+      phonenumber01: stripLeadingZero(data.phonenumber01),
+      phonecode02:  data.phonecode02  || '+94',
+      phonenumber02: stripLeadingZero(data.phonenumber02),
+      nic:          data.nic          || '',
+      email:        data.email        || '',
+      housenumber:  data.housenumber  || '',
+      streetname:   data.streetname   || '',
+      city:         data.city         || '',
+      district:     data.district     || null,
+      province:     data.province     || null,
+      country:      data.country      || 'Sri Lanka',
+    };
+
+    // Pre-filter district list to match the loaded province
+    if (data.province && this.provinceDistrictMap[data.province]) {
+      const names = this.provinceDistrictMap[data.province];
+      this.districtItems = this.allDistrictItems.filter(d => names.includes(d.value));
+    }
+
+    this.originalFormData = { ...this.formData };
+  }
+
+  onProvinceChange(province: string | null): void {
+    this.formData.district = null;
+    if (province && this.provinceDistrictMap[province]) {
+      const names = this.provinceDistrictMap[province];
+      this.districtItems = this.allDistrictItems.filter(d => names.includes(d.value));
+    } else {
+      this.districtItems = [...this.allDistrictItems];
+    }
+  }
+
+  onDistrictChange(district: string | null): void {
+    if (district && this.districtProvinceMap[district]) {
+      this.formData.province = this.districtProvinceMap[district];
+      const names = this.provinceDistrictMap[this.formData.province];
+      this.districtItems = this.allDistrictItems.filter(d => names.includes(d.value));
+    }
+  }
+
+  isFormValid(): boolean {
+    const nicOk = new RegExp(this.nicPattern).test(this.formData.nic);
+    const phone01Ok = new RegExp(this.phonePattern).test(this.formData.phonenumber01);
+    const phone02Ok = !this.formData.phonenumber02 || new RegExp(this.phonePattern).test(this.formData.phonenumber02);
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.formData.email);
+
+    return !!(
+      this.formData.officerrole &&
+      this.formData.firstname?.trim() &&
+      this.formData.lastname?.trim() &&
+      nicOk && emailOk && phone01Ok && phone02Ok &&
+      this.formData.housenumber?.trim() &&
+      this.formData.streetname?.trim() &&
+      this.formData.city?.trim() &&
+      this.formData.district &&
+      this.formData.province &&
+      this.formData.country?.trim()
+    );
+  }
 
   onSubmit(): void {
     this.submitted = true;
+    if (!this.isFormValid()) return;
     if (this.isSaving) return;
-
-    const errors = this.getValidationErrors();
-    if (errors.length > 0) {
-      Swal.fire({
-        title: 'Please fix the following issues',
-        html: `
-          <div style="text-align:left; margin-top:8px;">
-            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
-              ${errors.map(e => `
-                <li style="display:flex; align-items:center; gap:10px; padding:8px 12px; background:rgba(15,37,71,0.05); border-left:3px solid #C9A84C; border-radius:6px; font-size:15px; color:#0F2547;">
-                  <i class="fa-solid fa-circle-exclamation" style="color:#C9A84C; flex-shrink:0;"></i>
-                  ${e}
-                </li>`).join('')}
-            </ul>
-          </div>`,
-        icon: undefined,
-        confirmButtonText: 'Fix Issues',
-        customClass: {
-          popup: 'swal-court-popup',
-          title: 'swal-court-title',
-          confirmButton: 'swal-court-confirm',
-        },
-        didOpen: () => {
-          const popup = Swal.getPopup()!;
-          popup.style.borderTop = '4px solid #C9A84C';
-          popup.style.borderRadius = '12px';
-          const title = Swal.getTitle()!;
-          title.style.color = '#0F2547';
-          title.style.fontSize = '18px';
-          const btn = Swal.getConfirmButton()!;
-          btn.style.background = '#0F2547';
-          btn.style.color = '#C9A84C';
-          btn.style.border = '1.5px solid #C9A84C';
-          btn.style.borderRadius = '8px';
-          btn.style.padding = '10px 28px';
-          btn.style.fontWeight = '600';
-          btn.style.fontSize = '15px';
-        }
-      });
-      return;
-    }
-
     this.isSaving = true;
-    this.createClerk(this.formData);
+    this.updateClerk(this.formData);
   }
 
-  private getValidationErrors(): string[] {
-    const errors: string[] = [];
-    const f = this.formData;
-
-    const nicOld = /^\d{9}[VvXx]$/;
-    const nicNew = /^\d{12}$/;
-    const emailPattern = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
-    const mobilePattern = /^[1-9]\d{8}$/;
-
-    if (!f.officerrole)        errors.push('Officer Role is required');
-    if (!f.firstname?.trim())  errors.push('First Name is required');
-    if (!f.lastname?.trim())   errors.push('Last Name is required');
-
-    if (!f.nic?.trim()) {
-      errors.push('NIC is required');
-    } else if (!nicOld.test(f.nic.trim()) && !nicNew.test(f.nic.trim())) {
-      errors.push('NIC must be in old format (e.g. 123456789V) or new format (e.g. 200012345678)');
-    }
-
-    if (!f.email?.trim()) {
-      errors.push('Email is required');
-    } else if (!emailPattern.test(f.email.trim())) {
-      errors.push('Email must be a valid address (e.g. officer@courts.gov.lk)');
-    }
-
-    if (!f.phonenumber01?.trim()) {
-      errors.push('Primary Mobile number is required');
-    } else if (!mobilePattern.test(f.phonenumber01.trim())) {
-      errors.push('Primary Mobile must be 9 digits starting with a non-zero digit (e.g. 712345678)');
-    }
-
-    if (f.phonenumber02?.trim() && !mobilePattern.test(f.phonenumber02.trim())) {
-      errors.push('Secondary Mobile must be 9 digits starting with a non-zero digit (e.g. 712345678)');
-    }
-
-    if (!f.housenumber?.trim()) errors.push('House / Building Number is required');
-    if (!f.streetname?.trim())  errors.push('Street Name is required');
-    if (!f.city?.trim())        errors.push('City is required');
-    if (!f.district)            errors.push('District is required');
-    if (!f.province)            errors.push('Province is required');
-    if (!f.country?.trim())     errors.push('Country is required');
-
-    return errors;
-  }
-
-  createClerk(formData: ClerkForm) {
+  updateClerk(formData: ClerkForm): void {
   this.isLoading = true;
+  this.isSaving = true;
 
-  this.coreSrv.createClerk(formData).subscribe({
-    next: (res) => {
-      this.isLoading = false;
+  this.coreSrv.updateClerk(this.userId, formData).subscribe({
+    next: (res: any) => {
+      this.stopLoading();
 
       if (res?.status) {
         Swal.fire({
           icon: 'success',
-          title: 'Clerk Created Successfully',
-          confirmButtonText: 'OK'
+          title: 'Officer Updated',
+          text: 'Clerk details have been saved successfully.',
+          confirmButtonText: 'OK',
+        }).then(() => {
+          this.location.back();
         });
-        this.location.back();
+
       } else {
         Swal.fire({
           icon: 'warning',
-          title: 'Clerk Creation Failed',
-          text: res.message || 'Something went wrong'
+          title: 'Update Failed',
+          text: res?.message || 'Something went wrong.',
         });
       }
     },
 
-    error: (err) => {
-      this.isLoading = false;
+    error: (err: any) => {
+      this.stopLoading();
 
+      // 🔥 DUPLICATE HANDLING (409)
+      if (err?.status === 409) {
+        const duplicates: string[] = err?.error?.duplicates || [];
+
+        const formatted = duplicates.length
+          ? duplicates.map(f => `• ${this.prettyFieldName(f)}`).join('<br>')
+          : 'Duplicate entry detected';
+
+        Swal.fire({
+          icon: 'warning',
+          title: 'Duplicate Entry',
+          html: `
+            <div style="text-align:left">
+              These fields already exist:<br><br>
+              ${formatted}
+            </div>
+          `
+        });
+
+        return;
+      }
+
+      // ❌ GENERAL ERROR
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: err?.error?.error || 'Server error occurred'
+        text: err?.error?.error || 'Server error occurred.',
       });
     }
   });
 }
 
+private stopLoading() {
+  this.isLoading = false;
+  this.isSaving = false;
+}
+
+private prettyFieldName(field: string): string {
+  const map: any = {
+    nic: 'NIC',
+    email: 'Email',
+    phoneNumber01: 'Phone Number 1',
+    phoneNumber02: 'Phone Number 2'
+  };
+
+  return map[field] || field;
+}
 
   onReset(): void {
     this.submitted = false;
-    this.formData = {
-      firstname: '',
-      lastname: '',
-      officerrole: null,
-      phonecode01: '+94',
-      phonenumber01: '',
-      phonecode02: '+94',
-      phonenumber02: '',
-      nic: '',
-      email: '',
-      housenumber: '',
-      streetname: '',
-      city: '',
-      district: null,
-      province: null,
-      country: 'Sri Lanka',
-    };
+    if (this.originalFormData) {
+      this.formData = { ...this.originalFormData };
+      if (this.formData.province && this.provinceDistrictMap[this.formData.province]) {
+        const names = this.provinceDistrictMap[this.formData.province];
+        this.districtItems = this.allDistrictItems.filter(d => names.includes(d.value));
+      }
+    }
   }
 
   goBack(): void {
     this.location.back();
   }
-}
-
-class Court {
-
-  courtid!: string;
-  courtnameenglish!: string;
-
 }
