@@ -120,4 +120,15 @@ export class CoreService {
     return this.http.post(url, fromData, { headers });
   }
 
+  getClerkDetailsById(userId: number | null): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`
+  });
+
+  return this.http.get(
+    `${this.apiUrl}/get-clerk-details-by-id/${userId}`,
+    { headers }
+  );
+}
+
 }

@@ -222,52 +222,56 @@ export class CreateRegistarComponent implements OnInit {
 
   createRegistrar(formData: RegistrarForm) {
   this.isLoading = true;
+  this.isSaving = true;
 
   this.coreSrv.createRegistrar(formData).subscribe({
     next: (res) => {
-      this.isLoading = false;
+      this.stopLoading();
 
       if (res?.status) {
         Swal.fire({
           icon: 'success',
           title: 'Registrar Created',
           confirmButtonText: 'OK'
+        }).then(() => {
+          this.location.back();
         });
-        this.isSaving = false;
-        this.location.back();
 
       } else {
         Swal.fire({
           icon: 'warning',
           title: 'Failed',
-          text: res.message || 'Something went wrong'
+          text: res?.message || 'Something went wrong'
         });
-        this.isSaving = false;
       }
     },
 
     error: (err) => {
-      this.isLoading = false;
-      this.isSaving = false;
+      this.stopLoading();
 
-      // 🔥 HANDLE DUPLICATE CASE (409)
+      // 🔥 DUPLICATE HANDLING (409)
       if (err?.status === 409) {
-        const duplicates = err?.error?.duplicates || [];
+        const duplicates: string[] = err?.error?.duplicates || [];
 
-        const message =
-          duplicates.length > 0
-            ? `Duplicate fields found: ${duplicates.join(', ')}`
-            : err?.error?.message || 'Duplicate entry detected';
+        const formattedList = duplicates.length
+          ? duplicates.map(f => `• ${this.prettyFieldName(f)}`).join('<br>')
+          : 'Duplicate entry detected';
 
         Swal.fire({
           icon: 'warning',
           title: 'Duplicate Entry',
-          text: message
+          html: `
+            <div style="text-align:left">
+              The following fields already exist:<br><br>
+              ${formattedList}
+            </div>
+          `
         });
 
         return;
       }
 
+      // ❌ GENERAL ERROR
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -275,6 +279,22 @@ export class CreateRegistarComponent implements OnInit {
       });
     }
   });
+}
+
+private stopLoading() {
+  this.isLoading = false;
+  this.isSaving = false;
+}
+
+private prettyFieldName(field: string): string {
+  const map: any = {
+    nic: 'NIC',
+    email: 'Email',
+    phoneNumber01: 'Phone Number 1',
+    phoneNumber02: 'Phone Number 2'
+  };
+
+  return map[field] || field;
 }
 
   onReset(): void {

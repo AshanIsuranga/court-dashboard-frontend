@@ -19,6 +19,7 @@ import { RejecteConnectionsComponent } from './application/client-connections/re
 import { PendingLegalProfessionalsComponent } from './application/legal-professionals/pending-legal-professionals/pending-legal-professionals.component';
 import { ApprovedLawyersComponent } from './application/legal-professionals/approved-lawyers/approved-lawyers.component';
 import { ChangePasswordComponent } from './application/change-password/change-password.component';
+import { EditClerkComponent } from './application/manage-officers/edit-clerk/edit-clerk.component';
 
 export const routes: Routes = [
     {
@@ -173,12 +174,20 @@ export const routes: Routes = [
 
                   {
                         path: '',
+                        data: { roles: ['Registrar', 'Clerk'] },
                         component: ViewOfficersComponent
                   },
 
                   {
                         path: 'create-clerk',
+                        data: { roles: ['Registrar', 'Clerk'] },
                         component: CreataClerkComponent
+                  },
+
+                  {
+                        path: 'edit-clerk/:id',
+                        data: { roles: ['Registrar'] },
+                        component: EditClerkComponent
                   },
                 ]
             },

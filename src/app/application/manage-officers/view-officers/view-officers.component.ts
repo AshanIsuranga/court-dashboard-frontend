@@ -69,9 +69,14 @@ export class ViewOfficersComponent implements OnInit {
       return Math.ceil(this.totalItems / this.itemsPerPage);
   }
 
-  navigateToDashboard(id: number) {
+  editOfficer(id: number) {
     console.log('clicke')
-      this.router.navigate([`/courts/court-dashboard/${id}`]);
+      this.router.navigate([`/manage-officers/edit-clerk/${id}`]);
+  }
+
+  deleteOfficer(id: number) {
+    console.log('clicke')
+      this.router.navigate([`/manage-officers/delete-clerk/${id}`]);
   }
 
 

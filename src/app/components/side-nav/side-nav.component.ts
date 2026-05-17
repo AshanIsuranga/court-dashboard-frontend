@@ -51,14 +51,6 @@ export const MENU_ITEMS = [
     roles: ['Admin'],
   },
 
-  // {
-  //   id: 5,
-  //   key: 'manage-officers',
-  //   path: '/manage-officers',
-  //   label: 'Manage-officers',
-  //   icon: 'fa-solid fa-user-plus',
-  //   roles: ['Registrar', 'Clerk'],
-  // },
 
   {
     id: 6,
@@ -67,6 +59,15 @@ export const MENU_ITEMS = [
     label: 'Legal Professionals',
     icon: 'fa-solid fa-user-plus',
     roles: ['Admin'],
+  },
+
+  {
+    id: 7,
+    key: 'manage-officers',
+    path: '/manage-officers',
+    label: 'Manage officers',
+    icon: 'fa-solid fa-user-plus',
+    roles: ['Registrar', 'Clerk'],
   },
 
 

@@ -13,7 +13,7 @@ interface DropdownItem {
   label: string;
 }
 
-interface RegistrarForm {
+interface ClerkForm {
   firstname: string;
   lastname: string;
   officerrole: string | null;
@@ -33,20 +33,21 @@ interface RegistrarForm {
 }
 
 @Component({
-  selector: 'app-creata-clerk',
+  selector: 'app-edit-clerk',
   standalone: true,
   imports: [CommonModule, FormsModule, LoadingSpinnerComponent, SerchableDropdownComponent],
-  templateUrl: './creata-clerk.component.html',
-  styleUrl: './creata-clerk.component.css'
+  templateUrl: './edit-clerk.component.html',
+  styleUrl: './edit-clerk.component.css'
 })
-export class CreataClerkComponent implements OnInit {
+export class EditClerkComponent implements OnInit {
   isLoading = false;
   isSaving = false;
   submitted = false;
   courtId!: number;
   itemsArr!: Court[];
+  userId!: number | null;
 
-  formData: RegistrarForm = {
+  formData: ClerkForm = {
     firstname: '',
     lastname: '',
     officerrole: null,
@@ -117,6 +118,23 @@ export class CreataClerkComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {    
+    this.userId = Number(this.route.snapshot.paramMap.get('id'));
+    console.log('userId', this.userId)
+    this.fetchClerkDetails();
+  }
+
+  fetchClerkDetails(userId: number | null = this.userId) {
+      console.log('clerk called')
+      this.isLoading = true;
+
+      this.coreSrv.getClerkDetailsById(userId).subscribe(
+          (res) => {
+
+
+            console.log('res', res)
+              this.isLoading = false;
+          }
+      );
   }
 
 
@@ -214,7 +232,7 @@ export class CreataClerkComponent implements OnInit {
     return errors;
   }
 
-  createClerk(formData: RegistrarForm) {
+  createClerk(formData: ClerkForm) {
   this.isLoading = true;
 
   this.coreSrv.createClerk(formData).subscribe({
