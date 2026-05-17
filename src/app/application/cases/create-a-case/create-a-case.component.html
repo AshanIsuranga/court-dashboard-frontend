@@ -24,10 +24,10 @@
   <form (ngSubmit)="onSubmit()" #caseForm="ngForm" novalidate>
 
     <!-- Case Details Card -->
-    <div class="rounded-xl shadow-md overflow-hidden" style="border: 1px solid rgba(201,168,76,0.25);">
+    <div class="rounded-xl shadow-md" style="border: 1px solid rgba(201,168,76,0.25);">
 
       <!-- Card Header -->
-      <div class="px-6 py-4 flex items-center gap-2" style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;">
+      <div class="px-6 py-4 flex items-center gap-2 rounded-t-xl" style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;">
         <i class="fa-solid fa-file-circle-plus" style="color:#C9A84C;"></i>
         <p class="text-lg font-bold text-white">Case Details</p>
       </div>
@@ -168,13 +168,13 @@
     <!-- Party Cards -->
     <div
       *ngFor="let party of parties; let pi = index; trackBy: trackByIndex"
-      class="rounded-xl shadow-md overflow-hidden"
+      class="rounded-xl shadow-md"
       style="border: 1px solid rgba(201,168,76,0.25);"
     >
 
       <!-- Party Card Header -->
       <div
-        class="px-6 py-4 flex items-center justify-between"
+        class="px-6 py-4 flex items-center justify-between rounded-t-xl"
         style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;"
       >
         <div class="flex items-center gap-2">

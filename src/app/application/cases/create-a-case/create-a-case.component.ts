@@ -99,7 +99,7 @@ export class CreateACaseComponent {
 
   partyRoleItems: DropdownItem[] = [
     { value: 'PLAINTIFF', label: 'Plaintiff' },
-    { value: 'DEFENDANT', label: 'Defendant' },
+    { value: 'DEFENDENT', label: 'Defendant' },
     { value: 'COMPLAINANT', label: 'Complainant' },
     { value: 'PETITIONER', label: 'Petitioner' },
     { value: 'RESPONDENT', label: 'Respondent' },

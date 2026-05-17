@@ -14,6 +14,9 @@ import { CreateRegistarComponent } from './application/courts/create-registar/cr
 import { ViewOfficersComponent } from './application/manage-officers/view-officers/view-officers.component';
 import { CreataClerkComponent } from './application/manage-officers/creata-clerk/creata-clerk.component';
 import { CreateACaseComponent } from './application/cases/create-a-case/create-a-case.component';
+import { ApprovedConnectionsComponent } from './application/client-connections/approved-connections/approved-connections.component';
+import { RejecteConnectionsComponent } from './application/client-connections/rejecte-connections/rejecte-connections.component';
+import { PendingLegalProfessionalsComponent } from './application/legal-professionals/pending-legal-professionals/pending-legal-professionals.component';
 
 export const routes: Routes = [
     {
@@ -53,12 +56,24 @@ export const routes: Routes = [
               children: [
 
                 {
+                      path: 'approved-connections',
+                      data: { roles: ['Registrar', 'Clerk'] },
+                      component: ApprovedConnectionsComponent
+                },
+
+                {
+                      path: 'rejected-connections',
+                      data: { roles: ['Registrar', 'Clerk'] },
+                      component: RejecteConnectionsComponent
+                },
+
+                {
                       path: '',
                       data: { roles: ['Registrar', 'Clerk'] },
                       component: ViewClientCaseConnectionsComponent
                 },
               ]
-          },
+            },
 
             {
                 path: 'cases',
@@ -87,6 +102,17 @@ export const routes: Routes = [
                   {
                         path: 'create-schedule-for-case/:id',
                         component: CreateScheduleComponent
+                  },
+                ]
+            },
+
+            {
+                path: 'lawyers',
+                children: [
+
+                  {
+                        path: '',
+                        component: PendingLegalProfessionalsComponent
                   },
                 ]
             },

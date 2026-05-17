@@ -10,13 +10,13 @@ import { SerchableDropdownComponent } from '../../../components/serchable-dropdo
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-view-client-case-connections',
+  selector: 'app-approved-connections',
   standalone: true,
   imports: [CommonModule, FormsModule, LoadingSpinnerComponent, SerchableDropdownComponent, NgxPaginationModule],
-  templateUrl: './view-client-case-connections.component.html',
-  styleUrl: './view-client-case-connections.component.css'
+  templateUrl: './approved-connections.component.html',
+  styleUrl: './approved-connections.component.css'
 })
-export class ViewClientCaseConnectionsComponent implements OnInit {
+export class ApprovedConnectionsComponent implements OnInit {
   connectionsArr!: Connection[];
   individualConnections: Connection[] = [];
   organizationConnections: Connection[] = [];
@@ -49,33 +49,24 @@ export class ViewClientCaseConnectionsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-      this.fetchPendingConnectionDetails();
+      this.fetchApprovedConnectionDetails();
   }
 
 
-fetchPendingConnectionDetails(
+fetchApprovedConnectionDetails(
   page: number = this.page,
   limit: number = this.itemsPerPage,
   searchText: string = this.searchText
 ) {
   this.isLoading = true;
 
-  this.casesSrv.getPendingConnectionDetails(page, limit, searchText).subscribe(
+  this.casesSrv.getApprovedConnectionDetails(page, limit, searchText).subscribe(
     (res) => {
       // this.connectionsArr = res.items;
       this.individualConnections = res.indItems;
       this.organizationConnections = res.orgItems;
       this.indTotal = res.indTotal;
       this.orgTotal = res.orgTotal;
-
-      // // Split into two arrays
-      // this.individualConnections = res.items.filter(
-      //   (item: any) => item.partytype === 'Individual'
-      // );
-
-      // this.organizationConnections = res.items.filter(
-      //   (item: any) => item.partytype === 'Organization'
-      // );
 
       console.log('individualConnections', this.individualConnections);
       console.log('organizationConnections', this.organizationConnections);
@@ -89,18 +80,18 @@ fetchPendingConnectionDetails(
 
   onPageChange(page: number) {
       this.currentPage = page;
-      this.fetchPendingConnectionDetails();
+      this.fetchApprovedConnectionDetails();
   }
 
   onSearch() {
       this.searchText = this.searchText?.trim() || '';
       this.currentPage = 1; // Reset to first page on new search
-      this.fetchPendingConnectionDetails();
+      this.fetchApprovedConnectionDetails();
   }
 
   offSearch() {
       this.searchText='';
-      this.fetchPendingConnectionDetails();
+      this.fetchApprovedConnectionDetails();
   }
 
   getTotalPages(): number {

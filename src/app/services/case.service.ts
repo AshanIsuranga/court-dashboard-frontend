@@ -97,6 +97,35 @@ export class CaseService {
   }
 
 
+  rejectConnection(partyId: number, userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+  
+    const url = `${this.apiUrl}/reject-connection`;
+  
+    return this.http.post(
+      url,
+      { partyId, userId }, // body
+      { headers }          // config
+    );
+  }
+
+  rejectConnectionForOrg(partyId: number, userId: number, orgId: number, orgUserId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+  
+    const url = `${this.apiUrl}/reject-connection-for-org`;
+  
+    return this.http.post(
+      url,
+      { partyId, userId, orgId, orgUserId }, // body
+      { headers }          // config
+    );
+  }
+
+
 
   getDataForCreateHearing(caseId: number): Observable<any> {
     const headers = new HttpHeaders({
@@ -126,5 +155,37 @@ export class CaseService {
     });
 
     return this.http.post(`${this.apiUrl}/create-case`, payload, { headers });
+  }
+
+  getApprovedConnectionDetails(page: number = 1, limit: number = 10, searchText: string =''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    console.log('token', this.token)
+
+    let url = `${this.apiUrl}/get-approved-connections?page=${page}&limit=${limit}`;
+
+    if (searchText) {
+      url += `&searchText=${searchText}`
+    }
+
+    return this.http.get(url, { headers });
+  }
+
+  getRejectedConnectionDetails(page: number = 1, limit: number = 10, searchText: string =''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    console.log('token', this.token)
+
+    let url = `${this.apiUrl}/get-rejected-connections?page=${page}&limit=${limit}`;
+
+    if (searchText) {
+      url += `&searchText=${searchText}`
+    }
+
+    return this.http.get(url, { headers });
   }
 }

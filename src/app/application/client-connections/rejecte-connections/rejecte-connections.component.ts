@@ -1,4 +1,3 @@
-// view-centers.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -10,13 +9,13 @@ import { SerchableDropdownComponent } from '../../../components/serchable-dropdo
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-view-client-case-connections',
+  selector: 'app-rejecte-connections',
   standalone: true,
   imports: [CommonModule, FormsModule, LoadingSpinnerComponent, SerchableDropdownComponent, NgxPaginationModule],
-  templateUrl: './view-client-case-connections.component.html',
-  styleUrl: './view-client-case-connections.component.css'
+  templateUrl: './rejecte-connections.component.html',
+  styleUrl: './rejecte-connections.component.css'
 })
-export class ViewClientCaseConnectionsComponent implements OnInit {
+export class RejecteConnectionsComponent implements OnInit {
   connectionsArr!: Connection[];
   individualConnections: Connection[] = [];
   organizationConnections: Connection[] = [];
@@ -49,18 +48,18 @@ export class ViewClientCaseConnectionsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-      this.fetchPendingConnectionDetails();
+      this.fetchRejectedConnectionDetails();
   }
 
 
-fetchPendingConnectionDetails(
+fetchRejectedConnectionDetails(
   page: number = this.page,
   limit: number = this.itemsPerPage,
   searchText: string = this.searchText
 ) {
   this.isLoading = true;
 
-  this.casesSrv.getPendingConnectionDetails(page, limit, searchText).subscribe(
+  this.casesSrv.getRejectedConnectionDetails(page, limit, searchText).subscribe(
     (res) => {
       // this.connectionsArr = res.items;
       this.individualConnections = res.indItems;
@@ -89,18 +88,18 @@ fetchPendingConnectionDetails(
 
   onPageChange(page: number) {
       this.currentPage = page;
-      this.fetchPendingConnectionDetails();
+      this.fetchRejectedConnectionDetails();
   }
 
   onSearch() {
       this.searchText = this.searchText?.trim() || '';
       this.currentPage = 1; // Reset to first page on new search
-      this.fetchPendingConnectionDetails();
+      this.fetchRejectedConnectionDetails();
   }
 
   offSearch() {
       this.searchText='';
-      this.fetchPendingConnectionDetails();
+      this.fetchRejectedConnectionDetails();
   }
 
   getTotalPages(): number {
