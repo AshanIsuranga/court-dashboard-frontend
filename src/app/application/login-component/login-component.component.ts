@@ -22,6 +22,7 @@ export class LoginComponentComponent {
   disError: any;
   isLoading: boolean = false;
   role!: string;
+  currentYear = new Date().getFullYear();
 
 
   constructor(

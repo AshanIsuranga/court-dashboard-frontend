@@ -1,121 +1,239 @@
-<app-loading-spinner *ngIf="isLoading"/>
+<app-loading-spinner *ngIf="isLoading" />
 
-<div *ngIf="!isLoading" class="flex flex-col md:flex-row justify-between items-center min-h-full box-border relative">
-    <!-- Left Section -->
-    <div class="mobile-header w-full md:hidden flex flex-col items-center mb-6">
-        <img src="" alt="">
-        <div class="h-[50px]"></div>
+<div *ngIf="!isLoading" class="flex min-h-screen">
+
+  <!-- Left Panel — Branding -->
+  <div
+    class="hidden md:flex w-1/2 flex-col items-center justify-between py-12 px-14 relative overflow-hidden"
+    style="background: linear-gradient(145deg, #0A1C3E 0%, #0F2547 45%, #1A3A6B 100%);"
+  >
+    <!-- Decorative circles -->
+    <div
+      class="absolute -top-20 -left-20 rounded-full opacity-10"
+      style="width:380px; height:380px; background:#C9A84C;"
+    ></div>
+    <div
+      class="absolute -bottom-24 -right-24 rounded-full opacity-10"
+      style="width:420px; height:420px; background:#C9A84C;"
+    ></div>
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-5"
+      style="width:600px; height:600px; background:#C9A84C;"
+    ></div>
+
+    <!-- Top logo -->
+    <div class="relative z-10 flex items-center gap-3 self-start">
+      <div
+        class="flex items-center justify-center rounded-full"
+        style="width:44px; height:44px; background: rgba(201,168,76,0.15); border: 1.5px solid rgba(201,168,76,0.5);"
+      >
+        <i class="fa-solid fa-scale-balanced" style="color:#C9A84C; font-size:18px;"></i>
+      </div>
+      <div>
+        <p class="text-white font-bold text-base leading-tight">Court Management</p>
+        <p class="text-xs font-medium" style="color:#C9A84C;">Dashboard System</p>
+      </div>
     </div>
 
-    <div class="hidden md:block w-1/2 h-screen p-40 items-center justify-center bg-[#F5F6F8]">
-        <div class="p-0 m-0">
-            <img src="assets/images/LoginImage.svg" alt="Signup Image" class="h-full w-full object-cover" />
+    <!-- Centre content -->
+    <div class="relative z-10 flex flex-col items-center text-center gap-8">
+      <!-- Large icon -->
+      <div
+        class="flex items-center justify-center rounded-full"
+        style="width:130px; height:130px; background: rgba(201,168,76,0.1); border: 2px solid rgba(201,168,76,0.35);"
+      >
+        <i class="fa-solid fa-landmark" style="color:#C9A84C; font-size:56px;"></i>
+      </div>
+
+      <div>
+        <h2 class="text-white text-3xl font-bold leading-snug mb-3">Justice Through<br/>Technology</h2>
+        <p class="text-base leading-relaxed max-w-xs" style="color:rgba(255,255,255,0.55);">
+          Manage court cases, hearings, legal professionals, and documents — all in one secure platform.
+        </p>
+      </div>
+
+      <!-- Feature pills -->
+      <div class="flex flex-col gap-3 w-full max-w-xs">
+        <div
+          class="flex items-center gap-3 rounded-lg px-4 py-3"
+          style="background: rgba(255,255,255,0.05); border: 1px solid rgba(201,168,76,0.2);"
+        >
+          <i class="fa-solid fa-shield-halved" style="color:#C9A84C; width:16px;"></i>
+          <span class="text-sm text-white font-medium">Secure role-based access</span>
         </div>
+        <div
+          class="flex items-center gap-3 rounded-lg px-4 py-3"
+          style="background: rgba(255,255,255,0.05); border: 1px solid rgba(201,168,76,0.2);"
+        >
+          <i class="fa-solid fa-folder-open" style="color:#C9A84C; width:16px;"></i>
+          <span class="text-sm text-white font-medium">Centralized case management</span>
+        </div>
+        <div
+          class="flex items-center gap-3 rounded-lg px-4 py-3"
+          style="background: rgba(255,255,255,0.05); border: 1px solid rgba(201,168,76,0.2);"
+        >
+          <i class="fa-solid fa-calendar-check" style="color:#C9A84C; width:16px;"></i>
+          <span class="text-sm text-white font-medium">Hearing scheduling & tracking</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Right Section -->
-    <div class="w-full md:w-1/2 min-h-full flex flex-col items-center">
-        <div class="max-w-md w-full">
-            <img src="assets/images/logo.png" alt="logo"
-                class="hidden md:block absolute top-5 right-5 max-w-[150px] h-auto z-10">
-            <h1 class="text-3xl font-bold text-gray-800 mb-4">Welcome back!</h1>
-            <p class="text-gray-500 mb-6">Start managing your Court</p>
+    <!-- Bottom -->
+    <p class="relative z-10 text-xs" style="color:rgba(255,255,255,0.3);">
+      &copy; {{ currentYear }} Court Management System
+    </p>
+  </div>
 
-            <!-- Form -->
-            <div *ngIf="userNameInput.touched && !loginObj.userName" class="text-red-500 font-normal">
-                <div class="flex flex-row items-center gap-2 mx-3">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    <p>Your Officer Code or User Name</p>
-                </div>
+  <!-- Right Panel — Form -->
+  <div class="w-full md:w-1/2 flex items-center justify-center px-8 py-12" style="background:#F4F6FA;">
+    <div class="w-full max-w-md">
+
+      <!-- Mobile logo -->
+      <div class="md:hidden flex items-center gap-3 mb-8 justify-center">
+        <div
+          class="flex items-center justify-center rounded-full"
+          style="width:40px; height:40px; background:#0F2547; border: 1.5px solid #C9A84C;"
+        >
+          <i class="fa-solid fa-scale-balanced" style="color:#C9A84C;"></i>
+        </div>
+        <p class="font-bold text-lg" style="color:#0F2547;">Court Management System</p>
+      </div>
+
+      <!-- Card -->
+      <div
+        class="rounded-2xl shadow-xl overflow-hidden"
+        style="background:#fff; border: 1px solid rgba(201,168,76,0.2);"
+      >
+        <!-- Card header -->
+        <div
+          class="px-8 py-6"
+          style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 3px solid #C9A84C;"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="flex items-center justify-center rounded-full"
+              style="width:40px; height:40px; background: rgba(201,168,76,0.15); border: 1.5px solid rgba(201,168,76,0.4);"
+            >
+              <i class="fa-solid fa-right-to-bracket" style="color:#C9A84C;"></i>
             </div>
-            <div class="relative mb-6">
-                
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                                stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            </path>
-                        </g>
-                    </svg>
-                </div>
-                <input type="text" [(ngModel)]="loginObj.userName" (ngModelChange)="loginObj.userName = $event.toUpperCase()"  id="email" name="userName" #userNameInput="ngModel"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Your Officer Code / Username" (keydown.enter)="onLogin()">
+            <div>
+              <h1 class="text-white text-xl font-bold leading-tight">Welcome Back</h1>
+              <p class="text-sm" style="color:rgba(255,255,255,0.55);">Sign in to your account to continue</p>
             </div>
+          </div>
+        </div>
 
+        <!-- Form body -->
+        <div class="px-8 py-7 space-y-5">
 
-            
-            <div *ngIf="passwordInput.touched && !loginObj.password" class="text-red-500 font-normal">
-                <div class="flex flex-row items-center gap-2 mx-3">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    <p>Password is required</p>
-                </div>
+          <!-- Username field -->
+          <div>
+            <label class="block text-sm font-semibold mb-1.5" style="color:#0F2547;">
+              Officer Code / Username
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                <i class="fa-solid fa-user text-sm" style="color:#9CA3AF;"></i>
+              </div>
+              <input
+                type="text"
+                [(ngModel)]="loginObj.userName"
+                (ngModelChange)="loginObj.userName = $event.toUpperCase()"
+                id="userName"
+                name="userName"
+                #userNameInput="ngModel"
+                placeholder="Enter your officer code or username"
+                (keydown.enter)="onLogin()"
+                class="w-full pl-10 pr-4 py-2.5 rounded-lg text-sm outline-none transition-all"
+                style="background:#F4F6FA; border: 1.5px solid rgba(15,37,71,0.2); color:#0F2547;"
+                onfocus="this.style.borderColor='#C9A84C'; this.style.boxShadow='0 0 0 3px rgba(201,168,76,0.12)';"
+                onblur="this.style.borderColor='rgba(15,37,71,0.2)'; this.style.boxShadow='none';"
+              />
             </div>
-            <div class="relative mb-6">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M12 14.5V16.5M7 10.0288C7.47142 10 8.05259 10 8.8 10H15.2C15.9474 10 16.5286 10 17 10.0288M7 10.0288C6.41168 10.0647 5.99429 10.1455 5.63803 10.327C5.07354 10.6146 4.6146 11.0735 4.32698 11.638C4 12.2798 4 13.1198 4 14.8V16.2C4 17.8802 4 18.7202 4.32698 19.362C4.6146 19.9265 5.07354 20.3854 5.63803 20.673C6.27976 21 7.11984 21 8.8 21H15.2C16.8802 21 17.7202 21 18.362 20.673C18.9265 20.3854 19.3854 19.9265 19.673 19.362C20 18.7202 20 17.8802 20 16.2V14.8C20 13.1198 20 12.2798 19.673 11.638C19.3854 11.0735 18.9265 10.6146 18.362 10.327C18.0057 10.1455 17.5883 10.0647 17 10.0288M7 10.0288V8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8V10.0288"
-                            stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                </div>
-
-                <!-- Password Input Field -->
-                <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="loginObj.password" id="password" name="password" #passwordInput="ngModel"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
-                    placeholder="Your Password" (keydown.enter)="onLogin()">
-
-                <!-- Show Password Toggle Button -->
-                <button type="button" (click)="togglePasswordVisibility()"
-                    class="absolute inset-y-0 right-0 flex items-center pr-3">
-                    <svg *ngIf="!showPassword" class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <g id="Edit / Show">
-                                <g id="Vector">
-                                    <path
-                                        d="M3.5868 13.7788C5.36623 15.5478 8.46953 17.9999 12.0002 17.9999C15.5308 17.9999 18.6335 15.5478 20.413 13.7788C20.8823 13.3123 21.1177 13.0782 21.2671 12.6201C21.3738 12.2933 21.3738 11.7067 21.2671 11.3799C21.1177 10.9218 20.8823 10.6877 20.413 10.2211C18.6335 8.45208 15.5308 6 12.0002 6C8.46953 6 5.36623 8.45208 3.5868 10.2211C3.11714 10.688 2.88229 10.9216 2.7328 11.3799C2.62618 11.7067 2.62618 12.2933 2.7328 12.6201C2.88229 13.0784 3.11714 13.3119 3.5868 13.7788Z"
-                                        stroke="#000000" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path
-                                        d="M10 12C10 13.1046 10.8954 14 12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12Z"
-                                        stroke="#000000" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                </g>
-                            </g>
-                        </g>
-                    </svg>
-                    <svg *ngIf="showPassword" class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <g id="Edit / Hide">
-                                <path id="Vector"
-                                    d="M3.99989 4L19.9999 20M16.4999 16.7559C15.1473 17.4845 13.6185 17.9999 11.9999 17.9999C8.46924 17.9999 5.36624 15.5478 3.5868 13.7788C3.1171 13.3119 2.88229 13.0784 2.7328 12.6201C2.62619 12.2933 2.62616 11.7066 2.7328 11.3797C2.88233 10.9215 3.11763 10.6875 3.58827 10.2197C4.48515 9.32821 5.71801 8.26359 7.17219 7.42676M19.4999 14.6335C19.8329 14.3405 20.138 14.0523 20.4117 13.7803L20.4146 13.7772C20.8832 13.3114 21.1182 13.0779 21.2674 12.6206C21.374 12.2938 21.3738 11.7068 21.2672 11.38C21.1178 10.9219 20.8827 10.6877 20.4133 10.2211C18.6338 8.45208 15.5305 6 11.9999 6C11.6624 6 11.3288 6.02241 10.9999 6.06448M13.3228 13.5C12.9702 13.8112 12.5071 14 11.9999 14C10.8953 14 9.99989 13.1046 9.99989 12C9.99989 11.4605 10.2135 10.9711 10.5608 10.6113"
-                                    stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                </path>
-                            </g>
-                        </g>
-                    </svg>
-                </button>
+            <div
+              *ngIf="userNameInput.touched && !loginObj.userName"
+              class="flex items-center gap-1.5 mt-1.5 text-xs font-medium"
+              style="color:#DC2626;"
+            >
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span>Officer Code / Username is required</span>
             </div>
+          </div>
 
+          <!-- Password field -->
+          <div>
+            <label class="block text-sm font-semibold mb-1.5" style="color:#0F2547;">
+              Password
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                <i class="fa-solid fa-lock text-sm" style="color:#9CA3AF;"></i>
+              </div>
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                [(ngModel)]="loginObj.password"
+                id="password"
+                name="password"
+                #passwordInput="ngModel"
+                placeholder="Enter your password"
+                (keydown.enter)="onLogin()"
+                class="w-full pl-10 pr-11 py-2.5 rounded-lg text-sm outline-none transition-all"
+                style="background:#F4F6FA; border: 1.5px solid rgba(15,37,71,0.2); color:#0F2547;"
+                onfocus="this.style.borderColor='#C9A84C'; this.style.boxShadow='0 0 0 3px rgba(201,168,76,0.12)';"
+                onblur="this.style.borderColor='rgba(15,37,71,0.2)'; this.style.boxShadow='none';"
+              />
+              <button
+                type="button"
+                (click)="togglePasswordVisibility()"
+                class="absolute inset-y-0 right-0 flex items-center pr-3.5 transition-colors"
+                style="color:#9CA3AF;"
+                onmouseover="this.style.color='#0F2547'"
+                onmouseout="this.style.color='#9CA3AF'"
+              >
+                <i [class]="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+              </button>
+            </div>
+            <div
+              *ngIf="passwordInput.touched && !loginObj.password"
+              class="flex items-center gap-1.5 mt-1.5 text-xs font-medium"
+              style="color:#DC2626;"
+            >
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span>Password is required</span>
+            </div>
+          </div>
 
-            <!-- Login Button -->
-            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
-                (click)="onLogin()">
-                Log in
-            </button>
+          <!-- Login button -->
+          <button
+            type="submit"
+            (click)="onLogin()"
+            class="w-full py-3 rounded-lg font-bold text-base transition-all flex items-center justify-center gap-2 mt-2"
+            style="background:#0F2547; color:#C9A84C; border: 1.5px solid #C9A84C;"
+            onmouseover="this.style.background='#1A3A6B'"
+            onmouseout="this.style.background='#0F2547'"
+          >
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Sign In
+          </button>
 
         </div>
+
+        <!-- Card footer -->
+        <div
+          class="px-8 py-4 flex items-center justify-center gap-2"
+          style="background:#F4F6FA; border-top: 1px solid rgba(201,168,76,0.15);"
+        >
+          <i class="fa-solid fa-shield-halved text-xs" style="color:#C9A84C;"></i>
+          <p class="text-xs" style="color:#9CA3AF;">Secured with end-to-end encryption</p>
+        </div>
+      </div>
+
+      <!-- Below card note -->
+      <p class="text-center text-xs mt-5" style="color:#9CA3AF;">
+        Having trouble signing in? Contact your system administrator.
+      </p>
+
     </div>
+  </div>
+
 </div>

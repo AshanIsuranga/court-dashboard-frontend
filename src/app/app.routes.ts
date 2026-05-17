@@ -18,6 +18,7 @@ import { ApprovedConnectionsComponent } from './application/client-connections/a
 import { RejecteConnectionsComponent } from './application/client-connections/rejecte-connections/rejecte-connections.component';
 import { PendingLegalProfessionalsComponent } from './application/legal-professionals/pending-legal-professionals/pending-legal-professionals.component';
 import { ApprovedLawyersComponent } from './application/legal-professionals/approved-lawyers/approved-lawyers.component';
+import { ChangePasswordComponent } from './application/change-password/change-password.component';
 
 export const routes: Routes = [
     {
@@ -27,6 +28,8 @@ export const routes: Routes = [
     },
 
     { path: 'login', component: LoginComponentComponent },
+
+    { path: 'change-password', component: ChangePasswordComponent },
 
     {
         path: '',
@@ -153,6 +156,11 @@ export const routes: Routes = [
 
                   {
                     path: 'create-registrar/:id',
+                    component: CreateRegistarComponent
+                  },
+
+                  {
+                    path: 'edit-registrar/:id',
                     component: CreateRegistarComponent
                   }
                   

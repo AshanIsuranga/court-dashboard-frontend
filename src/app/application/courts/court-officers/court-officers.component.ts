@@ -164,6 +164,7 @@ onDistrictChange(selectedDistrict: string | null): void {
 
   fetchCourtOfficerDetails(courtId: number = this.courtId, province: string = this.selectProvince, district: string = this.selectDistrict, search: string = this.searchText) {
       this.isLoading = true;
+      console.log('isLoading', this.isLoading)
       this.coreSrv.getCourtOfficerDetails(courtId, this.currentPage, this.itemsPerPage, province, district, search).subscribe(
           (res) => {
               this.itemsArr = res.items;

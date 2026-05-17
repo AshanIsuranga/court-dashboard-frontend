@@ -15,13 +15,46 @@
     <span class="text-base font-semibold" style="color:#C9A84C;">Pending Approvals</span>
   </div>
 
-  <!-- Search & Count Card -->
+  <!-- Navigation Tab Buttons -->
+  <div class="flex items-center gap-3">
+    <button
+      class="px-5 py-2.5 rounded-lg font-semibold text-base flex items-center gap-2 cursor-default"
+      style="background:#0F2547; color:#C9A84C; border: 1.5px solid #C9A84C;"
+    >
+      <i class="fa-solid fa-clock"></i>
+      Pending
+    </button>
+    <button
+      (click)="navigateToApprovedConnections()"
+      class="px-5 py-2.5 rounded-lg font-semibold text-base transition-all flex items-center gap-2"
+      style="background:#fff; color:#0F2547; border: 1.5px solid rgba(15,37,71,0.2);"
+      onmouseover="this.style.background='#F4F6FA'"
+      onmouseout="this.style.background='#fff'"
+    >
+      <i class="fa-solid fa-circle-check"></i>
+      Approved
+    </button>
+    <button
+      (click)="navigateToRejectedConnections()"
+      class="px-5 py-2.5 rounded-lg font-semibold text-base transition-all flex items-center gap-2"
+      style="background:#fff; color:#0F2547; border: 1.5px solid rgba(15,37,71,0.2);"
+      onmouseover="this.style.background='#F4F6FA'"
+      onmouseout="this.style.background='#fff'"
+    >
+      <i class="fa-solid fa-circle-xmark"></i>
+      Rejected
+    </button>
+  </div>
+
+  <!-- Filter & Search Card -->
   <div
     class="rounded-xl px-6 py-5 shadow-md"
     style="background:#fff; border: 1px solid rgba(201,168,76,0.25); border-left: 4px solid #C9A84C;"
   >
     <div class="flex flex-wrap items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
+
+      <!-- Title + count -->
+      <div class="flex items-center gap-3 flex-shrink-0">
         <p class="text-lg font-bold" style="color:#0F2547;">Pending Legal Professionals</p>
         <span
           class="px-3 py-0.5 rounded-full text-base font-bold"
@@ -29,75 +62,68 @@
         >{{ totalItems.toString().padStart(2, '0') }}</span>
       </div>
 
-      <div class="flex gap-4 flex-shrink-0">
-                    <!-- Province Dropdown -->
-                    <div class="w-40 flex-shrink-0">
-                        <app-serchable-dropdown
-                            [items]="provinceItems"
-                            [placeholder]="'Province'"
-                            [searchPlaceholder]="'Search...'"
-                            [clearable]="true"
-                            [showSelected]="true"
-                            [(ngModel)]="selectProvince"
-                            (selectionChange)="onProvinceChange($event)">
-                        </app-serchable-dropdown>
-                    </div>
-                
-                    <!-- District Dropdown -->
-                    <div class="w-40 flex-shrink-0">
-                        <app-serchable-dropdown
-                            [items]="districtItems"
-                            [placeholder]="'District'"
-                            [searchPlaceholder]="'Search...'"
-                            [clearable]="true"
-                            [showSelected]="true"
-                            [(ngModel)]="selectDistrict"
-                            (selectionChange)="onDistrictChange($event)">
-                        </app-serchable-dropdown>
-                    </div>
-                </div>
+      <div class="flex flex-wrap items-center gap-4">
 
-      <div
-        class="flex items-center rounded-lg px-4 py-2.5 gap-2 w-80"
-        style="background:#F4F6FA; border: 1px solid rgba(15,37,71,0.18);"
-      >
-        <i class="fa-solid fa-magnifying-glass" style="color:#9CA3AF;"></i>
-        <input
-          type="text"
-          placeholder="Search by NIC / Username..."
-          [(ngModel)]="searchText"
-          class="bg-transparent outline-none w-full text-base"
-          style="color:#0F2547;"
-          (keydown.enter)="onSearch()"
-          (keydown.esc)="offSearch()"
-        />
-        <button *ngIf="searchText" type="button" (click)="offSearch()" style="color:#9CA3AF;">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <!-- Filter label -->
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <i class="fa-solid fa-filter text-sm" style="color:#9CA3AF;"></i>
+          <span class="text-sm font-medium" style="color:#6B7280;">Filter By</span>
+        </div>
+
+        <!-- Province Dropdown -->
+        <div class="w-40 flex-shrink-0">
+          <app-serchable-dropdown
+            [items]="provinceItems"
+            [placeholder]="'Province'"
+            [searchPlaceholder]="'Search...'"
+            [clearable]="true"
+            [showSelected]="true"
+            [(ngModel)]="selectProvince"
+            (selectionChange)="onProvinceChange($event)">
+          </app-serchable-dropdown>
+        </div>
+
+        <!-- District Dropdown -->
+        <div class="w-40 flex-shrink-0">
+          <app-serchable-dropdown
+            [items]="districtItems"
+            [placeholder]="'District'"
+            [searchPlaceholder]="'Search...'"
+            [clearable]="true"
+            [showSelected]="true"
+            [(ngModel)]="selectDistrict"
+            (selectionChange)="onDistrictChange($event)">
+          </app-serchable-dropdown>
+        </div>
+
+        <!-- Search -->
+        <div
+          class="flex items-center rounded-lg px-4 py-2.5 gap-2 w-72 flex-shrink-0"
+          style="background:#F4F6FA; border: 1px solid rgba(15,37,71,0.18);"
+        >
+          <i class="fa-solid fa-magnifying-glass" style="color:#9CA3AF;"></i>
+          <input
+            type="text"
+            placeholder="Search by NIC / Username..."
+            [(ngModel)]="searchText"
+            class="bg-transparent outline-none w-full text-base"
+            style="color:#0F2547;"
+            (keydown.enter)="onSearch()"
+            (keydown.esc)="offSearch()"
+          />
+          <button *ngIf="searchText" type="button" (click)="offSearch()" style="color:#9CA3AF;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
 
-   <button
-        (click)="navigateToApprovedConnections()"
-        class="px-5 py-2.5 rounded-lg font-semibold text-base transition-all flex items-center gap-2"
-        style="background:#0F2547; color:#C9A84C; border: 1.5px solid #C9A84C;"
-      >
-        <i class="fa-solid fa-link"></i>
-        approved
-  </button>
-
-  <button
-        (click)="navigateToRejectedConnections()"
-        class="px-5 py-2.5 rounded-lg font-semibold text-base transition-all flex items-center gap-2"
-        style="background:#0F2547; color:#C9A84C; border: 1.5px solid #C9A84C;"
-      >
-        <i class="fa-solid fa-link"></i>
-        Rejected
-  </button>
-
   <!-- Table -->
   <div class="rounded-xl shadow-md overflow-hidden" style="border: 1px solid rgba(201,168,76,0.25);">
+
+    <!-- Table header bar -->
     <div
       class="px-6 py-4 flex items-center gap-2"
       style="background: linear-gradient(90deg, #0F2547 0%, #1A3A6B 100%); border-bottom: 2px solid #C9A84C;"
@@ -124,7 +150,7 @@
             <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">District</th>
             <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Province</th>
             <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">City</th>
-            <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Nearest court</th>
+            <th class="px-5 py-3.5 text-left font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Nearest Court</th>
             <th class="px-5 py-3.5 text-center font-semibold tracking-wide whitespace-nowrap" style="color:#0F2547;">Action</th>
           </tr>
         </thead>
@@ -139,25 +165,41 @@
             <td class="px-5 py-3.5 font-medium text-left" style="color:#6B7280;">
               {{ ('0' + ((currentPage - 1) * itemsPerPage + i + 1)).slice(-2) }}
             </td>
+
+            <!-- Username with avatar -->
             <td class="px-5 py-3.5 font-semibold text-left whitespace-nowrap" style="color:#0F2547;">
               <div class="flex items-center gap-2">
+                <div
+                  class="flex items-center justify-center rounded-full flex-shrink-0"
+                  style="width:30px; height:30px; background: rgba(15,37,71,0.08); border: 1px solid rgba(201,168,76,0.3);"
+                >
+                  <i class="fa-solid fa-user text-xs" style="color:#0F2547;"></i>
+                </div>
                 {{ item.username || '--' }}
               </div>
             </td>
+
             <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.nic || '--' }}</td>
             <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.lawyerfirstnameenglish || '--' }}</td>
             <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.email || '--' }}</td>
+
+            <!-- Bar Enrollment badge -->
             <td class="px-5 py-3.5 text-left whitespace-nowrap">
               <span
                 class="inline-block px-3 py-1 rounded-full font-semibold text-base"
                 style="background: rgba(15,37,71,0.07); color:#0F2547; border: 1px solid rgba(201,168,76,0.25);"
               >{{ item.barcode || '--' }}</span>
             </td>
-            <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.phonecode01 + '' + item.phonenumber01 || '--' }}</td>
+
+            <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">
+              {{ item.phonecode01 }} {{ item.phonenumber01 || '--' }}
+            </td>
             <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.district || '--' }}</td>
             <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.province || '--' }}</td>
             <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.city || '--' }}</td>
-                        <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.courtnameenglish || '--' }}</td>
+            <td class="px-5 py-3.5 font-medium text-left whitespace-nowrap" style="color:#374151;">{{ item.courtnameenglish || '--' }}</td>
+
+            <!-- Action buttons -->
             <td class="px-5 py-3.5 text-center whitespace-nowrap">
               <div class="flex items-center justify-center gap-2">
                 <button
@@ -187,12 +229,19 @@
       </table>
     </div>
 
-    <div *ngIf="professionals.length > 0" class="flex justify-end items-center my-5 mr-5 pt-3 dark:bg-[#1D1D1F] text-right">
-            <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
-                [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
-                [screenReaderCurrentLabel]="'Youre on page'">
-            </pagination-controls>
-        </div>
+    <!-- Pagination -->
+    <div
+      *ngIf="professionals.length > 0"
+      class="px-6 py-4 flex justify-end items-center"
+      style="background:#fff; border-top: 1px solid rgba(201,168,76,0.2);"
+    >
+      <pagination-controls
+        (pageChange)="onPageChange($event)"
+        [responsive]="true"
+        [previousLabel]="'Previous'"
+        [nextLabel]="'Next'">
+      </pagination-controls>
+    </div>
 
     <!-- Empty State -->
     <div *ngIf="professionals.length === 0" class="flex flex-col items-center py-16" style="background:#fff;">
@@ -205,6 +254,7 @@
       <p class="text-base font-medium" style="color:#6B7280;">No pending legal professionals</p>
       <p class="text-base mt-1" style="color:#9CA3AF;">All approvals are up to date</p>
     </div>
+
   </div>
 
 </div>

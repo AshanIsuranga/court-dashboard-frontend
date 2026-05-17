@@ -1,7 +1,19 @@
-<div class="spinner-overlay">
-    <div class="wave-spinner">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
+<div class="fixed inset-0 z-50 flex flex-col items-center justify-center" style="background: rgba(15,37,71,0.55); backdrop-filter: blur(4px);">
+
+  <!-- Spinner ring -->
+  <div class="relative flex items-center justify-center" style="width:80px; height:80px;">
+    <!-- Outer ring -->
+    <svg class="absolute inset-0 animate-spin" style="width:80px; height:80px;" viewBox="0 0 80 80" fill="none">
+      <circle cx="40" cy="40" r="34" stroke="rgba(201,168,76,0.2)" stroke-width="6"/>
+      <path d="M40 6 A34 34 0 0 1 74 40" stroke="#C9A84C" stroke-width="6" stroke-linecap="round"/>
+    </svg>
+    <!-- Inner icon -->
+    <div class="flex items-center justify-center rounded-full" style="width:48px; height:48px; background: linear-gradient(135deg, #0F2547 0%, #1A3A6B 100%); border: 1.5px solid rgba(201,168,76,0.4);">
+      <i class="fa-solid fa-landmark text-lg" style="color:#C9A84C;"></i>
     </div>
+  </div>
+
+  <!-- Label -->
+  <p class="mt-4 text-sm font-semibold tracking-widest uppercase" style="color:#C9A84C; letter-spacing:0.18em;">Loading...</p>
+
 </div>

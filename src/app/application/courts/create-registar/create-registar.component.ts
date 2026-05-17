@@ -46,6 +46,34 @@ export class CreateRegistarComponent implements OnInit {
   courtId!: number;
   itemsArr!: Court[];
 
+  readonly nicPattern = '^([0-9]{9}[vVxX]|[0-9]{12})$';
+  readonly phonePattern = '^[0-9]{9}$';
+
+  private readonly provinceDistrictMap: { [key: string]: string[] } = {
+    'Western':      ['Colombo', 'Gampaha', 'Kalutara'],
+    'Central':      ['Kandy', 'Matale', 'Nuwara Eliya'],
+    'Southern':     ['Galle', 'Matara', 'Hambantota'],
+    'Northern':     ['Jaffna', 'Kilinochchi', 'Mannar', 'Mullaitivu', 'Vavuniya'],
+    'Eastern':      ['Trincomalee', 'Batticaloa', 'Ampara'],
+    'North Western':['Kurunegala', 'Puttalam'],
+    'North Central':['Anuradhapura', 'Polonnaruwa'],
+    'Uva':          ['Badulla', 'Monaragala'],
+    'Sabaragamuwa': ['Ratnapura', 'Kegalle'],
+  };
+
+  private readonly districtProvinceMap: { [key: string]: string } = {
+    'Colombo': 'Western', 'Gampaha': 'Western', 'Kalutara': 'Western',
+    'Kandy': 'Central', 'Matale': 'Central', 'Nuwara Eliya': 'Central',
+    'Galle': 'Southern', 'Matara': 'Southern', 'Hambantota': 'Southern',
+    'Jaffna': 'Northern', 'Kilinochchi': 'Northern', 'Mannar': 'Northern',
+    'Mullaitivu': 'Northern', 'Vavuniya': 'Northern',
+    'Trincomalee': 'Eastern', 'Batticaloa': 'Eastern', 'Ampara': 'Eastern',
+    'Kurunegala': 'North Western', 'Puttalam': 'North Western',
+    'Anuradhapura': 'North Central', 'Polonnaruwa': 'North Central',
+    'Badulla': 'Uva', 'Monaragala': 'Uva',
+    'Ratnapura': 'Sabaragamuwa', 'Kegalle': 'Sabaragamuwa',
+  };
+
   formData: RegistrarForm = {
     courtid: null,
     firstname: '',
@@ -83,7 +111,7 @@ export class CreateRegistarComponent implements OnInit {
     { value: 'Sabaragamuwa', label: 'Sabaragamuwa' },
   ];
 
-  districtItems: DropdownItem[] = [
+  private readonly allDistrictItems: DropdownItem[] = [
     { value: 'Colombo', label: 'Colombo' },
     { value: 'Gampaha', label: 'Gampaha' },
     { value: 'Kalutara', label: 'Kalutara' },
@@ -111,6 +139,8 @@ export class CreateRegistarComponent implements OnInit {
     { value: 'Kegalle', label: 'Kegalle' },
   ];
 
+  districtItems: DropdownItem[] = [...this.allDistrictItems];
+
   constructor(
     private router: Router,
     private coreSrv: CoreService,
@@ -123,35 +153,70 @@ export class CreateRegistarComponent implements OnInit {
     if (this.courtId) {
       this.formData.courtid = this.courtId;
     }
-
     this.fetchAllCourts();
   }
 
   fetchAllCourts() {
-      this.isLoading = true;
-      this.coreSrv.getAllCourts().subscribe(
-          (res) => {
-              this.itemsArr = res.data;
-              this.courtItems = this.itemsArr.map((court: Court) => ({
-                label: court.courtnameenglish,
-                value: court.courtid
-              }));
-
-              console.log('courtItems', this.courtItems)
-              this.isLoading = false;
-          }
-      );
+    this.isLoading = true;
+    this.coreSrv.getAllCourts().subscribe(
+      (res) => {
+        this.itemsArr = res.data;
+        this.courtItems = this.itemsArr.map((court: Court) => ({
+          label: court.courtnameenglish,
+          value: court.courtid
+        }));
+        this.isLoading = false;
+      }
+    );
   }
 
+  onProvinceChange(province: string | null): void {
+    this.formData.district = null;
+    if (province && this.provinceDistrictMap[province]) {
+      const names = this.provinceDistrictMap[province];
+      this.districtItems = this.allDistrictItems.filter(d => names.includes(d.value));
+    } else {
+      this.districtItems = [...this.allDistrictItems];
+    }
+  }
+
+  onDistrictChange(district: string | null): void {
+    if (district && this.districtProvinceMap[district]) {
+      this.formData.province = this.districtProvinceMap[district];
+      const names = this.provinceDistrictMap[this.formData.province];
+      this.districtItems = this.allDistrictItems.filter(d => names.includes(d.value));
+    }
+  }
+
+  isFormValid(): boolean {
+    const nicOk = new RegExp(this.nicPattern).test(this.formData.nic);
+    const phone01Ok = new RegExp(this.phonePattern).test(this.formData.phonenumber01);
+    const phone02Ok = !this.formData.phonenumber02 || new RegExp(this.phonePattern).test(this.formData.phonenumber02);
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.formData.email);
+
+    return !!(
+      this.formData.courtid &&
+      this.formData.officerrole &&
+      this.formData.firstname?.trim() &&
+      this.formData.lastname?.trim() &&
+      nicOk &&
+      emailOk &&
+      phone01Ok &&
+      phone02Ok &&
+      this.formData.housenumber?.trim() &&
+      this.formData.streetname?.trim() &&
+      this.formData.city?.trim() &&
+      this.formData.district &&
+      this.formData.province &&
+      this.formData.country?.trim()
+    );
+  }
 
   onSubmit(): void {
     this.submitted = true;
-    console.log('formData', this.formData)
+    if (!this.isFormValid()) return;
     if (this.isSaving) return;
     this.isSaving = true;
-    // Backend integration goes here
-    console.log('Form submitted:', this.formData);
-    setTimeout(() => { this.isSaving = false; }, 1000);
     this.createRegistrar(this.formData);
   }
 
@@ -168,18 +233,40 @@ export class CreateRegistarComponent implements OnInit {
           title: 'Registrar Created',
           confirmButtonText: 'OK'
         });
+        this.isSaving = false;
         this.location.back();
+
       } else {
         Swal.fire({
           icon: 'warning',
           title: 'Failed',
           text: res.message || 'Something went wrong'
         });
+        this.isSaving = false;
       }
     },
 
     error: (err) => {
       this.isLoading = false;
+      this.isSaving = false;
+
+      // 🔥 HANDLE DUPLICATE CASE (409)
+      if (err?.status === 409) {
+        const duplicates = err?.error?.duplicates || [];
+
+        const message =
+          duplicates.length > 0
+            ? `Duplicate fields found: ${duplicates.join(', ')}`
+            : err?.error?.message || 'Duplicate entry detected';
+
+        Swal.fire({
+          icon: 'warning',
+          title: 'Duplicate Entry',
+          text: message
+        });
+
+        return;
+      }
 
       Swal.fire({
         icon: 'error',
@@ -190,9 +277,9 @@ export class CreateRegistarComponent implements OnInit {
   });
 }
 
-
   onReset(): void {
     this.submitted = false;
+    this.districtItems = [...this.allDistrictItems];
     this.formData = {
       courtid: this.courtId || null,
       firstname: '',
@@ -214,13 +301,15 @@ export class CreateRegistarComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.router.navigate([`/courts/court-officers/${this.courtId}`]);
+  }
+
+  navigateToCourts(): void {
+    this.router.navigate(['/courts']);
   }
 }
 
 class Court {
-
   courtid!: string;
   courtnameenglish!: string;
-
 }
